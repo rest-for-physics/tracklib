@@ -1,5 +1,3 @@
-set(contents . tsp)
-
 file(GLOB_RECURSE addon_src
     "trackMinimization.c"
     "allocrus.c"
@@ -7,4 +5,6 @@ file(GLOB_RECURSE addon_src
     "edgeutil.c"
     "heldkarp.c" )
 
-COMPILEDIR(RestTrack)
+set(addon_inc ${CMAKE_CURRENT_SOURCE_DIR}/tsp/inc)
+
+COMPILELIB("")

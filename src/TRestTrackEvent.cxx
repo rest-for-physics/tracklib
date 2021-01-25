@@ -20,7 +20,6 @@
 
 #include "TRestTrackEvent.h"
 
-#include "TRestDetectorReadout.h"
 #include "TRestRun.h"
 #include "TRestTools.h"
 
