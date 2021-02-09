@@ -35,6 +35,7 @@ void TRestTrackBlobAnalysisProcess::LoadDefaultConfig() { SetTitle("Default conf
 //______________________________________________________________________________
 void TRestTrackBlobAnalysisProcess::Initialize() {
     SetSectionName(this->ClassName());
+    SetLibraryVersion(LIBRARY_VERSION);
 
     fInputTrackEvent = NULL;
     fOutputTrackEvent = new TRestTrackEvent();

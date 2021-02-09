@@ -38,6 +38,7 @@ void TRestTrackDetachIsolatedNodesProcess::LoadDefaultConfig() {
 //______________________________________________________________________________
 void TRestTrackDetachIsolatedNodesProcess::Initialize() {
     SetSectionName(this->ClassName());
+    SetLibraryVersion(LIBRARY_VERSION);
 
     fInputTrackEvent = NULL;
     fOutputTrackEvent = new TRestTrackEvent();

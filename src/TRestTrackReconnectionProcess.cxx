@@ -37,6 +37,7 @@ void TRestTrackReconnectionProcess::LoadDefaultConfig() {
 //______________________________________________________________________________
 void TRestTrackReconnectionProcess::Initialize() {
     SetSectionName(this->ClassName());
+    SetLibraryVersion(LIBRARY_VERSION);
 
     fInputTrackEvent = NULL;
     fOutputTrackEvent = new TRestTrackEvent();

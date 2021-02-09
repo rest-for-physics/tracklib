@@ -30,6 +30,7 @@ void TRestTrackPointLikeAnalysisProcess::LoadDefaultConfig() { SetTitle("Default
 //______________________________________________________________________________
 void TRestTrackPointLikeAnalysisProcess::Initialize() {
     SetSectionName(this->ClassName());
+    SetLibraryVersion(LIBRARY_VERSION);
 
     fTrackEvent = NULL;
 }

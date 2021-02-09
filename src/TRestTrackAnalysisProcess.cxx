@@ -176,6 +176,7 @@ void TRestTrackAnalysisProcess::LoadDefaultConfig() { SetTitle("Default config")
 //______________________________________________________________________________
 void TRestTrackAnalysisProcess::Initialize() {
     SetSectionName(this->ClassName());
+    SetLibraryVersion(LIBRARY_VERSION);
 
     fInputTrackEvent = NULL;
     fOutputTrackEvent = new TRestTrackEvent();
