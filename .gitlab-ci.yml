@@ -50,14 +50,9 @@ build:
     - rm -rf ${CI_PROJECT_DIR}/install
     - git clone --single-branch --branch development https://github.com/rest-for-physics/framework.git framework
     - cd framework
-    - git submodule init source/libraries/detector
-    - git submodule update source/libraries/detector
-    - cd source/libraries/detector/
-    - git checkout ${CI_COMMIT_BRANCH}
-    - cd ../../../
     - mkdir build
     - cd build
-    - cmake ../ -DREST_WELCOME=ON -DRESTLIB_DETECTOR=ON -DINSTALL_PREFIX=${CI_PROJECT_DIR}/install
+    - cmake ../ -DREST_WELCOME=ON -DINSTALL_PREFIX=${CI_PROJECT_DIR}/install
     - make install -j2
   artifacts:
     paths:
