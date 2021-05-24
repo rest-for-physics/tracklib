@@ -42,9 +42,6 @@ validateLibrary:
     stage: pre-build
     script:
         - python pipeline/validateLibrary.py .
-    except:
-        variables:
-            - $CRONJOB == "YES"
 
 build:
   type: build
@@ -62,9 +59,6 @@ build:
     - cd build
     - cmake ../ -DREST_WELCOME=ON -DRESTLIB_DETECTOR=ON -DINSTALL_PREFIX=${CI_PROJECT_DIR}/install
     - make install -j2
-  except:
-    variables:
-      - $CRONJOB
   artifacts:
     paths:
       - ${CI_PROJECT_DIR}/install
@@ -77,6 +71,3 @@ loadRESTLibs:
   script:
     - . ${CI_PROJECT_DIR}/install/thisREST.sh
     - restRoot -b -q
-  except:
-    variables:
-      - $CRONJOB
