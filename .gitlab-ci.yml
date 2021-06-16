@@ -1,4 +1,5 @@
-image: lobis/root-geant4-garfieldpp:cxx14_ROOTv6-25-01_Geant4v10.4.3
+#image: lobis/root-geant4-garfieldpp:cxx14_ROOTv6-25-01_Geant4v10.4.3
+image: nkx1231/root6-geant4-garfield:0.8
 
 stages:
   - pre-build
@@ -41,9 +42,6 @@ validateLibrary:
     stage: pre-build
     script:
         - python pipeline/validateLibrary.py .
-    except:
-        variables:
-            - $CRONJOB == "YES"
 
 build:
   type: build
@@ -60,11 +58,8 @@ build:
     - cd ../../../
     - mkdir build
     - cd build
-    - cmake ../ -DREST_WELCOME=ON -DRESTLIB_DETECTOR=ON -DINSTALL_PREFIX=${CI_PROJECT_DIR}/install
+    - cmake ../ -DREST_WELCOME=ON -DINSTALL_PREFIX=${CI_PROJECT_DIR}/install
     - make install -j2
-  except:
-    variables:
-      - $CRONJOB
   artifacts:
     paths:
       - ${CI_PROJECT_DIR}/install
@@ -77,6 +72,3 @@ loadRESTLibs:
   script:
     - . ${CI_PROJECT_DIR}/install/thisREST.sh
     - restRoot -b -q
-  except:
-    variables:
-      - $CRONJOB
