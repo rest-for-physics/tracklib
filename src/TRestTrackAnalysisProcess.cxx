@@ -41,11 +41,11 @@
 ///
 /// Maximum Second Track Energy observables:
 ///
-/// * **tckSecondMaxEnergy**: Energy of the second most energetic track in the event with X,Y,Z
+/// * **SecondMaxTrackEnergy**: Energy of the second most energetic track in the event with X,Y,Z
 /// coordinates.
-/// * **tckSecondMaxEnergy_X**: Energy of the second most energetic track in the event with X,Z
+/// * **SecondMaxTrackEnergy_X**: Energy of the second most energetic track in the event with X,Z
 /// coordinates.
-/// * **tckSecondMaxEnergy_Y**: Energy of the second most energetic track in the event with Y,Z
+/// * **SecondMaxTrackEnergy_Y**: Energy of the second most energetic track in the event with Y,Z
 /// coordinates.
 ///
 /// Track Length observables:
