@@ -41,11 +41,11 @@
 ///
 /// Maximum Second Track Energy observables:
 ///
-/// * **SecondTrackMaxEnergy**: Energy of the second most energetic track in the event with X,Y,Z
+/// * **tckSecondMaxEnergy**: Energy of the second most energetic track in the event with X,Y,Z
 /// coordinates.
-/// * **SecondTrackMaxEnergy_X**: Energy of the second most energetic track in the event with X,Z
+/// * **tckSecondMaxEnergy_X**: Energy of the second most energetic track in the event with X,Z
 /// coordinates.
-/// * **SecondTrackMaxEnergy_Y**: Energy of the second most energetic track in the event with Y,Z
+/// * **tckSecondMaxEnergy_Y**: Energy of the second most energetic track in the event with Y,Z
 /// coordinates.
 ///
 /// Track Length observables:
@@ -126,10 +126,24 @@
 /// * **MaxTrackSigmaY**: The cluster size in Y of the main most energetic track.
 /// * **MaxTrack_XZ_SigmaX**: The cluster size in X of the main most energetic track in XZ projection.
 /// * **MaxTrack_YZ_SigmaY**: The cluster size in Y of the main most energetic track in YZ projection.
-/// * **SecondTrackMaxSigmaX**: The cluster size in X of the second most energetic track.
-/// * **SecondTrackMaxSigmaY**: The cluster size in Y of the second most energetic track.
-/// * **SecondTrackMax_XZ_SigmaX**: The cluster size in X of the second most energetic track in XZ projection.
-/// * **SecondTrackMax_YZ_SigmaY**: The cluster size in Y of the second most energetic track in YZ projection.
+/// * **MaxTrackxySigmaBalanceGaus**: (gausSigma_x-gausSigma_y)/(gausSigma_x+gausSigma_y).
+/// * **SecondMaxTrackSigmaX**: The cluster size in X of the second most energetic track.
+/// * **SecondMaxTrackSigmaY**: The cluster size in Y of the second most energetic track.
+/// * **SecondMaxTrack_XZ_SigmaX**: The cluster size in X of the second most energetic track in XZ projection.
+/// * **SecondMaxTrack_YZ_SigmaY**: The cluster size in Y of the second most energetic track in YZ projection.
+/// * **SecondMaxTrackxySigmaBalanceGaus**: (secondGausSigma_x-secondGausSigma_y)/(secondGausSigma_x+secondGausSigma_y).
+///
+/// The gaussian sigma parameter measures the cluster size obtained from the fit to a gaussian of a given 
+/// track hits.
+///
+/// * **MaxTrackGaussSigmaX**: The cluster size in X of the main most energetic track.
+/// * **MaxTrackGaussSigmaY**: The cluster size in Y of the main most energetic track.
+/// * **MaxTrack_XZ_GaussSigmaX**: The cluster size in X of the main most energetic track in XZ projection.
+/// * **MaxTrack_YZ_GaussSigmaY**: The cluster size in Y of the main most energetic track in YZ projection.
+/// * **SecondMaxTrackGaussSigmaX**: The cluster size in X of the second most energetic track.
+/// * **SecondMaxTrackGaussSigmaY**: The cluster size in Y of the second most energetic track.
+/// * **SecondMaxTrack_XZ_GaussSigmaX**: The cluster size in X of the second most energetic track in XZ projection.
+/// * **SecondMaxTrack_YZ_GaussSigmaY**: The cluster size in Y of the second most energetic track in YZ projection.
 ///
 /// Time observables:
 ///
@@ -841,6 +855,9 @@ TRestEvent* TRestTrackAnalysisProcess::ProcessEvent(TRestEvent* evInput) {
     Double_t tckMaxXYZ_SigmaX = 0, tckMaxXYZ_SigmaY = 0;
     Double_t tckMaxXZ_SigmaX = 0;
     Double_t tckMaxYZ_SigmaY = 0;
+    Double_t tckMaxXYZ_gausSigmaX = 0, tckMaxXYZ_gausSigmaY = 0;
+    Double_t tckMaxXZ_gausSigmaX = 0;
+    Double_t tckMaxYZ_gausSigmaY = 0;
 
     if (fInputTrackEvent->GetMaxEnergyTrack()) {
         tckMaxEnXYZ = fInputTrackEvent->GetMaxEnergyTrack()->GetEnergy();
@@ -848,31 +865,41 @@ TRestEvent* TRestTrackAnalysisProcess::ProcessEvent(TRestEvent* evInput) {
         tckMaxXYZ_SigmaY = fInputTrackEvent->GetMaxEnergyTrack()->GetHits()->GetSigmaY();
         debug << "id: " << fInputTrackEvent->GetID() << " " << fInputTrackEvent->GetSubEventTag()
               << " tckMaxEnXYZ: " << tckMaxEnXYZ << endl;
+        tckMaxXYZ_gausSigmaX = fInputTrackEvent->GetMaxEnergyTrack()->GetHits()->GetGaussSigmaX();
+        tckMaxXYZ_gausSigmaY = fInputTrackEvent->GetMaxEnergyTrack()->GetHits()->GetGaussSigmaY();
     }
 
-    SetObservableValue((string) "MaxTrackEnergy", tckMaxEnXYZ);
     SetObservableValue((string) "MaxTrackSigmaX", tckMaxXYZ_SigmaX);
     SetObservableValue((string) "MaxTrackSigmaY", tckMaxXYZ_SigmaY);
+    SetObservableValue((string) "MaxTrackGaussSigmaX", tckMaxXYZ_gausSigmaX);
+    SetObservableValue((string) "MaxTrackGaussSigmaY", tckMaxXYZ_gausSigmaY);
 
     if (fInputTrackEvent->GetMaxEnergyTrack("X")) {
         tckMaxEnX = fInputTrackEvent->GetMaxEnergyTrack("X")->GetEnergy();
         tckMaxXZ_SigmaX = fInputTrackEvent->GetMaxEnergyTrack("X")->GetHits()->GetSigmaX();
+        tckMaxXZ_gausSigmaX = fInputTrackEvent->GetMaxEnergyTrack("X")->GetHits()->GetGaussSigmaX();
         debug << "id: " << fInputTrackEvent->GetID() << " " << fInputTrackEvent->GetSubEventTag()
               << " tckMaxEnX: " << tckMaxEnX << endl;
     }
 
     SetObservableValue((string) "MaxTrackEnergy_X", tckMaxEnX);
     SetObservableValue((string) "MaxTrack_XZ_SigmaX", tckMaxXZ_SigmaX);
+    SetObservableValue((string) "MaxTrack_XZ_GaussSigmaX", tckMaxXZ_gausSigmaX);
 
     if (fInputTrackEvent->GetMaxEnergyTrack("Y")) {
         tckMaxEnY = fInputTrackEvent->GetMaxEnergyTrack("Y")->GetEnergy();
         tckMaxYZ_SigmaY = fInputTrackEvent->GetMaxEnergyTrack("Y")->GetHits()->GetSigmaY();
+        tckMaxYZ_gausSigmaY = fInputTrackEvent->GetMaxEnergyTrack("Y")->GetHits()->GetGaussSigmaY();
         debug << "id: " << fInputTrackEvent->GetID() << " " << fInputTrackEvent->GetSubEventTag()
               << " tckMaxEnY: " << tckMaxEnY << endl;
     }
 
     SetObservableValue((string) "MaxTrackEnergy_Y", tckMaxEnY);
     SetObservableValue((string) "MaxTrack_YZ_SigmaY", tckMaxYZ_SigmaY);
+    SetObservableValue((string) "MaxTrack_YZ_GaussSigmaY", tckMaxYZ_gausSigmaY);
+
+	SetObservableValue("MaxTrackxy2SigmaGaus", (tckMaxXZ_gausSigmaX * tckMaxXZ_gausSigmaX) + (tckMaxYZ_gausSigmaY * tckMaxYZ_gausSigmaY));
+    SetObservableValue("MaxTrackxySigmaBalanceGaus", (tckMaxXZ_gausSigmaX - tckMaxYZ_gausSigmaY) / (tckMaxXZ_gausSigmaX + tckMaxYZ_gausSigmaY));
 
     Double_t tckMaxEnergy = tckMaxEnX + tckMaxEnY + tckMaxEnXYZ;
 
@@ -880,41 +907,58 @@ TRestEvent* TRestTrackAnalysisProcess::ProcessEvent(TRestEvent* evInput) {
 
     Double_t trackEnergyRatio = (totalEnergy - tckMaxEnergy) / totalEnergy;
 
+    SetObservableValue((string) "MaxTrackEnergy", tckMaxEnergy);
     SetObservableValue((string) "MaxTrackEnergyRatio", trackEnergyRatio);
     /* }}} */
 
-    /* {{{ Maximum Second Track Energy observable */
-    Double_t maxSecondTrackEnergy = 0;
+    /* {{{ Second Maximum Track Energy observable */
+    Double_t tckSecondMaxEnergy = 0;
     Double_t tckSecondMaxXYZ_SigmaX = 0, tckSecondMaxXYZ_SigmaY = 0;
+    Double_t tckSecondMaxXYZ_gausSigmaX = 0, tckSecondMaxXYZ_gausSigmaY = 0;
     if (fInputTrackEvent->GetSecondMaxEnergyTrack() != NULL) {
         tckSecondMaxXYZ_SigmaX = fInputTrackEvent->GetSecondMaxEnergyTrack()->GetHits()->GetSigmaX();
         tckSecondMaxXYZ_SigmaY = fInputTrackEvent->GetSecondMaxEnergyTrack()->GetHits()->GetSigmaY();
-        maxSecondTrackEnergy = fInputTrackEvent->GetSecondMaxEnergyTrack()->GetEnergy();
+        tckSecondMaxXYZ_gausSigmaX = fInputTrackEvent->GetSecondMaxEnergyTrack()->GetHits()->GetGaussSigmaX();
+        tckSecondMaxXYZ_gausSigmaY = fInputTrackEvent->GetSecondMaxEnergyTrack()->GetHits()->GetGaussSigmaY();
+        tckSecondMaxEnergy = fInputTrackEvent->GetSecondMaxEnergyTrack()->GetEnergy();
     }
 
-    Double_t maxSecondTrackEnergy_X = 0;
+    Double_t tckSecondMaxEnergy_X = 0;
     Double_t tckSecondMaxXZ_SigmaX = 0;
+    Double_t tckSecondMaxXZ_gausSigmaX = 0;
     if (fInputTrackEvent->GetSecondMaxEnergyTrack("X") != NULL) {
         tckSecondMaxXZ_SigmaX = fInputTrackEvent->GetSecondMaxEnergyTrack("X")->GetHits()->GetSigmaX();
-        maxSecondTrackEnergy_X = fInputTrackEvent->GetSecondMaxEnergyTrack("X")->GetEnergy();
+        tckSecondMaxEnergy_X = fInputTrackEvent->GetSecondMaxEnergyTrack("X")->GetEnergy();
+        tckSecondMaxXZ_gausSigmaX = fInputTrackEvent->GetSecondMaxEnergyTrack("X")->GetHits()->GetGaussSigmaX();
     }
 
-    Double_t maxSecondTrackEnergy_Y = 0;
+    Double_t tckSecondMaxEnergy_Y = 0;
     Double_t tckSecondMaxYZ_SigmaY = 0;
+    Double_t tckSecondMaxYZ_gausSigmaY = 0;
     if (fInputTrackEvent->GetSecondMaxEnergyTrack("Y") != NULL) {
         tckSecondMaxYZ_SigmaY = fInputTrackEvent->GetSecondMaxEnergyTrack("Y")->GetHits()->GetSigmaY();
-        maxSecondTrackEnergy_Y = fInputTrackEvent->GetSecondMaxEnergyTrack("Y")->GetEnergy();
+        tckSecondMaxEnergy_Y = fInputTrackEvent->GetSecondMaxEnergyTrack("Y")->GetEnergy();
+        tckSecondMaxYZ_gausSigmaY = fInputTrackEvent->GetSecondMaxEnergyTrack("Y")->GetHits()->GetGaussSigmaY();
     }
 
-    SetObservableValue((string) "SecondTrackMaxEnergy", maxSecondTrackEnergy);
-    SetObservableValue((string) "SecondTrackMaxSigmaX", tckSecondMaxXYZ_SigmaX);
-    SetObservableValue((string) "SecondTrackMaxSigmaY", tckSecondMaxXYZ_SigmaY);
+    Double_t trackSecondMaxEnergy = tckSecondMaxEnergy_X + tckSecondMaxEnergy_Y;
 
-    SetObservableValue((string) "SecondTrackMaxEnergy_X", maxSecondTrackEnergy_X);
-    SetObservableValue((string) "SecondTrackMax_XZ_SigmaX", tckSecondMaxXZ_SigmaX);
+    SetObservableValue((string) "SecondMaxTrackEnergy", trackSecondMaxEnergy);
+    SetObservableValue((string) "SecondMaxTrackSigmaX", tckSecondMaxXYZ_SigmaX);
+    SetObservableValue((string) "SecondMaxTrackSigmaY", tckSecondMaxXYZ_SigmaY);
+    SetObservableValue((string) "SecondMaxTrackGaussSigmaX", tckSecondMaxXYZ_gausSigmaX);
+    SetObservableValue((string) "SecondMaxTrackGaussSigmaY", tckSecondMaxXYZ_gausSigmaY);
 
-    SetObservableValue((string) "SecondTrackMaxEnergy_Y", maxSecondTrackEnergy_Y);
-    SetObservableValue((string) "SecondTrackMax_YZ_SigmaY", tckSecondMaxYZ_SigmaY);
+    SetObservableValue((string) "SecondMaxTrackEnergy_X", tckSecondMaxEnergy_X);
+    SetObservableValue((string) "SecondMaxTrack_XZ_SigmaX", tckSecondMaxXZ_SigmaX);
+    SetObservableValue((string) "SecondMaxTrack_XZ_GaussSigmaX", tckSecondMaxXZ_gausSigmaX);
+
+    SetObservableValue((string) "SecondMaxTrackEnergy_Y", tckSecondMaxEnergy_Y);
+    SetObservableValue((string) "SecondMaxTrack_YZ_SigmaY", tckSecondMaxYZ_SigmaY);
+    SetObservableValue((string) "SecondMaxTrack_YZ_GaussSigmaY", tckSecondMaxYZ_gausSigmaY);
+
+	SetObservableValue("SecondMaxTrackxy2SigmaGaus", (tckSecondMaxXZ_gausSigmaX * tckSecondMaxXZ_gausSigmaX) + (tckSecondMaxYZ_gausSigmaY * tckSecondMaxYZ_gausSigmaY));
+    SetObservableValue("SecondMaxTrackxySigmaBalanceGaus", (tckSecondMaxXZ_gausSigmaX - tckSecondMaxYZ_gausSigmaY) / (tckSecondMaxXZ_gausSigmaX + tckSecondMaxYZ_gausSigmaY));
     /* }}} */
 
     /* {{{ Track Length observables (MaxTrackLength_XX) */
