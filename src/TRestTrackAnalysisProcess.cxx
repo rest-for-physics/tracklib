@@ -21,7 +21,7 @@
  *************************************************************************/
 
 /////////////////////////////////////////////////////////////////////////////
-///g
+///
 /// ### Observables
 ///
 /// Energy and number of tracks:
@@ -1023,33 +1023,6 @@ TRestEvent* TRestTrackAnalysisProcess::ProcessEvent(TRestEvent* evInput) {
 
     SetObservableValue("SecondMaxTrackxy2SigmaGaus", (tckSecondMaxXZ_gausSigmaX * tckSecondMaxXZ_gausSigmaX) + (tckSecondMaxYZ_gausSigmaY * tckSecondMaxYZ_gausSigmaY));
     SetObservableValue("SecondMaxTrackxySigmaBalanceGaus", (tckSecondMaxXZ_gausSigmaX - tckSecondMaxYZ_gausSigmaY) / (tckSecondMaxXZ_gausSigmaX + tckSecondMaxYZ_gausSigmaY));
-
- /**   TRestHits hits2;
-    hitsXZ = fInputTrackEvent->GetSecondMaxEnergyTrack("X")->GetHits();
-    hitsYZ = fInputTrackEvent->GetSecondMaxEnergyTrack("Y")->GetHits();
-    hitsBoth = {hitsXZ, hitsYZ};
-
-    for(auto arg : hitsBoth){
-        if(arg == NULL) continue;
-        for(int n = 0; n < arg->GetNumberOfHits(); n++){
-            Double_t eDep = arg->GetEnergy(n);
-
-            Double_t x = arg->GetX(n);
-            Double_t y = arg->GetY(n);
-            Double_t z = arg->GetZ(n);
-
-            auto time = arg->GetTime(n);
-            auto type = arg->GetType(n);
-
-            hits2.AddHit(x, y, z, eDep, time, type);
-        }
-    }
-    tckSecondMaxTrack_XYZ_GaussSigmaZ = hits2.GetGaussSigmaZ();
-    tckSecondMaxTrack_XYZ_skewZ = hits2.GetSkewZ();
-    tckSecondMaxTrack_XYZ_skewXY = hits2.GetSkewXY();
-    SetObservableValue((string) "SecondMaxTrack_XYZ_GaussSigmaZ", tckSecondMaxTrack_XYZ_GaussSigmaZ);
-    SetObservableValue((string) "SecondMaxTrack_XYZ_skewZ", tckSecondMaxTrack_XYZ_skewZ);
-    SetObservableValue((string) "SecondMaxTrack_XYZ_skewXY", tckSecondMaxTrack_XYZ_skewXY); **/
     /* }}} */
 
     /* {{{ Track Length observables (MaxTrackLength_XX) */
