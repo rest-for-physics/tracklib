@@ -933,11 +933,17 @@ TRestEvent* TRestTrackAnalysisProcess::ProcessEvent(TRestEvent* evInput) {
     SetObservableValue((string) "MaxTrackEnergyRatio", trackEnergyRatio);
 
     TRestHits hits;
-    TRestHits* hitsXZ = fInputTrackEvent->GetMaxEnergyTrack("X")->GetHits();
-    TRestHits* hitsYZ = fInputTrackEvent->GetMaxEnergyTrack("Y")->GetHits();
+    TRestHits *hitsXZ = nullptr;
+    TRestHits *hitsYZ = nullptr;
+    if (fInputTrackEvent->GetMaxEnergyTrack("X"))
+        hitsXZ = fInputTrackEvent->GetMaxEnergyTrack("X")->GetHits();
+    if (fInputTrackEvent->GetMaxEnergyTrack("Y"))
+        hitsYZ = fInputTrackEvent->GetMaxEnergyTrack("Y")->GetHits();
+
     auto hitsBoth = {hitsXZ, hitsYZ};
 
     for(auto arg : hitsBoth){
+        if (arg == nullptr) continue;
         for(int n = 0; n < arg->GetNumberOfHits(); n++){
             // your code in the existing loop, replacing `hits` by `arg`
             Double_t eDep = arg->GetEnergy(n);
