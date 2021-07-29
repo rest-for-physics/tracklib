@@ -917,7 +917,7 @@ TRestEvent* TRestTrackAnalysisProcess::ProcessEvent(TRestEvent* evInput) {
     SetObservableValue((string) "MaxTrackEnergy_Y", tckMaxEnY);
     SetObservableValue((string) "MaxTrack_YZ_SigmaY", tckMaxYZ_SigmaY);
     SetObservableValue((string) "MaxTrack_YZ_SigmaZ", tckMaxYZ_SigmaY);
-    SetObservableValue((string) "MaxTrack_YZ_GaussSigmaY", tckMaxYZ_gausSigmaZ);
+    SetObservableValue((string) "MaxTrack_YZ_GaussSigmaY", tckMaxYZ_gausSigmaY);
     SetObservableValue((string) "MaxTrack_YZ_GaussSigmaZ", tckMaxYZ_gausSigmaZ_YZ);
 
     SetObservableValue("MaxTrackxy2SigmaGaus", (tckMaxXZ_gausSigmaX * tckMaxXZ_gausSigmaX) + (tckMaxYZ_gausSigmaY * tckMaxYZ_gausSigmaY));
