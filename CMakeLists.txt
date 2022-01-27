@@ -11,3 +11,7 @@ file(GLOB_RECURSE addon_src
 set(addon_inc ${CMAKE_CURRENT_SOURCE_DIR}/tsp/inc)
 
 COMPILELIB("")
+
+file(GLOB_RECURSE MAC "${CMAKE_CURRENT_SOURCE_DIR}/macros/*")
+INSTALL(FILES ${MAC} DESTINATION ./macros/track)
+
