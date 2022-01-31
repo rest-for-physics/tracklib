@@ -87,6 +87,8 @@ class TRestTrackEvent : public TRestEvent {
 
     TPad* DrawEvent(TString option = "");
 
+    TPad* DrawEvent ( const TVector3 &origin, const TVector3 &end, const TVector3 &max, const TVector3 &min, const TVector3& nBins);
+
     TPad* GetPad() { return fPad; }
 
     // Setters
