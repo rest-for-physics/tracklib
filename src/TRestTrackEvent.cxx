@@ -23,8 +23,6 @@
 #include "TRestRun.h"
 #include "TRestTools.h"
 
-#include "TH2F.h"
-
 using namespace std;
 
 ClassImp(TRestTrackEvent);
@@ -43,6 +41,8 @@ TRestTrackEvent::TRestTrackEvent() {
     fXYZTrack = NULL;
     fPad = NULL;
     fLevels = -1;
+    fXZHits = NULL;
+    fYZHits = NULL;
 
     fPrintHitsWarning = true;
 }
@@ -360,55 +360,36 @@ void TRestTrackEvent::PrintEvent(Bool_t fullInfo) {
 }
 
 
-TPad* TRestTrackEvent::DrawEvent ( const TVector3 &origin, const TVector3 &end, const TVector3 &max, const TVector3 &min, const TVector3& nBins){
+TPad* TRestTrackEvent::DrawEvent ( const TVector3 &max, const TVector3 &min, const TVector3& nBins){
 
   if(fPad)delete fPad;
+  if(fXZHits) delete fXZHits;
+  if(fYZHits) delete fYZHits;
 
-  fPad = new TPad("TrackEvent", " ", 0, 0, 1, 1);
-  fPad->Divide(2);
-  fPad->Draw();
-
-  TH2F *trackX = new TH2F("XZ","XZ",(int)nBins.X(),min.X(),max.X(),(int)nBins.Z(), min.Z(), max.Z());
-  TH2F *trackY = new TH2F("YZ","YZ",(int)nBins.Y(),min.Y(),max.Y(),(int)nBins.Z(), min.Z(), max.Z());
+  fXZHits = new TH2F("TXZ","TXZ",(int)nBins.X(),min.X(),max.X(),(int)nBins.Z(), min.Z(), max.Z());
+  fYZHits = new TH2F("TYZ","TYZ",(int)nBins.Y(),min.Y(),max.Y(),(int)nBins.Z(), min.Z(), max.Z());
 
     for (int t = 0; t < GetNumberOfTracks(); t++) {
       TRestTrack* tck = GetTrack(t);
         TRestVolumeHits* hits = tck->GetVolumeHits();
            for(int i=0; i<hits->GetNumberOfHits();i++){
                if(tck->isXZ()){
-                 trackX->Fill(hits->GetX(i),hits->GetZ(i),hits->GetEnergy(i));
+                 fXZHits->Fill(hits->GetX(i),hits->GetZ(i),hits->GetEnergy(i));
                } else if (tck->isYZ()){
-                 trackY->Fill(hits->GetY(i),hits->GetZ(i),hits->GetEnergy(i));
+                 fYZHits->Fill(hits->GetY(i),hits->GetZ(i),hits->GetEnergy(i));
                }
            }
     }
 
-  TGraph *originXZGr = new TGraph();
-  originXZGr->SetPoint(0,origin.X(),origin.Z());
-  TGraph *originYZGr = new TGraph();
-  originYZGr->SetPoint(0,origin.Y(),origin.Z());
-  TGraph *endXZGr = new TGraph();
-  endXZGr->SetPoint(0,end.X(),end.Z());
-  TGraph *endYZGr = new TGraph();
-  endYZGr->SetPoint(0,end.Y(),end.Z());
+fPad = new TPad("TrackEvent", " ", 0, 0, 1, 1);
+  fPad->Divide(2);
+  fPad->Draw();
 
   fPad->cd(1);
-  trackX->Draw("COLZ");
-  originXZGr->SetMarkerColor(kRed);
-  originXZGr->SetMarkerStyle(20);
-  originXZGr->Draw("LP");
-  endXZGr->SetMarkerColor(kBlack);
-  endXZGr->SetMarkerStyle(20);
-  endXZGr->Draw("LP");
+  fXZHits->Draw("COLZ");
   
   fPad->cd(2);
-  trackY->Draw("COLZ");
-  originYZGr->SetMarkerColor(kRed);
-  originYZGr->SetMarkerStyle(20);
-  originYZGr->Draw("LP");
-  endYZGr->SetMarkerColor(kBlack);
-  endYZGr->SetMarkerStyle(20);
-  endYZGr->Draw("LP");
+  fYZHits->Draw("COLZ");
 
   return fPad;
 }

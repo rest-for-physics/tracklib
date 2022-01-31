@@ -46,6 +46,27 @@ TPad *DrawPulses ( TRestRawSignalEvent *rawSignalEvent, TRestDetectorReadout *fR
 
 }
 
+void DrawOriginEnd(TPad *pad, TGraph *originXZGr, TGraph *originYZGr,TGraph *endXZGr,TGraph *endYZGr){
+
+  pad->cd(1);
+  originXZGr->SetMarkerColor(kRed);
+  originXZGr->SetMarkerStyle(20);
+  originXZGr->Draw("LP");
+  endXZGr->SetMarkerColor(kBlack);
+  endXZGr->SetMarkerStyle(20);
+  endXZGr->Draw("LP");
+
+  pad->cd(2);
+  originYZGr->SetMarkerColor(kRed);
+  originYZGr->SetMarkerStyle(20);
+  originYZGr->Draw("LP");
+  endYZGr->SetMarkerColor(kBlack);
+  endYZGr->SetMarkerStyle(20);
+  endYZGr->Draw("LP");
+
+}
+
+
 void UpdateRate(const double& currentTimeEv, double& oldTime, const int& currentEventCount, int& oldEventCount, int& rateGraphCounter, TGraphErrors* rateGraph, bool lastPoint = false) {
 
   if(!lastPoint)
@@ -84,8 +105,6 @@ int REST_Track_PlotAlphaAna(const std::string &fileName){
   std::string planeStr ="";
 
   TRestDetectorReadout *fReadout = (TRestDetectorReadout* ) run->GetMetadataClass("TRestDetectorReadout");
-
-  
 
   double xmin=0,xmax=0,ymin=0,ymax=0;
     if(fReadout) {
@@ -147,6 +166,7 @@ int REST_Track_PlotAlphaAna(const std::string &fileName){
   TGraphErrors* rateGraph = new TGraphErrors();
 
   bool interactive = true;
+  TGraph * originXZGr=nullptr,* originYZGr=nullptr,* endXZGr=nullptr,* endYZGr=nullptr;
 
     for(int i=0;i<run->GetEntries();i++){
       run->GetEntry(i);
@@ -178,17 +198,33 @@ int REST_Track_PlotAlphaAna(const std::string &fileName){
             std::cout<< n <<": "<<v<<"; ";
           }
         std::cout<<std::endl;
+
         TVector3 end = en.data();
-
-        TVector3 max,min,nBins;
-
+        
+        if(originXZGr) delete originXZGr;
+        if(originYZGr) delete originYZGr;
+        if(endXZGr) delete endXZGr;
+        if(endYZGr) delete endYZGr;
+        
+        originXZGr = new TGraph();
+        originXZGr->SetPoint(0,origin.X(),origin.Z());
+        originYZGr = new TGraph();
+        originYZGr->SetPoint(0,origin.Y(),origin.Z());
+        endXZGr = new TGraph();
+        endXZGr->SetPoint(0,end.X(),end.Z());
+        endYZGr = new TGraph();
+        endYZGr->SetPoint(0,end.Y(),end.Z());
+        
         hitmapCanvas->cd();
+        TPad *hitsPad = static_cast<TRestDetectorHitsEvent *>(hitsEvent)->DrawEvent("hist(COLZ)");
+        TVector3 max,min,nBins;
         static_cast<TRestDetectorHitsEvent *>(hitsEvent)->GetBoundaries(max,min,nBins);
-        static_cast<TRestDetectorHitsEvent *>(hitsEvent)->DrawEvent(origin,end,max,min,nBins);
+        DrawOriginEnd(hitsPad, originXZGr, originYZGr,endXZGr,endYZGr);
         hitmapCanvas->Update();
 
         projectionCanvas->cd();
-        static_cast<TRestTrackEvent *>(trackEvent)->DrawEvent(origin,end,max,min,nBins);
+        TPad *trackPad =static_cast<TRestTrackEvent *>(trackEvent)->DrawEvent(max,min,nBins);
+        DrawOriginEnd(trackPad, originXZGr, originYZGr,endXZGr,endYZGr);
         projectionCanvas->Update();
 
         signalCanvas->cd();
