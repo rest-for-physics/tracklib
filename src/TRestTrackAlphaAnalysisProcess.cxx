@@ -1,12 +1,83 @@
-///______________________________________________________________________________
-///______________________________________________________________________________
+/*************************************************************************
+ * This file is part of the REST software framework.                     *
+ *                                                                       *
+ * Copyright (C) 2016 GIFNA/TREX (University of Zaragoza)                *
+ * For more information see http://gifna.unizar.es/trex                  *
+ *                                                                       *
+ * REST is free software: you can redistribute it and/or modify          *
+ * it under the terms of the GNU General Public License as published by  *
+ * the Free Software Foundation, either version 3 of the License, or     *
+ * (at your option) any later version.                                   *
+ *                                                                       *
+ * REST is distributed in the hope that it will be useful,               *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the          *
+ * GNU General Public License for more details.                          *
+ *                                                                       *
+ * You should have a copy of the GNU General Public License along with   *
+ * REST in $REST_PATH/LICENSE.                                           *
+ * If not, see http://www.gnu.org/licenses/.                             *
+ * For the list of contributors see $REST_PATH/CREDITS.                  *
+ *************************************************************************/
+
+//////////////////////////////////////////////////////////////////////////
+/// The TRestTrackAlphaAnalysis process is meant to analyze alpha tracks,
+/// it performs the average of the track in XZ and YZ towards the longitudinal
+/// direction obtaning one point per Z bin. It assumes that only one alpha track
+/// is present, using the parameter fTrackBalance to define the minimun energy
+/// fTrackBalance*totalEnergy of the total XZ or YZ energy to assume a single
+/// track event, if the condition is not fulfilled the event is rejected.
+/// Several parameters of the alphaTrack are extracted such as origin, end,
+/// length, energy and downwards (bool).
+/// The different parameters required by this process are:
+/// * fTrackBalance : Minimum energy balance to consider single track event,
+/// (see above for more details.)
 ///
+/// ### Observables
 ///
-///             RESTSoft : Software for Rare Event Searches with TPCs
+/// * **originX**: Track origin in the X cordinate
+/// * **originY**: Track origin in the Y cordinate
+/// * **originZ**: Track origin in the Z cordinate
+/// * **endX**: Track end in the X cordinate
+/// * **endY**: Track end in the Y cordinate
+/// * **endZ**: Track end in the Z cordinate
+/// * **length**: Track length in mm
+/// * **angle**: Track polar angle in radians
+/// * **downwards**: (bool) true if the track direction is downwards, false otherwise
+/// * **totalEnergy**: Energy of the track
 ///
-///             TRestTrackAlphaAnalysisProcess.cxx
+/// Metadata example for this process:
+/// \code
+///            <addProcess type="TRestTrackAlphaAnalysisProcess" name="alphaTrackAna" value="ON" verboseLevel="silent" >
+///                   <parameter name="trackBalance" value="0.75" />
+///                   <observable name="originX" value="ON" />
+///                   <observable name="originY" value="ON" />
+///                   <observable name="originZ" value="ON" />
+///                   <observable name="endX" value="ON" />
+///                   <observable name="endY" value="ON" />
+///                   <observable name="endZ" value="ON" />
+///                   <observable name="length" value="ON" />
+///                   <observable name="angle" value="ON" />
+///                   <observable name="downwards" type="bool" value="ON" />
+///                   <observable name="totalEnergy" value="ON" />
+/// 		</addProcess>
+/// \endcode
 ///
-///_______________________________________________________________________________
+///--------------------------------------------------------------------------
+///
+/// RESTsoft - Software for Rare Event Searches with TPCs
+///
+/// History of developments:
+///
+/// 2022-January First implementation
+///
+///              JuanAn Garcia
+///
+/// \class      TRestRawZeroSuppresionProcess
+/// 
+///
+/// <hr>
+///
 
 #include "TRestTrackAlphaAnalysisProcess.h"
 using namespace std;
@@ -17,19 +88,9 @@ ClassImp(TRestTrackAlphaAnalysisProcess);
 TRestTrackAlphaAnalysisProcess::TRestTrackAlphaAnalysisProcess() { Initialize(); }
 
 //______________________________________________________________________________
-TRestTrackAlphaAnalysisProcess::TRestTrackAlphaAnalysisProcess(char* cfgFileName) {
-    Initialize();
-
-    if (LoadConfigFromFile(cfgFileName)) LoadDefaultConfig();
-    PrintMetadata();
-}
-
-//______________________________________________________________________________
 TRestTrackAlphaAnalysisProcess::~TRestTrackAlphaAnalysisProcess() {
   delete fOutTrackEvent;
 }
-
-void TRestTrackAlphaAnalysisProcess::LoadDefaultConfig() { SetTitle("Default config"); }
 
 //______________________________________________________________________________
 void TRestTrackAlphaAnalysisProcess::Initialize() {
@@ -38,10 +99,6 @@ void TRestTrackAlphaAnalysisProcess::Initialize() {
 
     fTrackEvent = nullptr;
     fOutTrackEvent = new TRestTrackEvent();
-}
-
-void TRestTrackAlphaAnalysisProcess::LoadConfig(string cfgFilename) {
-    if (LoadConfigFromFile(cfgFilename)) LoadDefaultConfig();
 }
 
 //______________________________________________________________________________
@@ -275,7 +332,3 @@ void TRestTrackAlphaAnalysisProcess::EndProcess() {
     // TRestEventProcess::EndProcess();
 }
 
-//______________________________________________________________________________
-void TRestTrackAlphaAnalysisProcess::InitFromConfigFile() {
-  fTrackBalance = StringToDouble(GetParameter("trackBalance", "0.65"));
-}
