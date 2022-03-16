@@ -20,33 +20,15 @@
  * For the list of contributors see $REST_PATH/CREDITS.                  *
  *************************************************************************/
 
-#ifndef RestCore_TRestTrackAlphaAnalysisProcess
-#define RestCore_TRestTrackAlphaAnalysisProcess
+#ifndef RestCore_TRestTrackLineAnalysisProcess
+#define RestCore_TRestTrackLineAnalysisProcess
 
 #include <TRestTrackEvent.h>
 
 #include "TRestEventProcess.h"
 
-//Help class for data handling
-class alphaTrackHit{
-  public:
-     double xy;
-     double z;
-     double en;
-
-  //Sort data structure by time
-  static bool sortByTime (const alphaTrackHit &h1, const alphaTrackHit &h2 ){
-    return h1.z > h2.z;
-  }
-
-  //Sort data structure by x or y coordinate
-  static bool sortByPos (const alphaTrackHit &h1, const alphaTrackHit &h2 ){
-    return h1.xy > h2.xy;
-  }
-};
-
 //! A process to analyze alpha tracks
-class TRestTrackAlphaAnalysisProcess : public TRestEventProcess {
+class TRestTrackLineAnalysisProcess : public TRestEventProcess {
    private:
    
 #ifndef __CINT__
@@ -61,7 +43,7 @@ class TRestTrackAlphaAnalysisProcess : public TRestEventProcess {
    protected:
 
    // A parameter to define the track balance, otherwise the eent is rejected 
-   Double_t fTrackBalance = 0.65; 
+   Double_t fTrackBalance = 0.65;
 
    public:
     any GetInputEvent() { return fTrackEvent; }
@@ -77,18 +59,17 @@ class TRestTrackAlphaAnalysisProcess : public TRestEventProcess {
         EndPrintProcess();
     }
 
-    // This function performs the track smoothing in the Z axis
-    std::vector<alphaTrackHit> smoothTrack(std::vector <alphaTrackHit> &hits);
+    // This function retreive the origin and the end  
+    void GetOriginEnd(TRestVolumeHits &hits, TVector3 &orig, TVector3 &end);
 
-    TString GetProcessName() { return (TString) "alphaTrackAna"; }
+    TString GetProcessName() { return (TString) "trackLineAna"; }
 
     // Constructor
-    TRestTrackAlphaAnalysisProcess();
-    TRestTrackAlphaAnalysisProcess(char* cfgFileName);
+    TRestTrackLineAnalysisProcess();
     // Destructor
-    ~TRestTrackAlphaAnalysisProcess();
+    ~TRestTrackLineAnalysisProcess();
 
-    ClassDef(TRestTrackAlphaAnalysisProcess, 1);
-                   // Template for a REST "event process" class inherited from TRestEventProcess
+    ClassDef(TRestTrackLineAnalysisProcess, 1);
+
 };
 #endif

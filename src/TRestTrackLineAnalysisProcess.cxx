@@ -21,9 +21,11 @@
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
-/// The TRestTrackAlphaAnalysis process is meant to analyze alpha tracks,
-/// it performs the average of the track in XZ and YZ towards the longitudinal
-/// direction obtaning one point per Z bin. It assumes that only one alpha track
+/// The TRestTrackLineAnalysis process is meant to analyze lienar tracks,
+/// such as alpha tracks. It should retreive the information after performing
+/// TRestTrackLinearization process, for the time being only works when
+/// XZ and YZ are present in the readout. Moreover, the hits have to be stored
+/// following the minimum path. It assumes that only one alpha track
 /// is present, using the parameter fTrackBalance to define the minimun energy
 /// fTrackBalance*totalEnergy of the total XZ or YZ energy to assume a single
 /// track event, if the condition is not fulfilled the event is rejected.
@@ -48,7 +50,7 @@
 ///
 /// Metadata example for this process:
 /// \code
-///            <addProcess type="TRestTrackAlphaAnalysisProcess" name="alphaTrackAna" value="ON" verboseLevel="silent" >
+///            <addProcess type="TRestTrackLineAnalysisProcess" name="alphaTrackAna" value="ON" verboseLevel="silent" >
 ///                   <parameter name="trackBalance" value="0.75" />
 ///                   <observable name="originX" value="ON" />
 ///                   <observable name="originY" value="ON" />
@@ -73,27 +75,27 @@
 ///
 ///              JuanAn Garcia
 ///
-/// \class      TRestRawZeroSuppresionProcess
 /// 
 ///
 /// <hr>
 ///
 
-#include "TRestTrackAlphaAnalysisProcess.h"
+#include "TRestTrackLineAnalysisProcess.h"
+#include "TRestTrackReductionProcess.h"
 using namespace std;
 
-ClassImp(TRestTrackAlphaAnalysisProcess);
+ClassImp(TRestTrackLineAnalysisProcess);
 
 //______________________________________________________________________________
-TRestTrackAlphaAnalysisProcess::TRestTrackAlphaAnalysisProcess() { Initialize(); }
+TRestTrackLineAnalysisProcess::TRestTrackLineAnalysisProcess() { Initialize(); }
 
 //______________________________________________________________________________
-TRestTrackAlphaAnalysisProcess::~TRestTrackAlphaAnalysisProcess() {
+TRestTrackLineAnalysisProcess::~TRestTrackLineAnalysisProcess() {
   delete fOutTrackEvent;
 }
 
 //______________________________________________________________________________
-void TRestTrackAlphaAnalysisProcess::Initialize() {
+void TRestTrackLineAnalysisProcess::Initialize() {
     SetSectionName(this->ClassName());
     SetLibraryVersion(LIBRARY_VERSION);
 
@@ -102,21 +104,21 @@ void TRestTrackAlphaAnalysisProcess::Initialize() {
 }
 
 //______________________________________________________________________________
-void TRestTrackAlphaAnalysisProcess::InitProcess() {
-  TRestEventProcess::ReadObservables();
-}
+void TRestTrackLineAnalysisProcess::InitProcess() { }
 
 //______________________________________________________________________________
-TRestEvent* TRestTrackAlphaAnalysisProcess::ProcessEvent(TRestEvent* evInput) {
+TRestEvent* TRestTrackLineAnalysisProcess::ProcessEvent(TRestEvent* evInput) {
 
     fTrackEvent = (TRestTrackEvent*)evInput;
     fOutTrackEvent->SetEventInfo(fTrackEvent);
 
-    Int_t nTracks = fTrackEvent->GetNumberOfTracks();
-    Int_t nTotalHits = fTrackEvent->GetTotalHits();
+   for (int t = 0; t < fTrackEvent->GetNumberOfTracks(); t++)
+     fOutTrackEvent->AddTrack(fTrackEvent->GetTrack(t));
 
     Int_t nTracksX = fTrackEvent->GetNumberOfTracks("X");
     Int_t nTracksY = fTrackEvent->GetNumberOfTracks("Y");
+
+    debug<<"Ntracks X "<<nTracksX<<" Y "<<nTracksY<<" "<<fTrackEvent->GetNumberOfTracks()<<endl;
 
     //No tracks in X or Y nothing to do
     if(nTracksX ==0 || nTracksY==0)return nullptr;
@@ -126,6 +128,7 @@ TRestEvent* TRestTrackAlphaAnalysisProcess::ProcessEvent(TRestEvent* evInput) {
     Int_t maxIndexX = -1, maxIndexY=-1;
 
     for (int t = 0; t < fTrackEvent->GetNumberOfTracks(); t++) {
+        if (!fTrackEvent->isTopLevel(t)) continue;
         TRestTrack* track = fTrackEvent->GetTrack(t);
         Double_t trackEn = track->GetEnergy();
         if(track->isXZ()) {
@@ -145,185 +148,104 @@ TRestEvent* TRestTrackAlphaAnalysisProcess::ProcessEvent(TRestEvent* evInput) {
 
    if(maxTrackEnergyX < totEnergyX*fTrackBalance || maxTrackEnergyY < totEnergyY*fTrackBalance)return nullptr;
 
-   Double_t trackEnergy = maxTrackEnergyX + maxTrackEnergyY;
+   debug<<"MaxIndex X "<<maxIndexX<<" Y "<<maxIndexY<<endl;
+
+   if(maxIndexX == -1 || maxIndexY == -1 )return nullptr;
 
    TRestTrack* tckX = fTrackEvent->GetTrack(maxIndexX);
    TRestTrack* tckY = fTrackEvent->GetTrack(maxIndexY);
 
-   debug<<" Track Energy "<<trackEnergy<<" "<<endl;
+   Double_t trackEnergy = maxTrackEnergyX + maxTrackEnergyY;
 
-   std::vector<std::pair<double,double> > posZEn;
+   TRestVolumeHits vHitsX = (TRestVolumeHits) *(tckX->GetVolumeHits());
+   TRestVolumeHits vHitsY = (TRestVolumeHits) *(tckY->GetVolumeHits());
 
-   TRestVolumeHits* hitsX = tckX->GetVolumeHits();
-   std::vector<alphaTrackHit> hitArrayX;
-     for(int i=0; i<hitsX->GetNumberOfHits();i++){
-       alphaTrackHit hit;
-       hit.xy= hitsX->GetX(i);
-       hit.z= hitsX->GetZ(i);
-       hit.en = hitsX->GetEnergy(i);
-       hitArrayX.emplace_back(hit);
-       posZEn.emplace_back(std::make_pair(hit.z,hit.en));
-     }
+   TVector3 origX,endX;
+   GetOriginEnd(vHitsX, origX, endX);
+   TVector3 origY,endY;
+   GetOriginEnd(vHitsY, origY, endY);
 
-   TRestVolumeHits* hitsY = tckY->GetVolumeHits();
-   std::vector<alphaTrackHit> hitArrayY;
-     for(int i=0; i<hitsY->GetNumberOfHits();i++){
-       alphaTrackHit hit;
-       hit.xy= hitsY->GetY(i);
-       hit.z= hitsY->GetZ(i);
-       hit.en = hitsY->GetEnergy(i);
-       hitArrayY.emplace_back(hit);
-       posZEn.emplace_back(std::make_pair(hit.z,hit.en));
-     }
+   double originZ = (origX.Z() + origY.Z())/2.;
+   double endZ = (endX.Z() + endY.Z())/2.;
 
-   std::sort(posZEn.begin(),posZEn.end());
+   debug<<"Origin: "<<origX.X()<<" y: "<<origY.Y()<<" z: "<<originZ<<endl;
+   debug<<"End : "<<endX.X()<<" y: "<<endY.Y()<<" z: "<<endZ<<endl;
 
-   double integ=0;
-   double minDiff = 1E10;
-   double halfIntZ = 0;
-   for(auto p : posZEn){
-     integ+= p.second;
-     double diff = std::abs (integ - trackEnergy/2.);
-     if(diff <minDiff ){halfIntZ=p.first;minDiff =diff; }
-   }
+   double dX = (origX.X() - endX.X());
+   double dY = (origY.Y() - endY.Y());
+   double dZ = (originZ - endZ);
+   Double_t length = TMath::Sqrt(dX*dX+dY*dY+dZ*dZ);
+   Double_t angle = TMath::ACos(dZ/length);
+   bool downwards = dZ >0;
 
-  debug<<"Min diff "<<minDiff<<" posZ "<<halfIntZ<<endl;
+   debug<<"Track length "<<length<<" angle: "<<angle<<endl;
 
-   double originX, originY, originZ;
-   double endX, endY, endZ;
-   Bool_t downwards;
+   // A new value for each observable is added
+   SetObservableValue("originX", origX.X());
+   SetObservableValue("originY", origY.Y());
+   SetObservableValue("originZ", originZ);
+   SetObservableValue("endX", endX.X());
+   SetObservableValue("endY", endY.Y());
+   SetObservableValue("endZ", endZ);
+   SetObservableValue("length", length);
+   SetObservableValue("angle", angle);
+   SetObservableValue("downwards", downwards);
+   SetObservableValue("totalEnergy", trackEnergy);
 
-     if( std::abs(halfIntZ - posZEn.back().first) > std::abs (halfIntZ - posZEn.front().first) ){ //Direction is downwards
-       originZ = posZEn.back().first;
-       endZ = posZEn.front().first;
-       downwards=true;
-     } else {//Direction is upwards
-       originZ = posZEn.front().first;
-       endZ = posZEn.back().first;
-       downwards=false;
-     }
+   TRestTrack newTrackX;
+   newTrackX.SetVolumeHits(vHitsX );
+   newTrackX.SetParentID(tckX->GetTrackID());
+   newTrackX.SetTrackID(fOutTrackEvent->GetNumberOfTracks() + 1);
+   fOutTrackEvent->AddTrack(&newTrackX);
 
-   downwards ? debug<<"Downwards "<<endl :debug<<"Upwards "<<endl;
+   TRestTrack newTrackY;
+   newTrackY.SetVolumeHits(vHitsY );
+   newTrackY.SetParentID(tckY->GetTrackID());
+   newTrackY.SetTrackID(fOutTrackEvent->GetNumberOfTracks() + 1);
+   fOutTrackEvent->AddTrack(&newTrackY);
 
-   auto smtTckX = smoothTrack(hitArrayX);
-   auto smtTckY = smoothTrack(hitArrayY);
-
-   if(smtTckX.empty() || smtTckY.empty())return nullptr;
-
-   TRestVolumeHits volHit;
-     for(auto tck : smtTckX){
-       const Double_t x = tck.xy;
-       const Double_t y = 0;
-       const Double_t z = tck.z;
-       const Double_t en = tck.en;
-       TVector3 pos(x, y, z);
-       TVector3 sigma(0., 0., 0.);
-       volHit.AddHit(pos, en, 0, REST_HitType::XZ, sigma);
-     }
-     TRestTrack *trackXZ = new TRestTrack();
-     trackXZ->SetParentID(0);
-     trackXZ->SetTrackID(1);
-     trackXZ->SetVolumeHits(volHit);
-     fOutTrackEvent->AddTrack(trackXZ);
-     fOutTrackEvent->SetNumberOfXTracks(1);
-     volHit.RemoveHits();
-     delete trackXZ;
-
-     for(auto tck : smtTckY){
-       const Double_t x = 0;
-       const Double_t y = tck.xy;
-       const Double_t z = tck.z;
-       const Double_t en = tck.en;
-       TVector3 pos(x, y, z);
-       TVector3 sigma(0., 0., 0.);
-       volHit.AddHit(pos, en, 0, REST_HitType::YZ, sigma);
-     }
-     TRestTrack *trackYZ = new TRestTrack();
-     trackYZ->SetParentID(0);
-     trackYZ->SetTrackID(2);
-     trackYZ->SetVolumeHits(volHit);
-     fOutTrackEvent->AddTrack(trackYZ);
-     fOutTrackEvent->SetNumberOfYTracks(1);
-     volHit.RemoveHits();
-     delete trackYZ;
-
-
-     if ( std::abs(smtTckX.front().z - originZ) >= std::abs(smtTckX.back().z - originZ)  ){
-       originX = smtTckX.back().xy;
-       endX = smtTckX.front().xy;
-     } else {
-       endX = smtTckX.back().xy;
-       originX = smtTckX.front().xy;
-     }
-
-     if ( std::abs(smtTckY.front().z - originZ) >= std::abs(smtTckY.back().z - originZ)  ){
-       originY = smtTckY.back().xy;
-       endY = smtTckY.front().xy;
-     } else {
-       endY = smtTckY.back().xy;
-       originY = smtTckY.front().xy;
-     }
-
-    debug<<"Origin x: "<<originX<<" y: "<<originY<<" z: "<<originZ<<endl;
-    debug<<"End x: "<<endX<<" y: "<<endY<<" z: "<<endZ<<endl;
-
-    double dX = (originX - endX);
-    double dY = (originY - endY);
-    double dZ = (originZ - endZ);
-    Double_t length = TMath::Sqrt(dX*dX+dY*dY+dZ*dZ);
-    Double_t angle = TMath::ACos(dZ/length);
-
-    debug<<"Track length "<<length<<" angle: "<<angle<<endl;
-
-    // A new value for each observable is added
-    SetObservableValue("originX", originX);
-    SetObservableValue("originY", originY);
-    SetObservableValue("originZ", originZ);
-    SetObservableValue("endX", endX);
-    SetObservableValue("endY", endY);
-    SetObservableValue("endZ", endZ);
-    SetObservableValue("length", length);
-    SetObservableValue("angle", angle);
-    SetObservableValue("downwards", downwards);
-    SetObservableValue("totalEnergy", trackEnergy);
-
-    return fOutTrackEvent;
+   fOutTrackEvent->SetLevels();
+   return fOutTrackEvent;
 }
 
-std::vector<alphaTrackHit> TRestTrackAlphaAnalysisProcess::smoothTrack(std::vector <alphaTrackHit> &hits){
+void TRestTrackLineAnalysisProcess::GetOriginEnd(TRestVolumeHits &hits, TVector3 &orig, TVector3 &end){
 
-  std::vector <alphaTrackHit> res;
-  std::sort(hits.begin(),hits.end(),alphaTrackHit::sortByTime);
-  int i=0;
-  const int size = hits.size();
-  debug<<"Track size "<<size<<endl;
-    while(i<size){
-      double posXY=0;
-      double en=0;
-      alphaTrackHit hit = hits[i];
-      double posZ = hits[i].z;
-      int nPoints=0;
-      while(posZ == hits[i].z && i<size){
-        posXY += hits[i].xy*hits[i].en;
-        en += hits[i].en;
-        i++;
-        nPoints++;
-      }
-        if(en>0 && nPoints >1){
-          hit.xy = posXY/en;
-          hit.en = en;
-          res.emplace_back(hit);
-        }
+  const int nHits = hits.GetNumberOfHits();
+  int maxBin;
+  double maxEn=0;
 
-    }
+   for(int i=0;i<nHits;i++){
+     double en = hits.GetEnergy(i);
+       if(en> maxEn){
+         maxEn=en;
+         maxBin=i;
+       }
+   }
 
-  debug<<"Res size "<<res.size()<<endl;
+  TVector3 maxPos = hits.GetPosition(maxBin);
+  
+  TVector3 pos0 = hits.GetPosition(0);
+  TVector3 posE = hits.GetPosition(nHits-1);
 
-  return res;
+  const double maxToFirst = (pos0-maxPos).Mag();
+  const double maxToLast = (posE-maxPos).Mag();
+
+  debug<<"Max index "<<maxBin <<" Pos to first "<<maxToFirst<<" last "<<maxToLast<<endl;
+   if( maxToFirst < maxToLast ){
+     end = pos0;
+     orig = posE;
+   } else {
+     orig = pos0;
+     end = posE;
+   }
+
+  debug<<"Origin "<<orig.X()<<" "<<orig.Y()<<" "<<orig.Z()<<endl;
+  debug<<"End    "<< end.X()<<" "<< end.Y()<<" "<< end.Z()<<endl;
+
 }
 
 //______________________________________________________________________________
-void TRestTrackAlphaAnalysisProcess::EndProcess() {
+void TRestTrackLineAnalysisProcess::EndProcess() {
     // Function to be executed once at the end of the process
     // (after all events have been processed)
 
