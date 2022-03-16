@@ -11,8 +11,6 @@
 #include "TRestTrackPathMinimizationProcess.h"
 using namespace std;
 
-const int Nmax = 30;
-
 ClassImp(TRestTrackPathMinimizationProcess)
     //______________________________________________________________________________
     TRestTrackPathMinimizationProcess::TRestTrackPathMinimizationProcess() {
@@ -20,20 +18,7 @@ ClassImp(TRestTrackPathMinimizationProcess)
 }
 
 //______________________________________________________________________________
-TRestTrackPathMinimizationProcess::TRestTrackPathMinimizationProcess(char* cfgFileName) {
-    Initialize();
-
-    if (LoadConfigFromFile(cfgFileName) == -1) LoadDefaultConfig();
-    PrintMetadata();
-}
-
-//______________________________________________________________________________
 TRestTrackPathMinimizationProcess::~TRestTrackPathMinimizationProcess() { delete fOutputTrackEvent; }
-
-void TRestTrackPathMinimizationProcess::LoadDefaultConfig() {
-    SetName("trackPathMinimizationProcess");
-    SetTitle("Default config");
-}
 
 //______________________________________________________________________________
 void TRestTrackPathMinimizationProcess::Initialize() {
@@ -42,12 +27,6 @@ void TRestTrackPathMinimizationProcess::Initialize() {
 
     fInputTrackEvent = NULL;
     fOutputTrackEvent = new TRestTrackEvent();
-}
-
-void TRestTrackPathMinimizationProcess::LoadConfig(std::string cfgFilename, std::string name) {
-    if (LoadConfigFromFile(cfgFilename, name) == -1) LoadDefaultConfig();
-
-    PrintMetadata();
 }
 
 //______________________________________________________________________________
@@ -68,84 +47,212 @@ TRestEvent* TRestTrackPathMinimizationProcess::ProcessEvent(TRestEvent* evInput)
     for (int tck = 0; tck < fInputTrackEvent->GetNumberOfTracks(); tck++) {
         if (!fInputTrackEvent->isTopLevel(tck)) continue;
         Int_t tckId = fInputTrackEvent->GetTrack(tck)->GetTrackID();
-
+        
         TRestVolumeHits* hits = fInputTrackEvent->GetTrack(tck)->GetVolumeHits();
-        TRestVolumeHits* originHits = fInputTrackEvent->GetOriginTrackById(tckId)->GetVolumeHits();
-
-        Int_t nHits = hits->GetNumberOfHits();
+        const int nHits = hits->GetNumberOfHits();
 
         /* {{{ Debug output */
-
         if (this->GetVerboseLevel() >= REST_Debug) {
-            Int_t pId = fInputTrackEvent->GetTrack(tck)->GetParentID();
-            cout << "Track : " << tck << " TrackID : " << tckId << " ParentID : " << pId << endl;
-            cout << "-----------------" << endl;
-            hits->PrintHits();
-            cout << "-----------------" << endl;
+         Int_t pId = fInputTrackEvent->GetTrack(tck)->GetParentID();
+         cout << "Track : " << tck << " TrackID : " << tckId << " ParentID : " << pId << endl;
+         cout << "-----------------" << endl;
+         hits->PrintHits();
+         cout << "-----------------" << endl;
         }
         /* }}} */
 
-        Float_t x[nHits], y[nHits], z[nHits];
+        debug << "hits : " << nHits << endl;
 
-        hits->GetXArray(x);
-        hits->GetYArray(y);
-        hits->GetZArray(z);
+        std::vector<int>bestPath(nHits);
+          for(int i=0;i<nHits;i++)bestPath[i]=i;//Initialize
 
-        Bool_t isXZ = fInputTrackEvent->GetTrack(tck)->isXZ();
-        Bool_t isYZ = fInputTrackEvent->GetTrack(tck)->isYZ();
-        Bool_t isXYZ = fInputTrackEvent->GetTrack(tck)->isXYZ();
+        if(fMinMethod == "bruteforce")
+         BruteForce(hits,bestPath);
+        else if (fMinMethod == "closestN")
+          NearestNeighbour(hits,bestPath);
+        else HeldKarp(hits,bestPath);//default
+        
 
-        Int_t rval = 0;
-        int bestPath[nHits];
+        TRestVolumeHits bestHitsOrder;
+          for(const auto &v: bestPath)bestHitsOrder.AddHit(*hits,v);
 
-        if (GetVerboseLevel() >= REST_Warning && nHits > Nmax) {
-            cout << "REST WARNING. Number of nodes : " << nHits << endl;
-            cout << "This number is higher than the recommended maximum for heldkarp "
-                    "method."
-                 << endl;
-            cout << "Still, you might get a reasonable track path minimization" << endl;
+        // TODO We must also copy other track info here
+        TRestTrack bestTrack;
+        bestTrack.SetTrackID(fOutputTrackEvent->GetNumberOfTracks() + 1);
+        bestTrack.SetParentID(tckId);
+        bestTrack.SetVolumeHits(bestHitsOrder);
+        fOutputTrackEvent->AddTrack(&bestTrack);
+    }
+
+    fOutputTrackEvent->SetLevels();
+    return fOutputTrackEvent;
+}
+
+// Return the index with the shortest path solving Travelling Salesman Problem (TSP) using
+// nearest neighbour algorithm, complexity is n2*n, it doesn't guarantee that the minimum
+// path is reached, but the solution should be within 25% of the distance to the minimum path
+//______________________________________________________________________________
+void TRestTrackPathMinimizationProcess::NearestNeighbour(TRestVolumeHits *hits, std::vector<int> &bestPath){
+
+  const int nHits = hits->GetNumberOfHits();
+  double dist[nHits][nHits];
+  debug<<"Nhits "<<nHits<<endl;
+
+  if(nHits<3)return;
+
+    for(int i=0;i<nHits;i++){
+      for(int j=i;j<nHits;j++){
+        if(i==j){
+          dist[i][j] =0;//Distance within the same vertex
+        } else {
+           dist[i][j] = hits->GetDistance(i,j);//Distance within two hits vertex
+           dist[j][i] = dist[i][j];//It is symmetric
+        }
+      }
+    }
+
+  double min_path = 1E9;
+  std::vector<int>current_path(nHits);
+
+    //Find the shortest path starting from all vertex
+    for(int s=0;s< nHits;s++){
+      std::vector<int> vertex(nHits-1);
+
+        int j=0;
+        for (int i = 0; i < nHits; i++){
+          if (i == s)continue;
+           vertex[j] =i;
+           j++;
         }
 
-        /* OBSOLETE :: We now produce the segments inside the process.
-        if( !fWeightHits && nHits > 3 )
-        {
-            int xInt[nHits], yInt[nHits], zInt[nHits];
+        // store current Path weight(cost)
+         double current_pathweight = 0;
+         current_path[0]=s;
 
-            for( int i = 0; i < nHits; i++ )
-            {
-                xInt[i] = (int) (10.* x[i]);
-                yInt[i] = (int) (10.* y[i]);
-                zInt[i] = (int) (10.* z[i]);
-            }
+         // compute current path weight
+         int k = s;
+           while (!vertex.empty() ){
+             int closestN;
+             int index=0, bestIndex;
+             double minDist = 1E9;
+              for(const auto &v : vertex){
+                const double d = dist[k][v];
+                  if(d <minDist){
+                    minDist = d;
+                    current_pathweight+=d;
+                    closestN = v;
+                    bestIndex=index;
+                  }
+                index++;
+              }
+            k=closestN;
+            current_path[nHits-vertex.size()]=k;
+            vertex.erase(vertex.begin()+bestIndex);
+          }
+        if(fCyclic)current_pathweight += dist[k][s];
 
-            if( isYZ && rval == 0 )
-            {
-                if( this->GetVerboseLevel() >= REST_Debug )
-                    cout << "Minimizing track in Y" << endl;
-                rval = TrackMinimization_2D( yInt, zInt, nHits, bestPath );
-            }
+        if(current_pathweight<min_path){
+           min_path = current_pathweight;
+           bestPath = current_path;
+         }
+    }
 
-            if( isXZ && rval == 0 )
-            {
-                if( this->GetVerboseLevel() >= REST_Debug )
-                    cout << "Minimizing track in X" << endl;
-                rval = TrackMinimization_2D( xInt, zInt, nHits, bestPath );
-            }
+  if (this->GetVerboseLevel() >= REST_Debug){
+      cout<<"Min path ";
+      for(const auto &v: bestPath)cout<<v<<" ";
+      cout<<" "<<min_path<<endl;
+    }
 
-            if( isXYZ && rval == 0 )
-            {
-                if( this->GetVerboseLevel() >= REST_Debug )
-                    cout << "Minimizing track in XYZ" << endl;
-                rval = TrackMinimization_3D( xInt, yInt, zInt, nHits, bestPath );
-            }
+}
+
+//Return the index with the shortest path solving Travelling Salesman Problem (TSP) using
+// brute force, algorithm complexity is n!, the minimum path is guarantee
+//______________________________________________________________________________
+void TRestTrackPathMinimizationProcess::BruteForce(TRestVolumeHits *hits, std::vector<int> &bestPath){
+
+  const int nHits = hits->GetNumberOfHits();
+  double dist[nHits][nHits];
+  debug<<"Nhits "<<nHits<<endl;
+  
+  if(nHits<3)return;
+
+    for(int i=0;i<nHits;i++){
+      for(int j=i;j<nHits;j++){
+        if(i==j){
+          dist[i][j] =0;//Distance within the same vertex
+        } else {
+           dist[i][j] = hits->GetDistance(i,j);//Distance within two hits vertex
+           dist[j][i] = dist[i][j];//It is symmetric
         }
-        else
-        */
+      }
+    }
 
-        if (nHits > 3) {
-            Int_t segment_count = nHits * (nHits - 1) / 2;
-            int* elen = (int*)malloc(segment_count * sizeof(int));
+    if (this->GetVerboseLevel() >= REST_Debug){
+      for(int i=0;i<nHits;i++){
+         for(int j=0;j<nHits;j++){
+          cout<<dist[i][j]<<" ";
+         }
+        cout<<"\n";
+      }
+    }
 
+  double min_path = 1E9;
+
+  //Find the shortest path starting from all vertex
+    for(int s=0;s< nHits;s++){
+      // store all vertex apart from source vertex
+      std::vector<int> vertex(nHits-1);
+      int index=0;
+        for (int i = 0; i < nHits; i++){
+          if (i == s)continue;
+           vertex[index] =i;
+           //debug<<index<<" "<<i<<endl;
+           index++;
+        }
+ 
+    // store minimum weight Hamiltonian Cycle.
+      do {
+        // store current Path weight(cost)
+         double current_pathweight = 0;
+
+         // compute current path weight
+         int k = s;
+           for (const auto &v : vertex) {
+             current_pathweight += dist[k][v];
+             k = v;
+           }
+         //In case of cyclic
+         if(fCyclic)current_pathweight += dist[k][s];
+ 
+         // update minimum
+         if(current_pathweight<min_path){
+           min_path = current_pathweight;
+           bestPath[0]=s;
+            for (int i = 0; i < vertex.size(); i++) bestPath[i+1]=vertex[i];
+         }
+
+      //Could be optimized using the shortest neighbour after computing Floyd Warshall Algorithm
+      } while (std::next_permutation(vertex.begin(), vertex.end()));
+    }
+    
+    if (this->GetVerboseLevel() >= REST_Debug){
+      cout<<"Min path ";
+      for(const auto &v: bestPath)cout<<v<<" ";
+      cout<<" "<<min_path<<endl;
+    }
+
+}
+
+//Return the index with the shortest path
+//______________________________________________________________________________
+void TRestTrackPathMinimizationProcess::HeldKarp(TRestVolumeHits *hits, std::vector<int> &bestPath){
+
+ const int nHits = hits->GetNumberOfHits();
+
+   if (nHits < 4)return;
+
+     Int_t segment_count = nHits * (nHits - 1) / 2;
+     int* elen = (int*)malloc(segment_count * sizeof(int));
             /*
             double *enBetween = (double *) malloc( segment_count * sizeof( double ) );
 
@@ -156,16 +263,18 @@ TRestEvent* TRestTrackPathMinimizationProcess::ProcessEvent(TRestEvent* evInput)
             Int_t integratedSegments = 0;
             */
 
-            int k = 0;
-            for (int i = 0; i < nHits; i++) {
-                bestPath[i] = i;
-                for (int j = 0; j < i; j++) {
-                    TVector3 x0, x1, pos0, pos1;
+    int k = 0;
+    int bestP[nHits];
+    Int_t rval = 0;
+      for (int i = 0; i < nHits; i++) {
+       bestP[i]=i;
+        for (int j = 0; j < i; j++) {
+          TVector3 x0, x1, pos0, pos1;
 
-                    x0 = hits->GetPosition(i);
-                    x1 = hits->GetPosition(j);
+          x0 = hits->GetPosition(i);
+          x1 = hits->GetPosition(j);
 
-                    Double_t distance = (x1 - x0).Mag();
+          Double_t distance = hits->GetDistance(i,j);
 
                     /* This can be used to weight the segments with the number of hits
                     between nodes
@@ -191,12 +300,12 @@ TRestEvent* TRestTrackPathMinimizationProcess::ProcessEvent(TRestEvent* evInput)
 
                     */
 
-                    elen[k] = (int)(100. * distance);
+          elen[k] = (int)(100. * distance);
 
-                    // enBetween[k] = energyBetween;
-                    k++;
-                }
-            }
+          // enBetween[k] = energyBetween;
+          k++;
+        }
+      }
 
             /* For the weighting of segments
              *
@@ -220,12 +329,12 @@ TRestEvent* TRestTrackPathMinimizationProcess::ProcessEvent(TRestEvent* evInput)
                 GetChar();
             */
 
-            if (GetVerboseLevel() >= REST_Extreme) {
-                for (int n = 0; n < segment_count; n++) cout << "n : " << n << " elen : " << elen[n] << endl;
-                GetChar();
-            }
+      if (GetVerboseLevel() >= REST_Extreme) {
+        for (int n = 0; n < segment_count; n++) cout << "n : " << n << " elen : " << elen[n] << endl;
+          GetChar();
+      }
 
-            rval = TrackMinimization_segment(nHits, elen, bestPath);
+      rval = TrackMinimization_segment(nHits, elen, bestP);
 
             /**** Just Printing
             for( int i = 0; i < hits->GetNumberOfHits()-1; i++ )
@@ -250,63 +359,27 @@ TRestEvent* TRestTrackPathMinimizationProcess::ProcessEvent(TRestEvent* evInput)
             << hits->GetY(nHits-1) <<  " z : " << hits->GetZ(nHits-1) << endl;
             ***** */
 
-            free(elen);
-            // free( enBetween );
+       free(elen);
+       // free( enBetween );
 
-            if (GetVerboseLevel() >= REST_Extreme) GetChar();
-        } else {
-            bestPath[0] = 0;
-            bestPath[1] = 1;
-            bestPath[2] = 2;
-        }
+     if (GetVerboseLevel() >= REST_Extreme) GetChar();
 
-        if (GetVerboseLevel() >= REST_Info) cout << "hits : " << nHits << endl;
-
-        if (GetVerboseLevel() >= REST_Warning && rval != 0) {
+       if (rval != 0){
+         if (GetVerboseLevel() >= REST_Warning) {
             cout << "REST WARNING. TRestTrackPathMinimizationProcess. HELDKARP FAILED." << endl;
         }
+         fOutputTrackEvent->SetOK(false);
+         return;
+       }
 
-        TRestVolumeHits bestHitsOrder;
+     for (int i = 0; i < nHits; i++) bestPath[i] = bestP[i];
 
-        if (rval != 0) fOutputTrackEvent->SetOK(false);
-
-        for (int i = 0; i < nHits; i++) {
-            Int_t n;
-            if (rval == 0)
-                n = bestPath[i];
-            else
-                n = i;
-
-            Double_t x = hits->GetX(n);
-            Double_t y = hits->GetY(n);
-            Double_t z = hits->GetZ(n);
-            Double_t sX = hits->GetSigmaX(n);
-            Double_t sY = hits->GetSigmaY(n);
-            Double_t sZ = hits->GetSigmaZ(n);
-            Double_t energy = hits->GetEnergy(n);
-
-            bestHitsOrder.AddHit(x, y, z, energy, 0, hits->GetType(n), sX, sY, sZ);
-        }
-
-        // TODO We must also copy other track info here
-        TRestTrack bestTrack;
-        bestTrack.SetTrackID(fOutputTrackEvent->GetNumberOfTracks() + 1);
-
-        bestTrack.SetParentID(tckId);
-
-        bestTrack.SetVolumeHits(bestHitsOrder);
-
-        fOutputTrackEvent->AddTrack(&bestTrack);
-    }
-
-    return fOutputTrackEvent;
 }
 
-//______________________________________________________________________________
-void TRestTrackPathMinimizationProcess::EndProcess() {}
 
 //______________________________________________________________________________
-void TRestTrackPathMinimizationProcess::InitFromConfigFile() {
-    fWeightHits = true;
-    if ((TString)GetParameter("weightHits", "false") == "false") fWeightHits = false;
+void TRestTrackPathMinimizationProcess::EndProcess() {
+
+
 }
+
