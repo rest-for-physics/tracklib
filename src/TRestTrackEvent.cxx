@@ -41,8 +41,6 @@ TRestTrackEvent::TRestTrackEvent() {
     fXYZTrack = NULL;
     fPad = NULL;
     fLevels = -1;
-    fXZHits = NULL;
-    fYZHits = NULL;
 
     fPrintHitsWarning = true;
 }
@@ -359,39 +357,59 @@ void TRestTrackEvent::PrintEvent(Bool_t fullInfo) {
     for (int i = 0; i < GetNumberOfTracks(); i++) this->GetTrack(i)->PrintTrack(fullInfo);
 }
 
+TPad* TRestTrackEvent::DrawHits ( ){
 
-TPad* TRestTrackEvent::DrawEvent ( const TVector3 &max, const TVector3 &min, const TVector3& nBins){
+  if(fXZHits){ delete fXZHits; fXZHits = nullptr;}
+  if(fYZHits){ delete fYZHits; fYZHits = nullptr;}
+  if(fHitsPad){ delete fHitsPad; fHitsPad = nullptr;}
 
-  if(fPad)delete fPad;
-  if(fXZHits) delete fXZHits;
-  if(fYZHits) delete fYZHits;
-
-  fXZHits = new TH2F("TXZ","TXZ",(int)nBins.X(),min.X(),max.X(),(int)nBins.Z(), min.Z(), max.Z());
-  fYZHits = new TH2F("TYZ","TYZ",(int)nBins.Y(),min.Y(),max.Y(),(int)nBins.Z(), min.Z(), max.Z());
+  std::vector<double>fX,fY,fZ;
 
     for (int t = 0; t < GetNumberOfTracks(); t++) {
       TRestTrack* tck = GetTrack(t);
+      if(GetLevel(t)!=1)continue;
         TRestVolumeHits* hits = tck->GetVolumeHits();
            for(int i=0; i<hits->GetNumberOfHits();i++){
-               if(tck->isXZ()){
-                 fXZHits->Fill(hits->GetX(i),hits->GetZ(i),hits->GetEnergy(i));
-               } else if (tck->isYZ()){
-                 fYZHits->Fill(hits->GetY(i),hits->GetZ(i),hits->GetEnergy(i));
-               }
+               if(hits->GetType(i) % X == 0)fX.emplace_back(hits->GetX(i));
+               if(hits->GetType(i) % Y == 0)fY.emplace_back(hits->GetY(i));
+               if(hits->GetType(i) % Z == 0)fZ.emplace_back(hits->GetZ(i));
            }
     }
 
-fPad = new TPad("TrackEvent", " ", 0, 0, 1, 1);
-  fPad->Divide(2);
-  fPad->Draw();
+  double maxX,minX,maxY,minY,maxZ,minZ;
+  int nBinsX,nBinsY,nBinsZ;
+  TRestHits::GetBoundaries(fX, maxX, minX, nBinsX);
+  TRestHits::GetBoundaries(fY, maxY, minY, nBinsY);
+  TRestHits::GetBoundaries(fZ, maxZ, minZ, nBinsZ);
 
-  fPad->cd(1);
+  fXZHits = new TH2F("TXZ","TXZ",nBinsX,minX,maxX,nBinsZ, minZ, maxZ);
+  fYZHits = new TH2F("TYZ","TYZ",nBinsY,minY,maxY,nBinsZ, minZ, maxZ);
+
+  for (int t = 0; t < GetNumberOfTracks(); t++) {
+      TRestTrack* tck = GetTrack(t);
+      if(GetLevel(t)!=1)continue;
+        TRestVolumeHits* hits = tck->GetVolumeHits();
+           for(int i=0; i<hits->GetNumberOfHits();i++){
+               if(hits->GetType(i) == XZ)fXZHits->Fill(hits->GetX(i),hits->GetZ(i),hits->GetEnergy(i));
+               if(hits->GetType(i) == YZ)fYZHits->Fill(hits->GetY(i),hits->GetZ(i),hits->GetEnergy(i));
+           }
+    }
+
+  fHitsPad = new TPad("TrackHits", "TrackHits", 0, 0, 1, 1);
+  fHitsPad->Divide(2,1);
+  fHitsPad->Draw();
+
+  fHitsPad->cd(1);
+  fXZHits->GetXaxis()->SetTitle("X-axis (mm)");
+  fXZHits->GetYaxis()->SetTitle("Z-axis (mm)");
   fXZHits->Draw("COLZ");
   
-  fPad->cd(2);
+  fHitsPad->cd(2);
+  fXZHits->GetXaxis()->SetTitle("Y-axis (mm)");
+  fXZHits->GetYaxis()->SetTitle("Z-axis (mm)");
   fYZHits->Draw("COLZ");
 
-  return fPad;
+  return fHitsPad;
 }
 
 

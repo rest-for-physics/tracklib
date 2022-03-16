@@ -52,8 +52,10 @@ class TRestTrackEvent : public TRestEvent {
     TGraph* fYZTrack;     //!
     TGraph2D* fXYZTrack;  //!
 
-    TH2F *fXZHits;        //!
-    TH2F *fYZHits;        //!
+    TH2F *fXZHits=nullptr;        //!
+    TH2F *fYZHits=nullptr;        //!
+
+    TPad *fHitsPad=nullptr;        //!
 
     Bool_t fPrintHitsWarning;  //!
 #endif
@@ -91,7 +93,7 @@ class TRestTrackEvent : public TRestEvent {
 
     TPad* DrawEvent(TString option = "");
 
-    TPad* DrawEvent ( const TVector3 &max, const TVector3 &min, const TVector3& nBins);
+    TPad* DrawHits ( );
 
     TPad* GetPad() { return fPad; }
 
