@@ -1,0 +1,84 @@
+/*************************************************************************
+ * This file is part of the REST software framework.                     *
+ *                                                                       *
+ * Copyright (C) 2016 GIFNA/TREX (University of Zaragoza)                *
+ * For more information see http://gifna.unizar.es/trex                  *
+ *                                                                       *
+ * REST is free software: you can redistribute it and/or modify          *
+ * it under the terms of the GNU General Public License as published by  *
+ * the Free Software Foundation, either version 3 of the License, or     *
+ * (at your option) any later version.                                   *
+ *                                                                       *
+ * REST is distributed in the hope that it will be useful,               *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the          *
+ * GNU General Public License for more details.                          *
+ *                                                                       *
+ * You should have a copy of the GNU General Public License along with   *
+ * REST in $REST_PATH/LICENSE.                                           *
+ * If not, see http://www.gnu.org/licenses/.                             *
+ * For the list of contributors see $REST_PATH/CREDITS.                  *
+ *************************************************************************/
+
+#ifndef RestCore_TRestTrackLinearizationProcess
+#define RestCore_TRestTrackLinearizationProcess
+
+#include <TRestTrackEvent.h>
+
+#include "TRestEventProcess.h"
+
+//! A process to analyze alpha tracks
+class TRestTrackLinearizationProcess : public TRestEventProcess {
+   private:
+   
+#ifndef __CINT__
+    // Input event Track Event
+    TRestTrackEvent* fTrackEvent;
+    // Output event Track event smoothed 
+    TRestTrackEvent* fOutTrackEvent;
+#endif
+
+    void Initialize();
+
+   protected:
+
+   // A parameter to define the maximum number of nodes for the track linearization
+   Int_t fMaxNodes =6;
+
+   public:
+    any GetInputEvent() { return fTrackEvent; }
+    any GetOutputEvent() { return fOutTrackEvent; }
+
+    void InitProcess();
+    TRestEvent* ProcessEvent(TRestEvent* eventInput);
+    void EndProcess();
+
+    void PrintMetadata() {
+        BeginPrintProcess();
+        metadata<<"Max nodes: "<<fMaxNodes<<endl;
+        EndPrintProcess();
+    }
+
+    // This function performs the track linearization towards a given number of nodes
+    // the nodes are extracted from the linear fit on GetBestNodes and afterwards
+    // the closest hits to the nodes are merged to correct the position of the nodes
+    // using kmeansClustering
+    void GetHitsProjection(TRestVolumeHits* hits, const int &nodes, TRestVolumeHits &vHits);
+
+    // This function performs a linear fit to the volumehits of the track weighthed by the
+    // energy of the hits. Two fit are performed by rotating the axis and the best Chi2 is
+    // selected. Afterwards, equidistant nodes following the fit and after the linear fit are
+    // extracted
+    std::vector<std::pair<double,double>> GetBestNodes(const std::vector<Float_t> &fXY, const std::vector<Float_t> &fZ, const std::vector<Float_t> &fEn, const int & nodes);
+
+    TString GetProcessName() { return (TString) "trackLinearization"; }
+
+    // Constructor
+    TRestTrackLinearizationProcess();
+    // Destructor
+    ~TRestTrackLinearizationProcess();
+
+    ClassDef(TRestTrackLinearizationProcess, 1);
+                   // Template for a REST "event process" class inherited from TRestEventProcess
+};
+#endif
