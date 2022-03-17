@@ -25,7 +25,7 @@ void TRestTrackReductionProcess::Initialize() {
     SetSectionName(this->ClassName());
     SetLibraryVersion(LIBRARY_VERSION);
 
-    fInputTrackEvent = NULL;
+    fInputTrackEvent = nullptr;
     fOutputTrackEvent = new TRestTrackEvent();
 }
 
@@ -115,4 +115,12 @@ void TRestTrackReductionProcess::getHitsMerged(TRestVolumeHits &hits){
 
 //______________________________________________________________________________
 void TRestTrackReductionProcess::EndProcess() {}
+
+//______________________________________________________________________________
+void TRestTrackReductionProcess::InitFromConfigFile() {
+    fStartingDistance = GetDblParameterWithUnits("startingDistance");
+    fMinimumDistance = GetDblParameterWithUnits("minimumDistance");
+    fDistanceFactor = StringToDouble(GetParameter("distanceStepFactor"));
+    fMaxNodes = StringToDouble(GetParameter("maxNodes"));
+}
 

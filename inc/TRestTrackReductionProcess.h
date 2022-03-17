@@ -22,13 +22,15 @@ class TRestTrackReductionProcess : public TRestEventProcess {
     TRestTrackEvent* fOutputTrackEvent;  //!
 #endif
 
+    void InitFromConfigFile();
+
     void Initialize();
 
    protected:
-    Double_t fStartingDistance=0.15;
-    Double_t fMinimumDistance=0.30;
-    Double_t fDistanceFactor=1.10;
-    Double_t fMaxNodes=6;
+    Double_t fStartingDistance=0.5;
+    Double_t fMinimumDistance=3;
+    Double_t fDistanceFactor=1.5;
+    Double_t fMaxNodes=30;
     Int_t fMaxIt=100;
     Bool_t fKmeans =false;
 
