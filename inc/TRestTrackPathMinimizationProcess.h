@@ -70,6 +70,6 @@ class TRestTrackPathMinimizationProcess : public TRestEventProcess {
     // Destructor
     ~TRestTrackPathMinimizationProcess();
 
-    ClassDef(TRestTrackPathMinimizationProcess, 1);
+    ClassDef(TRestTrackPathMinimizationProcess, 2);
 };
 #endif
