@@ -108,7 +108,7 @@ void TRestTrackReductionProcess::getHitsMerged(TRestVolumeHits &hits){
             debug << "TRestTrackReductionProcess. Number of hits merged : " << mergedHits << endl;
             mergedHits = 0;
 
-            distance *= fDistanceFactor;
+            distance *= fDistanceStepFactor;
         }
 
 }
@@ -116,11 +116,4 @@ void TRestTrackReductionProcess::getHitsMerged(TRestVolumeHits &hits){
 //______________________________________________________________________________
 void TRestTrackReductionProcess::EndProcess() {}
 
-//______________________________________________________________________________
-void TRestTrackReductionProcess::InitFromConfigFile() {
-    fStartingDistance = GetDblParameterWithUnits("startingDistance");
-    fMinimumDistance = GetDblParameterWithUnits("minimumDistance");
-    fDistanceFactor = StringToDouble(GetParameter("distanceStepFactor"));
-    fMaxNodes = StringToDouble(GetParameter("maxNodes"));
-}
 

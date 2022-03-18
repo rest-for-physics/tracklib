@@ -22,14 +22,12 @@ class TRestTrackReductionProcess : public TRestEventProcess {
     TRestTrackEvent* fOutputTrackEvent;  //!
 #endif
 
-    void InitFromConfigFile();
-
     void Initialize();
 
    protected:
     Double_t fStartingDistance=0.5;
     Double_t fMinimumDistance=3;
-    Double_t fDistanceFactor=1.5;
+    Double_t fDistanceStepFactor=1.5;
     Double_t fMaxNodes=30;
     Int_t fMaxIt=100;
     Bool_t fKmeans =false;
@@ -48,7 +46,7 @@ class TRestTrackReductionProcess : public TRestEventProcess {
 
         metadata << " Starting distance : " << fStartingDistance << endl;
         metadata << " Minimum distance : " << fMinimumDistance << endl;
-        metadata << " Distance step factor : " << fDistanceFactor << endl;
+        metadata << " Distance step factor : " << fDistanceStepFactor << endl;
         metadata << " Maximum number of nodes : " << fMaxNodes << endl;
         metadata << " Perform kMeans clustering : " << fKmeans << endl;
         if(fKmeans)metadata << " Maximum iterations : " << fMaxIt << endl;
