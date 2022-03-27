@@ -13,6 +13,7 @@
 #define RestCore_TRestTrackPathMinimizationProcess
 
 #include <TRestTrackEvent.h>
+
 #include "TRestEventProcess.h"
 
 #ifndef __CINT__

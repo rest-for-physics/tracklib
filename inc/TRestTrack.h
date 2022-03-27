@@ -19,11 +19,11 @@
 #ifndef RestCore_TRestTrack
 #define RestCore_TRestTrack
 
-#include <iostream>
-
 #include <TObject.h>
 #include <TRestVolumeHits.h>
 #include <TVector3.h>
+
+#include <iostream>
 
 class TRestTrack : public TObject {
    protected:

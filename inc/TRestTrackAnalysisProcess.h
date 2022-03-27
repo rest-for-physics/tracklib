@@ -152,10 +152,10 @@ class TRestTrackAnalysisProcess : public TRestEventProcess {
         BeginPrintProcess();
 
         if (fCutsEnabled) {
-            std::cout << "Number of tracks in X cut : ( " << fNTracksXCut.X() << " , " << fNTracksXCut.Y() << " ) "
-                 << endl;
-            std::cout << "Number of tracks in Y cut : ( " << fNTracksYCut.X() << " , " << fNTracksYCut.Y() << " ) "
-                 << endl;
+            std::cout << "Number of tracks in X cut : ( " << fNTracksXCut.X() << " , " << fNTracksXCut.Y()
+                      << " ) " << endl;
+            std::cout << "Number of tracks in Y cut : ( " << fNTracksYCut.X() << " , " << fNTracksYCut.Y()
+                      << " ) " << endl;
         } else {
             std::cout << endl;
             std::cout << "No cuts have been enabled" << endl;

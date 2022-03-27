@@ -13,6 +13,7 @@
 #define RestCore_TRestTrackReconnectionProcess
 
 #include <TRestTrackEvent.h>
+
 #include "TRestEventProcess.h"
 
 class TRestTrackReconnectionProcess : public TRestEventProcess {
