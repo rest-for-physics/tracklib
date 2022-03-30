@@ -26,7 +26,7 @@
 using namespace std;
 
 ClassImp(TRestTrackEvent);
-//______________________________________________________________________________
+
 TRestTrackEvent::TRestTrackEvent() {
     // TRestTrackEvent default constructor
     TRestEvent::Initialize();
@@ -45,7 +45,6 @@ TRestTrackEvent::TRestTrackEvent() {
     fPrintHitsWarning = true;
 }
 
-//______________________________________________________________________________
 TRestTrackEvent::~TRestTrackEvent() {
     // TRestTrackEvent destructor
 }

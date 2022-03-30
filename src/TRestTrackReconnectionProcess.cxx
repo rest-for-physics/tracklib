@@ -10,15 +10,13 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "TRestTrackReconnectionProcess.h"
+
 using namespace std;
 
-ClassImp(TRestTrackReconnectionProcess)
-    //______________________________________________________________________________
-    TRestTrackReconnectionProcess::TRestTrackReconnectionProcess() {
-    Initialize();
-}
+ClassImp(TRestTrackReconnectionProcess);
 
-//______________________________________________________________________________
+TRestTrackReconnectionProcess::TRestTrackReconnectionProcess() { Initialize(); }
+
 TRestTrackReconnectionProcess::TRestTrackReconnectionProcess(char* cfgFileName) {
     Initialize();
 
@@ -26,7 +24,6 @@ TRestTrackReconnectionProcess::TRestTrackReconnectionProcess(char* cfgFileName) 
     PrintMetadata();
 }
 
-//______________________________________________________________________________
 TRestTrackReconnectionProcess::~TRestTrackReconnectionProcess() { delete fOutputTrackEvent; }
 
 void TRestTrackReconnectionProcess::LoadDefaultConfig() {
@@ -34,7 +31,6 @@ void TRestTrackReconnectionProcess::LoadDefaultConfig() {
     SetTitle("Default config");
 }
 
-//______________________________________________________________________________
 void TRestTrackReconnectionProcess::Initialize() {
     SetSectionName(this->ClassName());
     SetLibraryVersion(LIBRARY_VERSION);
@@ -51,10 +47,8 @@ void TRestTrackReconnectionProcess::LoadConfig(std::string cfgFilename, std::str
     PrintMetadata();
 }
 
-//______________________________________________________________________________
 void TRestTrackReconnectionProcess::InitProcess() { TRestEventProcess::ReadObservables(); }
 
-//______________________________________________________________________________
 TRestEvent* TRestTrackReconnectionProcess::ProcessEvent(TRestEvent* evInput) {
     Int_t trackBranches = 0;
 
@@ -381,10 +375,8 @@ Int_t TRestTrackReconnectionProcess::GetTrackBranches(TRestHits& h, Double_t nSi
     return breaks;
 }
 
-//______________________________________________________________________________
 void TRestTrackReconnectionProcess::EndProcess() {}
 
-//______________________________________________________________________________
 void TRestTrackReconnectionProcess::InitFromConfigFile() {
     if (GetParameter("splitTrack", "false") == "true")
         fSplitTrack = true;

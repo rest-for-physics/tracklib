@@ -181,22 +181,19 @@
 using namespace std;
 
 ClassImp(TRestTrackAnalysisProcess);
-//______________________________________________________________________________
+
 TRestTrackAnalysisProcess::TRestTrackAnalysisProcess() { Initialize(); }
 
-//______________________________________________________________________________
 TRestTrackAnalysisProcess::TRestTrackAnalysisProcess(char* cfgFileName) {
     Initialize();
 
     if (LoadConfigFromFile(cfgFileName)) LoadDefaultConfig();
 }
 
-//______________________________________________________________________________
 TRestTrackAnalysisProcess::~TRestTrackAnalysisProcess() { delete fOutputTrackEvent; }
 
 void TRestTrackAnalysisProcess::LoadDefaultConfig() { SetTitle("Default config"); }
 
-//______________________________________________________________________________
 void TRestTrackAnalysisProcess::Initialize() {
     SetSectionName(this->ClassName());
     SetLibraryVersion(LIBRARY_VERSION);
@@ -213,7 +210,6 @@ void TRestTrackAnalysisProcess::LoadConfig(std::string cfgFilename, std::string 
     if (LoadConfigFromFile(cfgFilename, name)) LoadDefaultConfig();
 }
 
-//______________________________________________________________________________
 void TRestTrackAnalysisProcess::InitProcess() {
     std::vector<string> fObservables;
     fObservables = TRestEventProcess::ReadObservables();
@@ -426,7 +422,6 @@ void TRestTrackAnalysisProcess::InitProcess() {
         }
 }
 
-//______________________________________________________________________________
 TRestEvent* TRestTrackAnalysisProcess::ProcessEvent(TRestEvent* evInput) {
     fInputTrackEvent = (TRestTrackEvent*)evInput;
 
@@ -1220,13 +1215,12 @@ TRestEvent* TRestTrackAnalysisProcess::ProcessEvent(TRestEvent* evInput) {
     return fOutputTrackEvent;
 }
 
-////______________________________________________________________________________
+//
 // void TRestTrackAnalysisProcess::EndOfEventProcess() {
 //    fPreviousEventTime.push_back(fInputTrackEvent->GetTimeStamp());
 //    if (fPreviousEventTime.size() > 100) fPreviousEventTime.erase(fPreviousEventTime.begin());
 //}
 
-//______________________________________________________________________________
 void TRestTrackAnalysisProcess::EndProcess() {
     // Function to be executed once at the end of the process
     // (after all events have been processed)
@@ -1236,7 +1230,6 @@ void TRestTrackAnalysisProcess::EndProcess() {
     // TRestEventProcess::EndProcess();
 }
 
-//______________________________________________________________________________
 void TRestTrackAnalysisProcess::InitFromConfigFile() {
     fNTracksXCut = StringTo2DVector(GetParameter("nTracksXCut", "(1,10)"));
     fNTracksYCut = StringTo2DVector(GetParameter("nTracksYCut", "(1,10)"));

@@ -9,22 +9,19 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "TRestTrackReductionProcess.h"
+
 using namespace std;
 
-ClassImp(TRestTrackReductionProcess)
-    //______________________________________________________________________________
-    TRestTrackReductionProcess::TRestTrackReductionProcess() {
-    Initialize();
-}
+ClassImp(TRestTrackReductionProcess);
 
-//______________________________________________________________________________
+TRestTrackReductionProcess::TRestTrackReductionProcess() { Initialize(); }
+
 TRestTrackReductionProcess::TRestTrackReductionProcess(char* cfgFileName) {
     Initialize();
 
     if (LoadConfigFromFile(cfgFileName) == -1) LoadDefaultConfig();
 }
 
-//______________________________________________________________________________
 TRestTrackReductionProcess::~TRestTrackReductionProcess() { delete fOutputTrackEvent; }
 
 void TRestTrackReductionProcess::LoadDefaultConfig() {
@@ -37,7 +34,6 @@ void TRestTrackReductionProcess::LoadDefaultConfig() {
     fMaxNodes = 30;
 }
 
-//______________________________________________________________________________
 void TRestTrackReductionProcess::Initialize() {
     SetSectionName(this->ClassName());
     SetLibraryVersion(LIBRARY_VERSION);
@@ -50,10 +46,8 @@ void TRestTrackReductionProcess::LoadConfig(std::string cfgFilename, std::string
     if (LoadConfigFromFile(cfgFilename, name) == -1) LoadDefaultConfig();
 }
 
-//______________________________________________________________________________
 void TRestTrackReductionProcess::InitProcess() {}
 
-//______________________________________________________________________________
 TRestEvent* TRestTrackReductionProcess::ProcessEvent(TRestEvent* evInput) {
     fInputTrackEvent = (TRestTrackEvent*)evInput;
     fOutputTrackEvent->SetEventInfo(fInputTrackEvent);
@@ -137,10 +131,8 @@ TRestEvent* TRestTrackReductionProcess::ProcessEvent(TRestEvent* evInput) {
     return fOutputTrackEvent;
 }
 
-//______________________________________________________________________________
 void TRestTrackReductionProcess::EndProcess() {}
 
-//______________________________________________________________________________
 void TRestTrackReductionProcess::InitFromConfigFile() {
     fStartingDistance = GetDblParameterWithUnits("startingDistance");
     fMinimumDistance = GetDblParameterWithUnits("minimumDistance");

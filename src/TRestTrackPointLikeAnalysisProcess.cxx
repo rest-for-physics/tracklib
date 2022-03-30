@@ -9,25 +9,23 @@
 ///_______________________________________________________________________________
 
 #include "TRestTrackPointLikeAnalysisProcess.h"
+
 using namespace std;
 
 ClassImp(TRestTrackPointLikeAnalysisProcess);
-//______________________________________________________________________________
+
 TRestTrackPointLikeAnalysisProcess::TRestTrackPointLikeAnalysisProcess() { Initialize(); }
 
-//______________________________________________________________________________
 TRestTrackPointLikeAnalysisProcess::TRestTrackPointLikeAnalysisProcess(char* cfgFileName) {
     Initialize();
 
     if (LoadConfigFromFile(cfgFileName)) LoadDefaultConfig();
 }
 
-//______________________________________________________________________________
 TRestTrackPointLikeAnalysisProcess::~TRestTrackPointLikeAnalysisProcess() {}
 
 void TRestTrackPointLikeAnalysisProcess::LoadDefaultConfig() { SetTitle("Default config"); }
 
-//______________________________________________________________________________
 void TRestTrackPointLikeAnalysisProcess::Initialize() {
     SetSectionName(this->ClassName());
     SetLibraryVersion(LIBRARY_VERSION);
@@ -41,10 +39,8 @@ void TRestTrackPointLikeAnalysisProcess::LoadConfig(string cfgFilename) {
     // fReadout = new TRestDetectorReadout( cfgFilename.c_str() );
 }
 
-//______________________________________________________________________________
 void TRestTrackPointLikeAnalysisProcess::InitProcess() { TRestEventProcess::ReadObservables(); }
 
-//______________________________________________________________________________
 TRestEvent* TRestTrackPointLikeAnalysisProcess::ProcessEvent(TRestEvent* evInput) {
     fTrackEvent = (TRestTrackEvent*)evInput;
 
@@ -104,7 +100,6 @@ TRestEvent* TRestTrackPointLikeAnalysisProcess::ProcessEvent(TRestEvent* evInput
     return fTrackEvent;
 }
 
-//______________________________________________________________________________
 void TRestTrackPointLikeAnalysisProcess::EndProcess() {
     // Function to be executed once at the end of the process
     // (after all events have been processed)
@@ -114,5 +109,4 @@ void TRestTrackPointLikeAnalysisProcess::EndProcess() {
     // TRestEventProcess::EndProcess();
 }
 
-//______________________________________________________________________________
 void TRestTrackPointLikeAnalysisProcess::InitFromConfigFile() {}
