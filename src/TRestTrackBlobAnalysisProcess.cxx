@@ -35,7 +35,7 @@ void TRestTrackBlobAnalysisProcess::Initialize() {
     SetSectionName(this->ClassName());
     SetLibraryVersion(LIBRARY_VERSION);
 
-    fInputTrackEvent = NULL;
+    fInputTrackEvent = nullptr;
     fOutputTrackEvent = new TRestTrackEvent();
 
     fHitsToCheckFraction = 0.2;

@@ -18,8 +18,9 @@ TRestTrackReductionProcess::TRestTrackReductionProcess() { Initialize(); }
 
 TRestTrackReductionProcess::TRestTrackReductionProcess(char* cfgFileName) {
     Initialize();
-
-    if (LoadConfigFromFile(cfgFileName) == -1) LoadDefaultConfig();
+    if (LoadConfigFromFile(cfgFileName) == -1) {
+        LoadDefaultConfig();
+    }
 }
 
 TRestTrackReductionProcess::~TRestTrackReductionProcess() { delete fOutputTrackEvent; }
@@ -38,7 +39,7 @@ void TRestTrackReductionProcess::Initialize() {
     SetSectionName(this->ClassName());
     SetLibraryVersion(LIBRARY_VERSION);
 
-    fInputTrackEvent = NULL;
+    fInputTrackEvent = nullptr;
     fOutputTrackEvent = new TRestTrackEvent();
 }
 

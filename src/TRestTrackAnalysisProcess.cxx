@@ -198,7 +198,7 @@ void TRestTrackAnalysisProcess::Initialize() {
     SetSectionName(this->ClassName());
     SetLibraryVersion(LIBRARY_VERSION);
 
-    fInputTrackEvent = NULL;
+    fInputTrackEvent = nullptr;
     fOutputTrackEvent = new TRestTrackEvent();
 
     fCutsEnabled = false;
@@ -975,7 +975,7 @@ TRestEvent* TRestTrackAnalysisProcess::ProcessEvent(TRestEvent* evInput) {
     Double_t tckSecondMaxTrack_XYZ_GaussSigmaZ = 0;
     Double_t tckSecondMaxTrack_XYZ_skewXY = 0, tckSecondMaxTrack_XYZ_skewZ = 0;
 
-    if (fInputTrackEvent->GetSecondMaxEnergyTrack() != NULL) {
+    if (fInputTrackEvent->GetSecondMaxEnergyTrack() != nullptr) {
         tckSecondMaxXYZ_SigmaX = fInputTrackEvent->GetSecondMaxEnergyTrack()->GetHits()->GetSigmaX();
         tckSecondMaxXYZ_SigmaY = fInputTrackEvent->GetSecondMaxEnergyTrack()->GetHits()->GetSigmaY();
         tckSecondMaxXYZ_SigmaZ = fInputTrackEvent->GetSecondMaxEnergyTrack()->GetHits()->GetSigmaZ2();
@@ -988,7 +988,7 @@ TRestEvent* TRestTrackAnalysisProcess::ProcessEvent(TRestEvent* evInput) {
     Double_t tckSecondMaxEnergy_X = 0;
     Double_t tckSecondMaxXZ_SigmaX = 0;
     Double_t tckSecondMaxXZ_SigmaZ = 0;
-    if (fInputTrackEvent->GetSecondMaxEnergyTrack("X") != NULL) {
+    if (fInputTrackEvent->GetSecondMaxEnergyTrack("X") != nullptr) {
         tckSecondMaxXZ_SigmaX = fInputTrackEvent->GetSecondMaxEnergyTrack("X")->GetHits()->GetSigmaX();
         tckSecondMaxXZ_SigmaZ = fInputTrackEvent->GetSecondMaxEnergyTrack("X")->GetHits()->GetSigmaZ2();
         tckSecondMaxEnergy_X = fInputTrackEvent->GetSecondMaxEnergyTrack("X")->GetEnergy();
@@ -1001,7 +1001,7 @@ TRestEvent* TRestTrackAnalysisProcess::ProcessEvent(TRestEvent* evInput) {
     Double_t tckSecondMaxEnergy_Y = 0;
     Double_t tckSecondMaxYZ_SigmaY = 0;
     Double_t tckSecondMaxYZ_SigmaZ = 0;
-    if (fInputTrackEvent->GetSecondMaxEnergyTrack("Y") != NULL) {
+    if (fInputTrackEvent->GetSecondMaxEnergyTrack("Y") != nullptr) {
         tckSecondMaxYZ_SigmaY = fInputTrackEvent->GetSecondMaxEnergyTrack("Y")->GetHits()->GetSigmaY();
         tckSecondMaxYZ_SigmaZ = fInputTrackEvent->GetSecondMaxEnergyTrack("Y")->GetHits()->GetSigmaZ2();
         tckSecondMaxEnergy_Y = fInputTrackEvent->GetSecondMaxEnergyTrack("Y")->GetEnergy();
@@ -1071,7 +1071,7 @@ TRestEvent* TRestTrackAnalysisProcess::ProcessEvent(TRestEvent* evInput) {
     // Main max track
     TRestTrack* tMax = fInputTrackEvent->GetMaxEnergyTrack();
 
-    if (tMax != NULL) {
+    if (tMax != nullptr) {
         maxX = tMax->GetMeanPosition().X();
         maxY = tMax->GetMeanPosition().Y();
         maxZ = tMax->GetMeanPosition().Z();
@@ -1084,7 +1084,7 @@ TRestEvent* TRestTrackAnalysisProcess::ProcessEvent(TRestEvent* evInput) {
     // Second max track
     TRestTrack* tSecondMax = fInputTrackEvent->GetSecondMaxEnergyTrack();
 
-    if (tSecondMax != NULL) {
+    if (tSecondMax != nullptr) {
         sMaxX = tSecondMax->GetMeanPosition().X();
         sMaxY = tSecondMax->GetMeanPosition().Y();
         sMaxZ = tSecondMax->GetMeanPosition().Z();
@@ -1106,7 +1106,7 @@ TRestEvent* TRestTrackAnalysisProcess::ProcessEvent(TRestEvent* evInput) {
     maxX = 0, maxY = 0, maxZ = 0;
     dX = 0, dY = 0, dZ = 0;
     tMax = fInputTrackEvent->GetMaxEnergyTrack("X");
-    if (tMax != NULL) {
+    if (tMax != nullptr) {
         maxX = tMax->GetMeanPosition().X();
         maxZ = tMax->GetMeanPosition().Z();
     }
@@ -1116,7 +1116,7 @@ TRestEvent* TRestTrackAnalysisProcess::ProcessEvent(TRestEvent* evInput) {
 
     sMaxX = 0, sMaxY = 0, sMaxZ = 0;
     tSecondMax = fInputTrackEvent->GetSecondMaxEnergyTrack("X");
-    if (tSecondMax != NULL) {
+    if (tSecondMax != nullptr) {
         sMaxX = tSecondMax->GetMeanPosition().X();
         sMaxZ = tSecondMax->GetMeanPosition().Z();
     }
@@ -1136,7 +1136,7 @@ TRestEvent* TRestTrackAnalysisProcess::ProcessEvent(TRestEvent* evInput) {
     dX = 0, dY = 0, dZ = 0;
 
     tMax = fInputTrackEvent->GetMaxEnergyTrack("Y");
-    if (tMax != NULL) {
+    if (tMax != nullptr) {
         maxY = tMax->GetMeanPosition().Y();
         maxZ = tMax->GetMeanPosition().Z();
     }
@@ -1146,7 +1146,7 @@ TRestEvent* TRestTrackAnalysisProcess::ProcessEvent(TRestEvent* evInput) {
 
     sMaxX = 0, sMaxY = 0, sMaxZ = 0;
     tSecondMax = fInputTrackEvent->GetSecondMaxEnergyTrack("Y");
-    if (tSecondMax != NULL) {
+    if (tSecondMax != nullptr) {
         sMaxY = tSecondMax->GetMeanPosition().Y();
         sMaxZ = tSecondMax->GetMeanPosition().Z();
     }
@@ -1166,19 +1166,19 @@ TRestEvent* TRestTrackAnalysisProcess::ProcessEvent(TRestEvent* evInput) {
     /////////////////// xMean, yMean and zMean //////////////////////////
     Double_t x = 0, y = 0, z = 0;
 
-    if (tXYZ != NULL) {
+    if (tXYZ != nullptr) {
         x = tXYZ->GetMeanPosition().X();
         y = tXYZ->GetMeanPosition().Y();
         z = tXYZ->GetMeanPosition().Z();
     } else {
         double zxz = 0;
         int i = 0;
-        if (tX != NULL) {
+        if (tX != nullptr) {
             x = tX->GetMeanPosition().X();
             zxz += tX->GetMeanPosition().Z();
             i++;
         }
-        if (tY != NULL) {
+        if (tY != nullptr) {
             y = tY->GetMeanPosition().Y();
             zxz += tY->GetMeanPosition().Z();
             i++;
@@ -1206,8 +1206,8 @@ TRestEvent* TRestTrackAnalysisProcess::ProcessEvent(TRestEvent* evInput) {
     SetObservableValue((string) "MeanRate_InHz", meanRate);
 
     if (fCutsEnabled) {
-        if (nTracksX < fNTracksXCut.X() || nTracksX > fNTracksXCut.Y()) return NULL;
-        if (nTracksY < fNTracksYCut.X() || nTracksY > fNTracksYCut.Y()) return NULL;
+        if (nTracksX < fNTracksXCut.X() || nTracksX > fNTracksXCut.Y()) return nullptr;
+        if (nTracksY < fNTracksYCut.X() || nTracksY > fNTracksYCut.Y()) return nullptr;
     }
 
     if (GetVerboseLevel() >= REST_Extreme) GetChar();

@@ -30,7 +30,7 @@ void TRestTrackPointLikeAnalysisProcess::Initialize() {
     SetSectionName(this->ClassName());
     SetLibraryVersion(LIBRARY_VERSION);
 
-    fTrackEvent = NULL;
+    fTrackEvent = nullptr;
 }
 
 void TRestTrackPointLikeAnalysisProcess::LoadConfig(string cfgFilename) {
