@@ -405,8 +405,8 @@ TPad* TRestTrackEvent::DrawHits ( ){
   fXZHits->Draw("COLZ");
   
   fHitsPad->cd(2);
-  fXZHits->GetXaxis()->SetTitle("Y-axis (mm)");
-  fXZHits->GetYaxis()->SetTitle("Z-axis (mm)");
+  fYZHits->GetXaxis()->SetTitle("Y-axis (mm)");
+  fYZHits->GetYaxis()->SetTitle("Z-axis (mm)");
   fYZHits->Draw("COLZ");
 
   return fHitsPad;
