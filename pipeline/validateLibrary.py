@@ -5,16 +5,12 @@
 # J.  Galan - Javier.Galan.Lacarra@cern.ch
 # 23 - Dec - 2019
 
-# from __future__ import print_function
 import os
 import sys
 
 
 def validateClass(className):
-    print
-    ""
-    print
-    "++++ Validating class : " + className
+    print(f"\n++++ Validating class : {className}")
     with open(className, 'r') as file:
         data = file.read()
 
@@ -22,34 +18,30 @@ def validateClass(className):
         data = getMethodDefinition(data)
         data = removeCppComment(data)
 
-        # print (data)
-        # print data.find("SETLIBRARYVERSION(LIBRARY_VERSION);")
         if data.find("SETLIBRARYVERSION(LIBRARY_VERSION);") >= 0:
-            print
-            "OK"
+            print("OK")
             return
         else:
-            print("Problem found at class : " + className)
+            print(f"Problem found at class : {className}")
             print("SetLibraryVersion was NOT found at Initialization!")
             sys.exit(1)
-    return
 
 
 def getObservablePositions(data):
     obsposes = {}
     pos = 0
     str = "SETOBSERVABLEVALUE(\""
-    while (pos < len(data)):
+    while pos < len(data):
         pos1 = data.find(str, pos)
-        if (pos1 == -1):
+        if pos1 == -1:
             break
         pos1 += len(str)
         pos2 = data.find("\"", pos1)
-        if (pos2 == -1):
+        if pos2 == -1:
             break
 
         name = data[pos1:pos2]
-        if (not obsposes.has_key(name)):
+        if not obsposes.has_key(name):
             obsposes[name] = pos1
 
         pos = pos2 + 1
@@ -61,17 +53,17 @@ def getMethodDefinition(text):
 
     counter = 1
     start = initPos + 1
-    while (counter > 0):
+    while counter > 0:
         pos1 = text.find("{", start)
         pos2 = text.find("}", start)
 
         endPosition = pos2 + 1
 
-        if (pos1 != -1 and pos2 != -1):
-            if (pos1 < pos2):
+        if pos1 != -1 and pos2 != -1:
+            if pos1 < pos2:
                 counter = counter + 1
                 start = pos1 + 1
-            if (pos2 < pos1):
+            if pos2 < pos1:
                 counter = counter - 1
                 start = pos2 + 1
         elif pos1 != -1:
@@ -85,7 +77,7 @@ def getMethodDefinition(text):
 
 
 def removeCppComment(strInput):
-    state = 0;
+    state = 0
     strOutput = ''
     strRemoved = ''
 
@@ -142,7 +134,7 @@ def removeCppComment(strInput):
                 state == 6 or state == 7 or state == 8:
             strOutput += c
         else:
-            # removed chareters
+            # removed characters
             strRemoved += c
 
     return strOutput
@@ -155,7 +147,6 @@ for r, d, f in os.walk(sys.argv[1]):
     for file in f:
         validate = 0
         if '.cxx' in file:
-            #                print ( file )
             with open(os.path.join(r, file)) as fin:
                 if '::InitFromConfigFile' in fin.read():
                     validate = 1
@@ -169,8 +160,4 @@ for r, d, f in os.walk(sys.argv[1]):
             files.append(os.path.join(r, file))
             validateClass(os.path.join(r, file))
 
-# for f in files:
-#    print(f)
-
-# validateProcess(sys.argv[1]);
 sys.exit(0)
