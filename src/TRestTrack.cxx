@@ -17,15 +17,15 @@
 ///_______________________________________________________________________________
 
 #include "TRestTrack.h"
+
 using namespace std;
 
 ClassImp(TRestTrack);
-//______________________________________________________________________________
+
 TRestTrack::TRestTrack() {
     // TRestTrack default constructor
 }
 
-//______________________________________________________________________________
 TRestTrack::~TRestTrack() {
     // TRestTrack destructor
 }

@@ -9,30 +9,25 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "TRestTrackPathMinimizationProcess.h"
+
 using namespace std;
 
-ClassImp(TRestTrackPathMinimizationProcess)
-    //______________________________________________________________________________
-    TRestTrackPathMinimizationProcess::TRestTrackPathMinimizationProcess() {
-    Initialize();
-}
+ClassImp(TRestTrackPathMinimizationProcess);
 
-//______________________________________________________________________________
+TRestTrackPathMinimizationProcess::TRestTrackPathMinimizationProcess() { Initialize(); }
+
 TRestTrackPathMinimizationProcess::~TRestTrackPathMinimizationProcess() { delete fOutputTrackEvent; }
 
-//______________________________________________________________________________
 void TRestTrackPathMinimizationProcess::Initialize() {
     SetSectionName(this->ClassName());
     SetLibraryVersion(LIBRARY_VERSION);
 
-    fInputTrackEvent = NULL;
+    fInputTrackEvent = nullptr;
     fOutputTrackEvent = new TRestTrackEvent();
 }
 
-//______________________________________________________________________________
 void TRestTrackPathMinimizationProcess::InitProcess() {}
 
-//______________________________________________________________________________
 TRestEvent* TRestTrackPathMinimizationProcess::ProcessEvent(TRestEvent* evInput) {
     fInputTrackEvent = (TRestTrackEvent*)evInput;
 
@@ -376,10 +371,4 @@ void TRestTrackPathMinimizationProcess::HeldKarp(TRestVolumeHits *hits, std::vec
 
 }
 
-
-//______________________________________________________________________________
-void TRestTrackPathMinimizationProcess::EndProcess() {
-
-
-}
-
+void TRestTrackPathMinimizationProcess::EndProcess() { }

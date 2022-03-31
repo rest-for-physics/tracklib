@@ -9,17 +9,15 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "TRestTrackDetachIsolatedNodesProcess.h"
+
 using namespace std;
 
 const int Nmax = 30;
 
-ClassImp(TRestTrackDetachIsolatedNodesProcess)
-    //______________________________________________________________________________
-    TRestTrackDetachIsolatedNodesProcess::TRestTrackDetachIsolatedNodesProcess() {
-    Initialize();
-}
+ClassImp(TRestTrackDetachIsolatedNodesProcess);
 
-//______________________________________________________________________________
+TRestTrackDetachIsolatedNodesProcess::TRestTrackDetachIsolatedNodesProcess() { Initialize(); }
+
 TRestTrackDetachIsolatedNodesProcess::TRestTrackDetachIsolatedNodesProcess(char* cfgFileName) {
     Initialize();
 
@@ -27,7 +25,6 @@ TRestTrackDetachIsolatedNodesProcess::TRestTrackDetachIsolatedNodesProcess(char*
     PrintMetadata();
 }
 
-//______________________________________________________________________________
 TRestTrackDetachIsolatedNodesProcess::~TRestTrackDetachIsolatedNodesProcess() { delete fOutputTrackEvent; }
 
 void TRestTrackDetachIsolatedNodesProcess::LoadDefaultConfig() {
@@ -35,12 +32,11 @@ void TRestTrackDetachIsolatedNodesProcess::LoadDefaultConfig() {
     SetTitle("Default config");
 }
 
-//______________________________________________________________________________
 void TRestTrackDetachIsolatedNodesProcess::Initialize() {
     SetSectionName(this->ClassName());
     SetLibraryVersion(LIBRARY_VERSION);
 
-    fInputTrackEvent = NULL;
+    fInputTrackEvent = nullptr;
     fOutputTrackEvent = new TRestTrackEvent();
 }
 
@@ -50,10 +46,8 @@ void TRestTrackDetachIsolatedNodesProcess::LoadConfig(std::string cfgFilename, s
     PrintMetadata();
 }
 
-//______________________________________________________________________________
 void TRestTrackDetachIsolatedNodesProcess::InitProcess() {}
 
-//______________________________________________________________________________
 TRestEvent* TRestTrackDetachIsolatedNodesProcess::ProcessEvent(TRestEvent* evInput) {
     fInputTrackEvent = (TRestTrackEvent*)evInput;
 
@@ -161,10 +155,8 @@ TRestEvent* TRestTrackDetachIsolatedNodesProcess::ProcessEvent(TRestEvent* evInp
     return fOutputTrackEvent;
 }
 
-//______________________________________________________________________________
 void TRestTrackDetachIsolatedNodesProcess::EndProcess() {}
 
-//______________________________________________________________________________
 void TRestTrackDetachIsolatedNodesProcess::InitFromConfigFile() {
     fThresholdDistance = StringToDouble(GetParameter("thDistance", "8"));
     fConnectivityThreshold = StringToDouble(GetParameter("connectivityThreshold", "0"));

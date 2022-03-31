@@ -13,6 +13,7 @@
 #define RestCore_TRestTrackReconnectionProcess
 
 #include <TRestTrackEvent.h>
+
 #include "TRestEventProcess.h"
 
 class TRestTrackReconnectionProcess : public TRestEventProcess {
@@ -62,8 +63,8 @@ class TRestTrackReconnectionProcess : public TRestEventProcess {
 
     TString GetProcessName() { return (TString) "trackReconnection"; }
 
-    void BreakTracks(TRestVolumeHits* hits, vector<TRestVolumeHits>& hitSets, Double_t nSigma = 2.);
-    void ReconnectTracks(vector<TRestVolumeHits>& hitSets);
+    void BreakTracks(TRestVolumeHits* hits, std::vector<TRestVolumeHits>& hitSets, Double_t nSigma = 2.);
+    void ReconnectTracks(std::vector<TRestVolumeHits>& hitSets);
     Int_t GetTrackBranches(TRestHits& h, Double_t nSigma);
 
     // Constructor

@@ -9,18 +9,15 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "TRestTrackReductionProcess.h"
+
 using namespace std;
 
-ClassImp(TRestTrackReductionProcess)
-    //______________________________________________________________________________
-    TRestTrackReductionProcess::TRestTrackReductionProcess() {
-    Initialize();
-}
+ClassImp(TRestTrackReductionProcess);
 
-//______________________________________________________________________________
+TRestTrackReductionProcess::TRestTrackReductionProcess() { Initialize(); }
+
 TRestTrackReductionProcess::~TRestTrackReductionProcess() { delete fOutputTrackEvent; }
 
-//______________________________________________________________________________
 void TRestTrackReductionProcess::Initialize() {
     SetSectionName(this->ClassName());
     SetLibraryVersion(LIBRARY_VERSION);
@@ -29,10 +26,8 @@ void TRestTrackReductionProcess::Initialize() {
     fOutputTrackEvent = new TRestTrackEvent();
 }
 
-//______________________________________________________________________________
 void TRestTrackReductionProcess::InitProcess() {}
 
-//______________________________________________________________________________
 TRestEvent* TRestTrackReductionProcess::ProcessEvent(TRestEvent* evInput) {
     fInputTrackEvent = (TRestTrackEvent*)evInput;
     fOutputTrackEvent->SetEventInfo(fInputTrackEvent);
@@ -113,7 +108,4 @@ void TRestTrackReductionProcess::getHitsMerged(TRestVolumeHits &hits){
 
 }
 
-//______________________________________________________________________________
 void TRestTrackReductionProcess::EndProcess() {}
-
-

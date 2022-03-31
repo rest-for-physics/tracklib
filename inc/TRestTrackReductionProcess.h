@@ -13,6 +13,7 @@
 #define RestCore_TRestTrackReductionProcess
 
 #include <TRestTrackEvent.h>
+
 #include "TRestEventProcess.h"
 
 class TRestTrackReductionProcess : public TRestEventProcess {

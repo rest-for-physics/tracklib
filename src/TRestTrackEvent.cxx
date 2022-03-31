@@ -26,26 +26,25 @@
 using namespace std;
 
 ClassImp(TRestTrackEvent);
-//______________________________________________________________________________
+
 TRestTrackEvent::TRestTrackEvent() {
     // TRestTrackEvent default constructor
     TRestEvent::Initialize();
     fTrack.clear();
-    fXYHit = NULL;
-    fXZHit = NULL;
-    fYZHit = NULL;
-    fXYZHit = NULL;
-    fXYTrack = NULL;
-    fXZTrack = NULL;
-    fYZTrack = NULL;
-    fXYZTrack = NULL;
-    fPad = NULL;
+    fXYHit = nullptr;
+    fXZHit = nullptr;
+    fYZHit = nullptr;
+    fXYZHit = nullptr;
+    fXYTrack = nullptr;
+    fXZTrack = nullptr;
+    fYZTrack = nullptr;
+    fXYZTrack = nullptr;
+    fPad = nullptr;
     fLevels = -1;
 
     fPrintHitsWarning = true;
 }
 
-//______________________________________________________________________________
 TRestTrackEvent::~TRestTrackEvent() {
     // TRestTrackEvent destructor
 }
@@ -123,7 +122,7 @@ Int_t TRestTrackEvent::GetNumberOfTracks(TString option) {
 TRestTrack* TRestTrackEvent::GetTrackById(Int_t id) {
     for (int i = 0; i < GetNumberOfTracks(); i++)
         if (GetTrack(i)->GetTrackID() == id) return GetTrack(i);
-    return NULL;
+    return nullptr;
 }
 
 TRestTrack* TRestTrackEvent::GetMaxEnergyTrackInX() {
@@ -141,7 +140,7 @@ TRestTrack* TRestTrackEvent::GetMaxEnergyTrackInX() {
         }
     }
 
-    if (track == -1) return NULL;
+    if (track == -1) return nullptr;
 
     return GetTrack(track);
 }
@@ -161,7 +160,7 @@ TRestTrack* TRestTrackEvent::GetMaxEnergyTrackInY() {
         }
     }
 
-    if (track == -1) return NULL;
+    if (track == -1) return nullptr;
 
     return GetTrack(track);
 }
@@ -184,13 +183,13 @@ TRestTrack* TRestTrackEvent::GetMaxEnergyTrack(TString option) {
         }
     }
 
-    if (track == -1) return NULL;
+    if (track == -1) return nullptr;
 
     return GetTrack(track);
 }
 
 TRestTrack* TRestTrackEvent::GetSecondMaxEnergyTrack(TString option) {
-    if (GetMaxEnergyTrack(option) == NULL) return NULL;
+    if (GetMaxEnergyTrack(option) == nullptr) return nullptr;
 
     Int_t id = GetMaxEnergyTrack(option)->GetTrackID();
 
@@ -222,7 +221,7 @@ TRestTrack* TRestTrackEvent::GetSecondMaxEnergyTrack(TString option) {
         }
     }
 
-    if (track == -1) return NULL;
+    if (track == -1) return nullptr;
 
     return GetTrack(track);
 }
@@ -451,48 +450,48 @@ TPad* TRestTrackEvent::DrawEvent(TString option) {
         if (opt.find("minLevel=") != string::npos) minLevel = stoi(opt.substr(9, opt.length()).c_str());
     }
 
-    if (fXYHit != NULL) {
+    if (fXYHit != nullptr) {
         delete[] fXYHit;
-        fXYHit = NULL;
+        fXYHit = nullptr;
     }
-    if (fXZHit != NULL) {
+    if (fXZHit != nullptr) {
         delete[] fXZHit;
-        fXZHit = NULL;
+        fXZHit = nullptr;
     }
-    if (fYZHit != NULL) {
+    if (fYZHit != nullptr) {
         delete[] fYZHit;
-        fYZHit = NULL;
+        fYZHit = nullptr;
     }
-    if (fXYZHit != NULL) {
+    if (fXYZHit != nullptr) {
         delete[] fXYZHit;
-        fXYZHit = NULL;
+        fXYZHit = nullptr;
     }
-    if (fXYTrack != NULL) {
+    if (fXYTrack != nullptr) {
         delete[] fXYTrack;
-        fXYTrack = NULL;
+        fXYTrack = nullptr;
     }
-    if (fXZTrack != NULL) {
+    if (fXZTrack != nullptr) {
         delete[] fXZTrack;
-        fXZTrack = NULL;
+        fXZTrack = nullptr;
     }
-    if (fYZTrack != NULL) {
+    if (fYZTrack != nullptr) {
         delete[] fYZTrack;
-        fYZTrack = NULL;
+        fYZTrack = nullptr;
     }
-    if (fXYZTrack != NULL) {
+    if (fXYZTrack != nullptr) {
         delete[] fXYZTrack;
-        fXYZTrack = NULL;
+        fXYZTrack = nullptr;
     }
-    if (fPad != NULL) {
+    if (fPad != nullptr) {
         delete fPad;
-        fPad = NULL;
+        fPad = nullptr;
     }
 
     int nTracks = this->GetNumberOfTracks();
 
     if (nTracks == 0) {
         cout << "Empty event " << endl;
-        return NULL;
+        return nullptr;
     }
 
     this->PrintEvent(false);
