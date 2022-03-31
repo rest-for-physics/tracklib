@@ -14,30 +14,28 @@
 ///_______________________________________________________________________________
 
 #include "TRestTrackBlobAnalysisProcess.h"
+
 using namespace std;
 
 ClassImp(TRestTrackBlobAnalysisProcess);
-//______________________________________________________________________________
+
 TRestTrackBlobAnalysisProcess::TRestTrackBlobAnalysisProcess() { Initialize(); }
 
-//______________________________________________________________________________
 TRestTrackBlobAnalysisProcess::TRestTrackBlobAnalysisProcess(char* cfgFileName) {
     Initialize();
 
     if (LoadConfigFromFile(cfgFileName)) LoadDefaultConfig();
 }
 
-//______________________________________________________________________________
 TRestTrackBlobAnalysisProcess::~TRestTrackBlobAnalysisProcess() { delete fOutputTrackEvent; }
 
 void TRestTrackBlobAnalysisProcess::LoadDefaultConfig() { SetTitle("Default config"); }
 
-//______________________________________________________________________________
 void TRestTrackBlobAnalysisProcess::Initialize() {
     SetSectionName(this->ClassName());
     SetLibraryVersion(LIBRARY_VERSION);
 
-    fInputTrackEvent = NULL;
+    fInputTrackEvent = nullptr;
     fOutputTrackEvent = new TRestTrackEvent();
 
     fHitsToCheckFraction = 0.2;
@@ -47,7 +45,6 @@ void TRestTrackBlobAnalysisProcess::LoadConfig(std::string cfgFilename, std::str
     if (LoadConfigFromFile(cfgFilename, name)) LoadDefaultConfig();
 }
 
-//______________________________________________________________________________
 void TRestTrackBlobAnalysisProcess::InitProcess() {
     std::vector<string> fObservables;
     fObservables = TRestEventProcess::ReadObservables();
@@ -181,7 +178,6 @@ void TRestTrackBlobAnalysisProcess::InitProcess() {
     }
 }
 
-//______________________________________________________________________________
 TRestEvent* TRestTrackBlobAnalysisProcess::ProcessEvent(TRestEvent* evInput) {
     fInputTrackEvent = (TRestTrackEvent*)evInput;
 
@@ -476,7 +472,6 @@ TRestEvent* TRestTrackBlobAnalysisProcess::ProcessEvent(TRestEvent* evInput) {
     return fOutputTrackEvent;
 }
 
-//______________________________________________________________________________
 void TRestTrackBlobAnalysisProcess::EndProcess() {
     // Function to be executed once at the end of the process
     // (after all events have been processed)
@@ -486,7 +481,6 @@ void TRestTrackBlobAnalysisProcess::EndProcess() {
     // TRestEventProcess::EndProcess();
 }
 
-//______________________________________________________________________________
 void TRestTrackBlobAnalysisProcess::InitFromConfigFile() {
     fHitsToCheckFraction = StringToDouble(GetParameter("hitsToCheckFraction", "0.2"));
 }

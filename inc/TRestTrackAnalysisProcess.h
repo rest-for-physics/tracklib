@@ -34,7 +34,7 @@ class TRestTrackAnalysisProcess : public TRestEventProcess {
     TRestTrackEvent* fInputTrackEvent;   //!
     TRestTrackEvent* fOutputTrackEvent;  //!
 
-    vector<Double_t> fPreviousEventTime;  //!
+    std::vector<Double_t> fPreviousEventTime;  //!
 
     Bool_t fCutsEnabled;  //!
 
@@ -152,13 +152,13 @@ class TRestTrackAnalysisProcess : public TRestEventProcess {
         BeginPrintProcess();
 
         if (fCutsEnabled) {
-            cout << "Number of tracks in X cut : ( " << fNTracksXCut.X() << " , " << fNTracksXCut.Y() << " ) "
-                 << endl;
-            cout << "Number of tracks in Y cut : ( " << fNTracksYCut.X() << " , " << fNTracksYCut.Y() << " ) "
-                 << endl;
+            std::cout << "Number of tracks in X cut : ( " << fNTracksXCut.X() << " , " << fNTracksXCut.Y()
+                      << " ) " << endl;
+            std::cout << "Number of tracks in Y cut : ( " << fNTracksYCut.X() << " , " << fNTracksYCut.Y()
+                      << " ) " << endl;
         } else {
-            cout << endl;
-            cout << "No cuts have been enabled" << endl;
+            std::cout << endl;
+            std::cout << "No cuts have been enabled" << endl;
         }
 
         EndPrintProcess();

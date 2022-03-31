@@ -13,6 +13,7 @@
 #define RestCore_TRestTrackPathMinimizationProcess
 
 #include <TRestTrackEvent.h>
+
 #include "TRestEventProcess.h"
 
 #ifndef __CINT__
@@ -51,7 +52,7 @@ class TRestTrackPathMinimizationProcess : public TRestEventProcess {
     void PrintMetadata() {
         BeginPrintProcess();
 
-        //           cout << "Maximum number of nodes (hits) allowed : " <<
+        //           std::cout << "Maximum number of nodes (hits) allowed : " <<
         //           fMaxNodes << endl;
 
         if (fWeightHits)

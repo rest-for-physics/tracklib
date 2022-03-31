@@ -9,17 +9,15 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "TRestTrackPathMinimizationProcess.h"
+
 using namespace std;
 
 const int Nmax = 30;
 
-ClassImp(TRestTrackPathMinimizationProcess)
-    //______________________________________________________________________________
-    TRestTrackPathMinimizationProcess::TRestTrackPathMinimizationProcess() {
-    Initialize();
-}
+ClassImp(TRestTrackPathMinimizationProcess);
 
-//______________________________________________________________________________
+TRestTrackPathMinimizationProcess::TRestTrackPathMinimizationProcess() { Initialize(); }
+
 TRestTrackPathMinimizationProcess::TRestTrackPathMinimizationProcess(char* cfgFileName) {
     Initialize();
 
@@ -27,7 +25,6 @@ TRestTrackPathMinimizationProcess::TRestTrackPathMinimizationProcess(char* cfgFi
     PrintMetadata();
 }
 
-//______________________________________________________________________________
 TRestTrackPathMinimizationProcess::~TRestTrackPathMinimizationProcess() { delete fOutputTrackEvent; }
 
 void TRestTrackPathMinimizationProcess::LoadDefaultConfig() {
@@ -35,12 +32,11 @@ void TRestTrackPathMinimizationProcess::LoadDefaultConfig() {
     SetTitle("Default config");
 }
 
-//______________________________________________________________________________
 void TRestTrackPathMinimizationProcess::Initialize() {
     SetSectionName(this->ClassName());
     SetLibraryVersion(LIBRARY_VERSION);
 
-    fInputTrackEvent = NULL;
+    fInputTrackEvent = nullptr;
     fOutputTrackEvent = new TRestTrackEvent();
 }
 
@@ -50,10 +46,8 @@ void TRestTrackPathMinimizationProcess::LoadConfig(std::string cfgFilename, std:
     PrintMetadata();
 }
 
-//______________________________________________________________________________
 void TRestTrackPathMinimizationProcess::InitProcess() {}
 
-//______________________________________________________________________________
 TRestEvent* TRestTrackPathMinimizationProcess::ProcessEvent(TRestEvent* evInput) {
     fInputTrackEvent = (TRestTrackEvent*)evInput;
 
@@ -302,10 +296,8 @@ TRestEvent* TRestTrackPathMinimizationProcess::ProcessEvent(TRestEvent* evInput)
     return fOutputTrackEvent;
 }
 
-//______________________________________________________________________________
 void TRestTrackPathMinimizationProcess::EndProcess() {}
 
-//______________________________________________________________________________
 void TRestTrackPathMinimizationProcess::InitFromConfigFile() {
     fWeightHits = true;
     if ((TString)GetParameter("weightHits", "false") == "false") fWeightHits = false;

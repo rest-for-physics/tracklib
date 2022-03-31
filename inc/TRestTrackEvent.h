@@ -62,7 +62,7 @@ class TRestTrackEvent : public TRestEvent {
             std::cout << "-- Error : However, only " << fTrack.size() << " where found inside TRestTrackEvent"
                       << std::endl;
             std::cout << "-- Error : This might be probably a crash ... !!" << std::endl;
-            return NULL;
+            return nullptr;
         }
         return &fTrack[n];
     }
