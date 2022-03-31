@@ -86,51 +86,57 @@ typedef struct CCbigchunk {
     char space[CC_BIGCHUNK];
     CCbigchunkptr ptr;
 } CCbigchunk;
-
-void* CCutil_allocrus(size_t size) {
-    void* mem = (void*)NULL;
+    
+void *CCutil_allocrus (size_t size)
+{
+    void *mem = (void *) NULL;
 
     if (size == 0) {
-        fprintf(stderr, "Warning: 0 bytes allocated\n");
+        fprintf (stderr, "Warning: 0 bytes allocated\n");
     }
 
-    mem = (void*)malloc(size);
-    if (mem == (void*)NULL) {
-        fprintf(stderr, "Out of memory. Asked for %d bytes\n", (int)size);
+    mem = (void *) malloc (size);
+    if (mem == (void *) NULL) {
+        fprintf (stderr, "Out of memory. Asked for %d bytes\n", (int) size);
     }
     return mem;
 }
 
-void CCutil_freerus(void* p) {
+void CCutil_freerus (void *p)
+{
     if (!p) {
-        fprintf(stderr, "Warning: null pointer freed\n");
+        fprintf (stderr, "Warning: null pointer freed\n");
         return;
     }
 
-    free(p);
+    free (p);
 }
 
-void* CCutil_reallocrus(void* ptr, size_t size) {
-    void* newptr;
+void *CCutil_reallocrus (void *ptr, size_t size)
+{
+    void *newptr;
 
     if (!ptr) {
-        return CCutil_allocrus(size);
+        return CCutil_allocrus (size);
     } else {
-        newptr = (void*)realloc(ptr, size);
+        newptr = (void *) realloc (ptr, size);
         if (!newptr) {
-            fprintf(stderr, "Out of memory.  Tried to grow to %d bytes\n", (int)size);
+            fprintf (stderr, "Out of memory.  Tried to grow to %d bytes\n",
+                     (int) size);
         }
         return newptr;
     }
 }
 
-int CCutil_reallocrus_scale(void** pptr, int* pnnum, int count, double scale, size_t size) {
-    int newsize = (int)(((double)*pnnum) * scale);
-    void* p;
+int CCutil_reallocrus_scale (void **pptr, int *pnnum, int count, double scale,
+        size_t size)
+{
+    int newsize = (int) (((double) *pnnum) * scale);
+    void *p;
 
-    if (newsize < *pnnum + 1000) newsize = *pnnum + 1000;
+    if (newsize < *pnnum+1000) newsize = *pnnum+1000;
     if (newsize < count) newsize = count;
-    p = CCutil_reallocrus(*pptr, newsize * size);
+    p = CCutil_reallocrus (*pptr, newsize * size);
     if (!p) {
         return 1;
     } else {
@@ -140,8 +146,9 @@ int CCutil_reallocrus_scale(void** pptr, int* pnnum, int count, double scale, si
     }
 }
 
-int CCutil_reallocrus_count(void** pptr, int count, size_t size) {
-    void* p = CCutil_reallocrus(*pptr, count * size);
+int CCutil_reallocrus_count (void **pptr, int count, size_t size)
+{
+    void *p = CCutil_reallocrus (*pptr, count * size);
 
     if (!p) {
         return 1;
@@ -151,44 +158,52 @@ int CCutil_reallocrus_count(void** pptr, int count, size_t size) {
     }
 }
 
-CCbigchunkptr* CCutil_bigchunkalloc(void) {
-    CCbigchunk* p = CC_SAFE_MALLOC(1, CCbigchunk);
 
-    if (p == (CCbigchunk*)NULL) {
-        fprintf(stderr, "Out of memory in CCutil_bigchunkalloc\n");
-        return (CCbigchunkptr*)NULL;
+CCbigchunkptr *CCutil_bigchunkalloc (void)
+{
+    CCbigchunk *p = CC_SAFE_MALLOC (1, CCbigchunk);
+
+    if (p == (CCbigchunk *) NULL) {
+        fprintf (stderr, "Out of memory in CCutil_bigchunkalloc\n");
+        return (CCbigchunkptr *) NULL;
     }
     p->ptr.this_chunk = p;
-    p->ptr.this_one = (void*)p->space;
+    p->ptr.this_one = (void *) p->space;
     return &(p->ptr);
 }
 
-void CCutil_bigchunkfree(CCbigchunkptr* bp) {
+void CCutil_bigchunkfree (CCbigchunkptr *bp)
+{
     /* This copy is necessary since CC_FREE zeros its first argument */
-    CCbigchunk* p = bp->this_chunk;
-
-    CC_FREE(p, CCbigchunk);
+    CCbigchunk *p = bp->this_chunk;
+    
+    CC_FREE (p, CCbigchunk);
 }
 
-void CCptrworld_init(CCptrworld* world) {
+void CCptrworld_init (CCptrworld *world)
+{
     world->refcount = 1;
-    world->freelist = (void*)NULL;
-    world->chunklist = (CCbigchunkptr*)NULL;
+    world->freelist = (void *) NULL;
+    world->chunklist = (CCbigchunkptr *) NULL;
 }
 
-void CCptrworld_add(CCptrworld* world) { world->refcount++; }
+void CCptrworld_add (CCptrworld *world)
+{
+    world->refcount++;
+}
 
-void CCptrworld_delete(CCptrworld* world) {
+void CCptrworld_delete (CCptrworld *world)
+{
     world->refcount--;
     if (world->refcount <= 0) {
         CCbigchunkptr *bp, *bpnext;
 
-        for (bp = world->chunklist; bp; bp = bpnext) {
+        for (bp = world->chunklist ; bp; bp = bpnext) {
             bpnext = bp->next;
-            CCutil_bigchunkfree(bp);
+            CCutil_bigchunkfree (bp);
         }
-        world->chunklist = (CCbigchunkptr*)NULL;
-        world->freelist = (void*)NULL;
+        world->chunklist = (CCbigchunkptr *) NULL;
+        world->freelist = (void *) NULL;
         world->refcount = 0;
     }
 }
