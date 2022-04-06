@@ -525,16 +525,10 @@ TPad* TRestTrackEvent::DrawEvent(TString option) {
     fYZTrack = new TGraph[nTracks];
     fXYZTrack = new TGraph2D[nTracks];
 
-    vector<Int_t> drawLinesXY(nTracks);
-    vector<Int_t> drawLinesXZ(nTracks);
-    vector<Int_t> drawLinesYZ(nTracks);
-    vector<Int_t> drawLinesXYZ(nTracks);
-
-    for (int i = 0; i < nTracks; i++) {
-        drawLinesXY[i] = 0;
-        drawLinesXZ[i] = 0;
-        drawLinesYZ[i] = 0;
-    }
+    vector<Int_t> drawLinesXY(nTracks,0);
+    vector<Int_t> drawLinesXZ(nTracks,0);
+    vector<Int_t> drawLinesYZ(nTracks,0);
+    vector<Int_t> drawLinesXYZ(nTracks,0);
 
     int countXY = 0, countYZ = 0, countXZ = 0, countXYZ = 0;
     int nTckXY = 0, nTckXZ = 0, nTckYZ = 0, nTckXYZ = 0;
@@ -672,12 +666,20 @@ TPad* TRestTrackEvent::DrawEvent(TString option) {
                 countYZ++;
             }
 
-            if (x > maxX) maxX = x;
-            if (x < minX) minX = x;
-            if (y > maxY) maxY = y;
-            if (y < minY) minY = y;
-            if (z > maxZ) maxZ = z;
-            if (z < minZ) minZ = z;
+            if(type % X == 0){
+              if (x > maxX) maxX = x;
+              if (x < minX) minX = x;
+            }
+
+            if(type % Y == 0){
+              if (y > maxY) maxY = y;
+              if (y < minY) minY = y;
+            }
+
+            if(type % Z == 0){
+              if (z > maxZ) maxZ = z;
+              if (z < minZ) minZ = z;
+            }
         }
     }
 
