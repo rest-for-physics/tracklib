@@ -357,7 +357,7 @@ void TRestTrackEvent::PrintEvent(Bool_t fullInfo) {
 }
 
 // Draw current event in a Tpad
-TPad* TRestTrackEvent::DrawEvent(TString option) {
+TPad* TRestTrackEvent::DrawEvent(const TString& option) {
     /* Not used for the moment
     Bool_t drawXZ = false;
     Bool_t drawYZ = false;
