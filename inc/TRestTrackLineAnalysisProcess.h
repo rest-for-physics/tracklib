@@ -31,12 +31,13 @@
 class TRestTrackLineAnalysisProcess : public TRestEventProcess {
    private:
    
-#ifndef __CINT__
-    // Input event Track Event
+
+    /// A pointer to the input event Track Event
     TRestTrackEvent* fTrackEvent;
-    // Output event Track event smoothed 
+   
+    /// A pointer to the output event Track event (after smoothing)
     TRestTrackEvent* fOutTrackEvent;
-#endif
+
 
     void Initialize();
 
