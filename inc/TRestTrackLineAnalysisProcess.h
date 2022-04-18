@@ -30,20 +30,18 @@
 //! A process to analyze alpha tracks
 class TRestTrackLineAnalysisProcess : public TRestEventProcess {
    private:
-   
 #ifndef __CINT__
     // Input event Track Event
     TRestTrackEvent* fTrackEvent;
-    // Output event Track event smoothed 
+    // Output event Track event smoothed
     TRestTrackEvent* fOutTrackEvent;
 #endif
 
     void Initialize();
 
    protected:
-
-   // A parameter to define the track balance, otherwise the eent is rejected 
-   Double_t fTrackBalance = 0.65;
+    // A parameter to define the track balance, otherwise the eent is rejected
+    Double_t fTrackBalance = 0.65;
 
    public:
     any GetInputEvent() { return fTrackEvent; }
@@ -55,12 +53,12 @@ class TRestTrackLineAnalysisProcess : public TRestEventProcess {
 
     void PrintMetadata() {
         BeginPrintProcess();
-        metadata<<"Track Balance: "<<fTrackBalance<<endl;
+        metadata << "Track Balance: " << fTrackBalance << endl;
         EndPrintProcess();
     }
 
-    // This function retreive the origin and the end  
-    void GetOriginEnd(TRestVolumeHits &hits, TVector3 &orig, TVector3 &end);
+    // This function retreive the origin and the end
+    void GetOriginEnd(TRestVolumeHits& hits, TVector3& orig, TVector3& end);
 
     TString GetProcessName() { return (TString) "trackLineAna"; }
 
@@ -70,6 +68,5 @@ class TRestTrackLineAnalysisProcess : public TRestEventProcess {
     ~TRestTrackLineAnalysisProcess();
 
     ClassDef(TRestTrackLineAnalysisProcess, 1);
-
 };
 #endif

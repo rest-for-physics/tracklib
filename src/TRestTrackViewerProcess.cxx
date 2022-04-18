@@ -73,7 +73,6 @@ void TRestTrackViewerProcess::Initialize() {
 
     fTrackEvent = nullptr;
     fSingleThreadOnly = true;
-
 }
 
 ///////////////////////////////////////////////
@@ -81,117 +80,110 @@ void TRestTrackViewerProcess::Initialize() {
 /// TRestEventProcess
 ///
 void TRestTrackViewerProcess::InitProcess() {
-  CreateCanvas();
-  if (!hCanvas && fDrawHits)hCanvas = new TCanvas("hitsCanvas","hitsCanvas",fCanvasSize.X(), fCanvasSize.Y());
+    CreateCanvas();
+    if (!hCanvas && fDrawHits)
+        hCanvas = new TCanvas("hitsCanvas", "hitsCanvas", fCanvasSize.X(), fCanvasSize.Y());
 }
 
 ///////////////////////////////////////////////
 /// \brief The main processing event function
 ///
 TRestEvent* TRestTrackViewerProcess::ProcessEvent(TRestEvent* evInput) {
+    // no need for verbose copy now
+    fTrackEvent = (TRestTrackEvent*)evInput;
 
-  // no need for verbose copy now
-  fTrackEvent = (TRestTrackEvent*)evInput;
-
-  fCanvas->cd();
-  TPad *pad = fTrackEvent->DrawEvent();
-  if(fDrawOriginEnd){
-    GetOriginEnd(fAnalysisTree, originGr, endGr, legOrEnd);
-    DrawOriginEnd(pad, originGr, endGr, legOrEnd);
-  }
-
-  fCanvas->cd();
-  pad->Draw();
-  fCanvas->Update();
-
-  if(!fDrawHits)return fTrackEvent;
-
-  hCanvas->cd();
-  TPad *hPad = fTrackEvent->DrawHits();
-    if(fDrawOriginEnd){
-      DrawOriginEnd(hPad, originGr, endGr, legOrEnd);
+    fCanvas->cd();
+    TPad* pad = fTrackEvent->DrawEvent();
+    if (fDrawOriginEnd) {
+        GetOriginEnd(fAnalysisTree, originGr, endGr, legOrEnd);
+        DrawOriginEnd(pad, originGr, endGr, legOrEnd);
     }
 
-  hCanvas->cd();
-  hPad->Draw();
-  hCanvas->Update();
+    fCanvas->cd();
+    pad->Draw();
+    fCanvas->Update();
 
-  return fTrackEvent;
+    if (!fDrawHits) return fTrackEvent;
+
+    hCanvas->cd();
+    TPad* hPad = fTrackEvent->DrawHits();
+    if (fDrawOriginEnd) {
+        DrawOriginEnd(hPad, originGr, endGr, legOrEnd);
+    }
+
+    hCanvas->cd();
+    hPad->Draw();
+    hCanvas->Update();
+
+    return fTrackEvent;
 }
 
 ///////////////////////////////////////////////
 /// \brief Get origin and end of the track if trackLineAnalysis have
 /// been performed
 ///
-void TRestTrackViewerProcess::GetOriginEnd(TRestAnalysisTree *anaTree, std::vector<TGraph *>  &origin, std::vector<TGraph *>  &end, std::vector<TLegend *> &leg){
+void TRestTrackViewerProcess::GetOriginEnd(TRestAnalysisTree* anaTree, std::vector<TGraph*>& origin,
+                                           std::vector<TGraph*>& end, std::vector<TLegend*>& leg) {
+    for (auto gr : origin)
+        if (gr) delete gr;
 
-  for(auto gr : origin)
-    if(gr)delete gr;
+    for (auto gr : end)
+        if (gr) delete gr;
 
-  for(auto gr : end)
-    if(gr)delete gr;
+    for (auto l : leg)
+        if (l) delete l;
 
-  for(auto l : leg)
-    if(l)delete l;
+    std::vector<double> originV(3, 0);
+    std::vector<std::string> oName = {"originX", "originY", "originZ"};
+    std::vector<double> endV(3, 0);
+    std::vector<std::string> eName = {"endX", "endY", "endZ"};
 
-  std::vector <double> originV(3,0);
-  std::vector<std::string> oName = {"originX","originY","originZ"}; 
-  std::vector <double> endV(3,0);
-  std::vector<std::string> eName = {"endX","endY","endZ"}; 
-
-    for(int i=0;i<3;i++){
-      std::string fName = "alphaTrackAna_"+oName[i];
-        if(anaTree->GetObservableID(fName) ==-1){
-          warning<<"Observable "<< fName <<"not found\n";
-          return;
+    for (int i = 0; i < 3; i++) {
+        std::string fName = "alphaTrackAna_" + oName[i];
+        if (anaTree->GetObservableID(fName) == -1) {
+            warning << "Observable " << fName << "not found\n";
+            return;
         }
-      originV[i] = anaTree->GetObservableValue<Double_t>(fName);
-      fName = "alphaTrackAna_"+eName[i];
-        if(anaTree->GetObservableID(fName) ==-1){
-          warning<<"Observable "<< fName <<"not found\n";
-          return;
+        originV[i] = anaTree->GetObservableValue<Double_t>(fName);
+        fName = "alphaTrackAna_" + eName[i];
+        if (anaTree->GetObservableID(fName) == -1) {
+            warning << "Observable " << fName << "not found\n";
+            return;
         }
-      endV[i] = anaTree->GetObservableValue<Double_t>(fName);
+        endV[i] = anaTree->GetObservableValue<Double_t>(fName);
     }
 
-    for(int i=0;i<2;i++){
-      origin[i] = new TGraph();
-      origin[i]->SetPoint(0,originV[i],originV[2]);
-      origin[i]->SetMarkerColor(kRed);
-      origin[i]->SetMarkerStyle(20);
-      end[i] = new TGraph();
-      end[i]->SetPoint(0,endV[i],endV[2]);
-      end[i]->SetMarkerColor(kBlack);
-      end[i]->SetMarkerStyle(20);
-      leg[i] = new TLegend(0.7,0.7,0.9,0.9);
-      leg[i]->AddEntry(origin[i],"Origin","p");
-      leg[i]->AddEntry(end[i],"End","p");
+    for (int i = 0; i < 2; i++) {
+        origin[i] = new TGraph();
+        origin[i]->SetPoint(0, originV[i], originV[2]);
+        origin[i]->SetMarkerColor(kRed);
+        origin[i]->SetMarkerStyle(20);
+        end[i] = new TGraph();
+        end[i]->SetPoint(0, endV[i], endV[2]);
+        end[i]->SetMarkerColor(kBlack);
+        end[i]->SetMarkerStyle(20);
+        leg[i] = new TLegend(0.7, 0.7, 0.9, 0.9);
+        leg[i]->AddEntry(origin[i], "Origin", "p");
+        leg[i]->AddEntry(end[i], "End", "p");
     }
-
 }
 ///////////////////////////////////////////////
 /// \brief Draw origin and end of the track if trackLineAnalysis have
 /// been performed
 ///
-void TRestTrackViewerProcess::DrawOriginEnd(TPad *pad, std::vector<TGraph *> &origin, std::vector<TGraph *> &end, std::vector<TLegend *> &leg){
-
-    for(int i=0;i<2;i++){
-      pad->cd(i+1);
-        if(origin[i])
-          origin[i]->Draw("LP");
-        if(end[i])
-          end[i]->Draw("LP");
-        if(leg[i])
-          leg[i]->Draw();
-      pad->Update();
+void TRestTrackViewerProcess::DrawOriginEnd(TPad* pad, std::vector<TGraph*>& origin,
+                                            std::vector<TGraph*>& end, std::vector<TLegend*>& leg) {
+    for (int i = 0; i < 2; i++) {
+        pad->cd(i + 1);
+        if (origin[i]) origin[i]->Draw("LP");
+        if (end[i]) end[i]->Draw("LP");
+        if (leg[i]) leg[i]->Draw();
+        pad->Update();
     }
-  
 }
 
 ///////////////////////////////////////////////
 /// \brief Function to include required actions after all events have been
 /// processed.
 ///
-void TRestTrackViewerProcess::EndProcess() {
-
-}
+void TRestTrackViewerProcess::EndProcess() {}

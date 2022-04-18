@@ -356,61 +356,68 @@ void TRestTrackEvent::PrintEvent(Bool_t fullInfo) {
     for (int i = 0; i < GetNumberOfTracks(); i++) this->GetTrack(i)->PrintTrack(fullInfo);
 }
 
-TPad* TRestTrackEvent::DrawHits ( ){
+TPad* TRestTrackEvent::DrawHits() {
+    if (fXZHits) {
+        delete fXZHits;
+        fXZHits = nullptr;
+    }
+    if (fYZHits) {
+        delete fYZHits;
+        fYZHits = nullptr;
+    }
+    if (fHitsPad) {
+        delete fHitsPad;
+        fHitsPad = nullptr;
+    }
 
-  if(fXZHits){ delete fXZHits; fXZHits = nullptr;}
-  if(fYZHits){ delete fYZHits; fYZHits = nullptr;}
-  if(fHitsPad){ delete fHitsPad; fHitsPad = nullptr;}
-
-  std::vector<double>fX,fY,fZ;
+    std::vector<double> fX, fY, fZ;
 
     for (int t = 0; t < GetNumberOfTracks(); t++) {
-      TRestTrack* tck = GetTrack(t);
-      if(GetLevel(t)!=1)continue;
+        TRestTrack* tck = GetTrack(t);
+        if (GetLevel(t) != 1) continue;
         TRestVolumeHits* hits = tck->GetVolumeHits();
-           for(int i=0; i<hits->GetNumberOfHits();i++){
-               if(hits->GetType(i) % X == 0)fX.emplace_back(hits->GetX(i));
-               if(hits->GetType(i) % Y == 0)fY.emplace_back(hits->GetY(i));
-               if(hits->GetType(i) % Z == 0)fZ.emplace_back(hits->GetZ(i));
-           }
+        for (int i = 0; i < hits->GetNumberOfHits(); i++) {
+            if (hits->GetType(i) % X == 0) fX.emplace_back(hits->GetX(i));
+            if (hits->GetType(i) % Y == 0) fY.emplace_back(hits->GetY(i));
+            if (hits->GetType(i) % Z == 0) fZ.emplace_back(hits->GetZ(i));
+        }
     }
 
-  double maxX,minX,maxY,minY,maxZ,minZ;
-  int nBinsX,nBinsY,nBinsZ;
-  TRestHits::GetBoundaries(fX, maxX, minX, nBinsX);
-  TRestHits::GetBoundaries(fY, maxY, minY, nBinsY);
-  TRestHits::GetBoundaries(fZ, maxZ, minZ, nBinsZ);
+    double maxX, minX, maxY, minY, maxZ, minZ;
+    int nBinsX, nBinsY, nBinsZ;
+    TRestHits::GetBoundaries(fX, maxX, minX, nBinsX);
+    TRestHits::GetBoundaries(fY, maxY, minY, nBinsY);
+    TRestHits::GetBoundaries(fZ, maxZ, minZ, nBinsZ);
 
-  fXZHits = new TH2F("TXZ","TXZ",nBinsX,minX,maxX,nBinsZ, minZ, maxZ);
-  fYZHits = new TH2F("TYZ","TYZ",nBinsY,minY,maxY,nBinsZ, minZ, maxZ);
+    fXZHits = new TH2F("TXZ", "TXZ", nBinsX, minX, maxX, nBinsZ, minZ, maxZ);
+    fYZHits = new TH2F("TYZ", "TYZ", nBinsY, minY, maxY, nBinsZ, minZ, maxZ);
 
-  for (int t = 0; t < GetNumberOfTracks(); t++) {
-      TRestTrack* tck = GetTrack(t);
-      if(GetLevel(t)!=1)continue;
+    for (int t = 0; t < GetNumberOfTracks(); t++) {
+        TRestTrack* tck = GetTrack(t);
+        if (GetLevel(t) != 1) continue;
         TRestVolumeHits* hits = tck->GetVolumeHits();
-           for(int i=0; i<hits->GetNumberOfHits();i++){
-               if(hits->GetType(i) == XZ)fXZHits->Fill(hits->GetX(i),hits->GetZ(i),hits->GetEnergy(i));
-               if(hits->GetType(i) == YZ)fYZHits->Fill(hits->GetY(i),hits->GetZ(i),hits->GetEnergy(i));
-           }
+        for (int i = 0; i < hits->GetNumberOfHits(); i++) {
+            if (hits->GetType(i) == XZ) fXZHits->Fill(hits->GetX(i), hits->GetZ(i), hits->GetEnergy(i));
+            if (hits->GetType(i) == YZ) fYZHits->Fill(hits->GetY(i), hits->GetZ(i), hits->GetEnergy(i));
+        }
     }
 
-  fHitsPad = new TPad("TrackHits", "TrackHits", 0, 0, 1, 1);
-  fHitsPad->Divide(2,1);
-  fHitsPad->Draw();
+    fHitsPad = new TPad("TrackHits", "TrackHits", 0, 0, 1, 1);
+    fHitsPad->Divide(2, 1);
+    fHitsPad->Draw();
 
-  fHitsPad->cd(1);
-  fXZHits->GetXaxis()->SetTitle("X-axis (mm)");
-  fXZHits->GetYaxis()->SetTitle("Z-axis (mm)");
-  fXZHits->Draw("COLZ");
-  
-  fHitsPad->cd(2);
-  fYZHits->GetXaxis()->SetTitle("Y-axis (mm)");
-  fYZHits->GetYaxis()->SetTitle("Z-axis (mm)");
-  fYZHits->Draw("COLZ");
+    fHitsPad->cd(1);
+    fXZHits->GetXaxis()->SetTitle("X-axis (mm)");
+    fXZHits->GetYaxis()->SetTitle("Z-axis (mm)");
+    fXZHits->Draw("COLZ");
 
-  return fHitsPad;
+    fHitsPad->cd(2);
+    fYZHits->GetXaxis()->SetTitle("Y-axis (mm)");
+    fYZHits->GetYaxis()->SetTitle("Z-axis (mm)");
+    fYZHits->Draw("COLZ");
+
+    return fHitsPad;
 }
-
 
 // Draw current event in a Tpad
 TPad* TRestTrackEvent::DrawEvent(const TString& option) {
@@ -525,10 +532,10 @@ TPad* TRestTrackEvent::DrawEvent(const TString& option) {
     fYZTrack = new TGraph[nTracks];
     fXYZTrack = new TGraph2D[nTracks];
 
-    vector<Int_t> drawLinesXY(nTracks,0);
-    vector<Int_t> drawLinesXZ(nTracks,0);
-    vector<Int_t> drawLinesYZ(nTracks,0);
-    vector<Int_t> drawLinesXYZ(nTracks,0);
+    vector<Int_t> drawLinesXY(nTracks, 0);
+    vector<Int_t> drawLinesXZ(nTracks, 0);
+    vector<Int_t> drawLinesYZ(nTracks, 0);
+    vector<Int_t> drawLinesXYZ(nTracks, 0);
 
     int countXY = 0, countYZ = 0, countXZ = 0, countXYZ = 0;
     int nTckXY = 0, nTckXZ = 0, nTckYZ = 0, nTckXYZ = 0;
@@ -666,19 +673,19 @@ TPad* TRestTrackEvent::DrawEvent(const TString& option) {
                 countYZ++;
             }
 
-            if(type % X == 0){
-              if (x > maxX) maxX = x;
-              if (x < minX) minX = x;
+            if (type % X == 0) {
+                if (x > maxX) maxX = x;
+                if (x < minX) minX = x;
             }
 
-            if(type % Y == 0){
-              if (y > maxY) maxY = y;
-              if (y < minY) minY = y;
+            if (type % Y == 0) {
+                if (y > maxY) maxY = y;
+                if (y < minY) minY = y;
             }
 
-            if(type % Z == 0){
-              if (z > maxZ) maxZ = z;
-              if (z < minZ) minZ = z;
+            if (type % Z == 0) {
+                if (z > maxZ) maxZ = z;
+                if (z < minZ) minZ = z;
             }
         }
     }

@@ -23,29 +23,29 @@
 #ifndef RestCore_TRestTrackViewerProcess
 #define RestCore_TRestTrackViewerProcess
 
-#include <TLegend.h>
 #include <TGraph.h>
+#include <TLegend.h>
 
-#include "TRestTrackEvent.h"
 #include "TRestEventProcess.h"
+#include "TRestTrackEvent.h"
 
 //! A generic viewer REST process to visualize track events
 class TRestTrackViewerProcess : public TRestEventProcess {
    private:
     TRestTrackEvent* fTrackEvent;  //!
 
-    //In case of alpha tracks one might be interested on drawing the origin and end from the analysis
+    // In case of alpha tracks one might be interested on drawing the origin and end from the analysis
     bool fDrawOriginEnd = false;
     bool fDrawHits = true;
 
-    //Graph to store the origin of the track
-    std::vector<TGraph *>  originGr {nullptr,nullptr}; //!
-    //Graph to store the end of the track
-    std::vector<TGraph *>  endGr {nullptr,nullptr};    //!
-    //Graph to store legends
-    std::vector<TLegend *> legOrEnd {nullptr,nullptr}; //!
+    // Graph to store the origin of the track
+    std::vector<TGraph*> originGr{nullptr, nullptr};  //!
+    // Graph to store the end of the track
+    std::vector<TGraph*> endGr{nullptr, nullptr};  //!
+    // Graph to store legends
+    std::vector<TLegend*> legOrEnd{nullptr, nullptr};  //!
 
-    TCanvas *hCanvas = nullptr;
+    TCanvas* hCanvas = nullptr;
 
     void Initialize();
 
@@ -70,8 +70,10 @@ class TRestTrackViewerProcess : public TRestEventProcess {
 
     TString GetProcessName() { return (TString) "trackViewer"; }
 
-    static void GetOriginEnd(TRestAnalysisTree *anaTree, std::vector<TGraph *> &origin, std::vector<TGraph *>  &end, std::vector<TLegend *> &leg);
-    static void DrawOriginEnd(TPad *pad, std::vector<TGraph *> &origin, std::vector<TGraph *> &end, std::vector<TLegend *> &leg);
+    static void GetOriginEnd(TRestAnalysisTree* anaTree, std::vector<TGraph*>& origin,
+                             std::vector<TGraph*>& end, std::vector<TLegend*>& leg);
+    static void DrawOriginEnd(TPad* pad, std::vector<TGraph*>& origin, std::vector<TGraph*>& end,
+                              std::vector<TLegend*>& leg);
 
     // Constructor
     TRestTrackViewerProcess();
@@ -79,6 +81,6 @@ class TRestTrackViewerProcess : public TRestEventProcess {
     ~TRestTrackViewerProcess();
 
     ClassDef(TRestTrackViewerProcess, 1);  // Template for a REST "event process" class inherited from
-                                               // TRestEventProcess
+                                           // TRestEventProcess
 };
 #endif

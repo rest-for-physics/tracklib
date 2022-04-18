@@ -38,7 +38,8 @@
 ///
 /// Metadata example for this process:
 /// \code
-///            <addProcess type="TRestTrackLinearizationProcess" name="alphaTrackAna" value="ON" verboseLevel="info" >
+///            <addProcess type="TRestTrackLinearizationProcess" name="alphaTrackAna" value="ON"
+///            verboseLevel="info" >
 ///                   <parameter name="maxNodes" value="6" />
 /// 		</addProcess>
 /// \endcode
@@ -67,9 +68,7 @@ ClassImp(TRestTrackLinearizationProcess);
 TRestTrackLinearizationProcess::TRestTrackLinearizationProcess() { Initialize(); }
 
 //______________________________________________________________________________
-TRestTrackLinearizationProcess::~TRestTrackLinearizationProcess() {
-  delete fOutTrackEvent;
-}
+TRestTrackLinearizationProcess::~TRestTrackLinearizationProcess() { delete fOutTrackEvent; }
 
 //______________________________________________________________________________
 void TRestTrackLinearizationProcess::Initialize() {
@@ -81,149 +80,151 @@ void TRestTrackLinearizationProcess::Initialize() {
 }
 
 //______________________________________________________________________________
-void TRestTrackLinearizationProcess::InitProcess() { }
+void TRestTrackLinearizationProcess::InitProcess() {}
 
 //______________________________________________________________________________
 TRestEvent* TRestTrackLinearizationProcess::ProcessEvent(TRestEvent* evInput) {
+    fTrackEvent = (TRestTrackEvent*)evInput;
+    fOutTrackEvent->SetEventInfo(fTrackEvent);
 
-  fTrackEvent = (TRestTrackEvent*)evInput;
-  fOutTrackEvent->SetEventInfo(fTrackEvent);
-
-   for (int t = 0; t < fTrackEvent->GetNumberOfTracks(); t++)
-     fOutTrackEvent->AddTrack(fTrackEvent->GetTrack(t));
+    for (int t = 0; t < fTrackEvent->GetNumberOfTracks(); t++)
+        fOutTrackEvent->AddTrack(fTrackEvent->GetTrack(t));
 
     for (int t = 0; t < fTrackEvent->GetNumberOfTracks(); t++) {
-      if (!fTrackEvent->isTopLevel(t)) continue;
-      TRestTrack* track = fTrackEvent->GetTrack(t);
-      TRestVolumeHits* hits = track->GetVolumeHits();
-      TRestVolumeHits vHits;
-      GetHitsProjection(hits, fMaxNodes, vHits);
-      if(vHits.GetNumberOfHits()==0)continue;
+        if (!fTrackEvent->isTopLevel(t)) continue;
+        TRestTrack* track = fTrackEvent->GetTrack(t);
+        TRestVolumeHits* hits = track->GetVolumeHits();
+        TRestVolumeHits vHits;
+        GetHitsProjection(hits, fMaxNodes, vHits);
+        if (vHits.GetNumberOfHits() == 0) continue;
 
-      debug<<"Adding track "<<endl;
-      TRestTrack newTrack;
-      newTrack.SetTrackID(fOutTrackEvent->GetNumberOfTracks() + 1);
-      newTrack.SetParentID(track->GetTrackID());
-      newTrack.SetVolumeHits(vHits );
+        debug << "Adding track " << endl;
+        TRestTrack newTrack;
+        newTrack.SetTrackID(fOutTrackEvent->GetNumberOfTracks() + 1);
+        newTrack.SetParentID(track->GetTrackID());
+        newTrack.SetVolumeHits(vHits);
 
-      debug<<"Is XZ "<<newTrack.isXZ()<<" Is YZ "<<newTrack.isYZ()<<endl;
+        debug << "Is XZ " << newTrack.isXZ() << " Is YZ " << newTrack.isYZ() << endl;
 
-      fOutTrackEvent->AddTrack(&newTrack);
+        fOutTrackEvent->AddTrack(&newTrack);
     }
 
-   debug<<"NTracks  X "<<fOutTrackEvent->GetNumberOfTracks("X")<<" Y "<<fOutTrackEvent->GetNumberOfTracks("Y")<<" "<<fOutTrackEvent->GetNumberOfTracks("X")<<endl;
+    debug << "NTracks  X " << fOutTrackEvent->GetNumberOfTracks("X") << " Y "
+          << fOutTrackEvent->GetNumberOfTracks("Y") << " " << fOutTrackEvent->GetNumberOfTracks("X") << endl;
 
-   fOutTrackEvent->SetLevels();
-   return fOutTrackEvent;
+    fOutTrackEvent->SetLevels();
+    return fOutTrackEvent;
 }
 
 //______________________________________________________________________________
-void TRestTrackLinearizationProcess::GetHitsProjection(TRestVolumeHits* hits, const int &nodes, TRestVolumeHits &vHits){
+void TRestTrackLinearizationProcess::GetHitsProjection(TRestVolumeHits* hits, const int& nodes,
+                                                       TRestVolumeHits& vHits) {
+    const int nHits = hits->GetNumberOfHits();
+    const REST_HitType hType = hits->GetType(0);
+    vHits.RemoveHits();
 
-   const int nHits = hits->GetNumberOfHits();
-   const REST_HitType hType = hits->GetType(0);
-   vHits.RemoveHits();
+    debug << "NHits " << nHits << " hits Type " << hType << endl;
 
-   debug<<"NHits "<<nHits<<" hits Type "<<hType<<endl;
+    if (hType == XZ) {
+        auto cl = GetBestNodes(hits->fX, hits->fZ, hits->fEnergy, nodes);
+        for (const auto& [xy, z] : cl) {
+            vHits.AddHit(xy, hits->GetY(0), z, 0, 0, hType, 0, 0, 0);
+        }
+    } else if (hType == YZ) {
+        auto cl = GetBestNodes(hits->fY, hits->fZ, hits->fEnergy, nodes);
+        for (const auto& [xy, z] : cl) {
+            vHits.AddHit(hits->GetX(0), xy, z, 0, 0, hType, 0, 0, 0);
+        }
+    } else if (hType == XY) {
+        auto cl = GetBestNodes(hits->fX, hits->fY, hits->fEnergy, nodes);
+        for (const auto& [xy, z] : cl) {
+            vHits.AddHit(xy, z, hits->GetZ(0), 0, 0, hType, 0, 0, 0);
+        }
+    } else {
+        warning << "Track linearization not implemented for XYZ tracks" << endl;
+        return;
+    }
 
-     if(hType == XZ){
-       auto cl = GetBestNodes(hits->fX,hits->fZ,hits->fEnergy,nodes);
-         for(const auto &[xy,z] : cl){
-           vHits.AddHit(xy,hits->GetY(0),z,0,0,hType,0,0,0);
-         }
-     } else if (hType == YZ) {
-       auto cl = GetBestNodes(hits->fY,hits->fZ,hits->fEnergy,nodes);
-         for(const auto &[xy,z] : cl){
-            vHits.AddHit(hits->GetX(0),xy,z,0,0,hType,0,0,0);
-         }
-     } else if (hType == XY) {
-       auto cl = GetBestNodes(hits->fX,hits->fY,hits->fEnergy,nodes);
-         for(const auto &[xy,z] : cl){
-            vHits.AddHit(xy,z,hits->GetZ(0),0,0,hType,0,0,0);
-         }
-     } else {
-       warning<<"Track linearization not implemented for XYZ tracks"<<endl;
-       return;
-     }
+    TRestVolumeHits::kMeansClustering(hits, vHits, 1);
 
-  TRestVolumeHits::kMeansClustering(hits,vHits,1);
-
-   if (GetVerboseLevel() >= REST_Debug)
-     for(int i=0;i<vHits.GetNumberOfHits();i++)debug<<i<<" "<<vHits.GetX(i)<<" "<<vHits.GetY(i)<<" "<<vHits.GetZ(i)<<" "<<vHits.GetType(i)<<endl;
-
+    if (GetVerboseLevel() >= REST_Debug)
+        for (int i = 0; i < vHits.GetNumberOfHits(); i++)
+            debug << i << " " << vHits.GetX(i) << " " << vHits.GetY(i) << " " << vHits.GetZ(i) << " "
+                  << vHits.GetType(i) << endl;
 }
 
-std::vector<std::pair<double,double>> TRestTrackLinearizationProcess::GetBestNodes(const std::vector<Float_t> &fXY, const std::vector<Float_t> &fZ, const std::vector<Float_t> &fEn, const int & nodes){
+std::vector<std::pair<double, double>> TRestTrackLinearizationProcess::GetBestNodes(
+    const std::vector<Float_t>& fXY, const std::vector<Float_t>& fZ, const std::vector<Float_t>& fEn,
+    const int& nodes) {
+    const int nHits = fXY.size();
 
-  const int nHits = fXY.size();
+    const double max[2] = {TMath::MaxElement(fXY.size(), fXY.data()),
+                           TMath::MaxElement(fZ.size(), fZ.data())};
+    const double min[2] = {TMath::MinElement(fXY.size(), fXY.data()),
+                           TMath::MinElement(fZ.size(), fZ.data())};
 
-  const double max[2] = {TMath::MaxElement(fXY.size(), fXY.data()), TMath::MaxElement(fZ.size(), fZ.data())};
-  const double min[2] = {TMath::MinElement(fXY.size(), fXY.data()), TMath::MinElement(fZ.size(), fZ.data())};
+    double totEn = 0;
+    for (const auto& en : fEn) totEn += en;
 
-  double totEn = 0;
-  for(const auto &en : fEn )totEn += en;
+    debug << "Max " << max[0] << " " << max[1] << endl;
+    debug << "Min " << min[0] << " " << min[1] << endl;
 
-  debug<<"Max "<<max[0]<<" "<<max[1]<<endl;
-  debug<<"Min "<<min[0]<<" "<<min[1]<<endl;
+    TGraph gr[2];
 
-   TGraph gr[2];
+    const int hitAvg = std::round(totEn / (double)nHits / 10.);
+    int c = 0;
+    for (int h = 0; h < nHits; h++) {
+        double en = fEn.at(h);
+        for (int e = 0; e < en; e += hitAvg) {
+            gr[0].SetPoint(c, fXY.at(h), fZ.at(h));
+            gr[1].SetPoint(c, fZ.at(h), fXY.at(h));
+            c++;
+        }
+    }
 
-   const int hitAvg = std::round(totEn/(double)nHits/10.);
-   int c=0;
-     for(int h=0;h<nHits;h++){
-       double en = fEn.at(h);
-         for(int e=0;e<en;e+=hitAvg){
-           gr[0].SetPoint(c,fXY.at(h),fZ.at(h));
-           gr[1].SetPoint(c,fZ.at(h),fXY.at(h));
-           c++;
-         }
-     }
+    debug << "Points graph " << c << " Hits " << nHits << endl;
 
-   debug<<"Points graph "<<c<<" Hits "<<nHits<<endl;
+    int bestIndex = 0;
+    double bestFit;
+    double slope;
+    double intercept;
 
-   int bestIndex=0;
-   double bestFit;
-   double slope;
-   double intercept;
+    std::string fitOpt = "";
+    if (GetVerboseLevel() < REST_Debug) fitOpt = "Q";
 
-   std::string fitOpt="";
-   if (GetVerboseLevel() < REST_Debug)fitOpt = "Q";
+    for (int l = 0; l < 2; l++) {
+        TF1 f1("f1", "[0] * x + [1]", min[l], max[l]);
+        gr[l].Fit(&f1, fitOpt.c_str());
+        double fitGoodness = f1.GetChisquare();
 
-     for(int l=0;l<2;l++){
-       TF1 f1("f1", "[0] * x + [1]",min[l],max[l]);
-       gr[l].Fit(&f1,fitOpt.c_str());
-       double fitGoodness = f1.GetChisquare();
+        if (l == 0) {
+            bestFit = fitGoodness;
+            slope = f1.GetParameter(0);
+            intercept = f1.GetParameter(1);
+            continue;
+        } else if (fitGoodness < bestFit) {
+            bestFit = fitGoodness;
+            bestIndex = l;
+            slope = f1.GetParameter(0);
+            intercept = f1.GetParameter(1);
+        }
+    }
 
-         if(l==0){
-           bestFit=fitGoodness;
-           slope = f1.GetParameter(0);
-           intercept = f1.GetParameter(1);
-           continue;
-         } else if(fitGoodness < bestFit){
-           bestFit=fitGoodness;
-           bestIndex =l;
-           slope = f1.GetParameter(0);
-           intercept = f1.GetParameter(1);
-         }
-     }
+    debug << "Best fit " << bestFit << " " << bestIndex << endl;
+    debug << "Slope " << slope << " Intercept " << intercept << endl;
 
-   debug<<"Best fit "<<bestFit<<" "<<bestIndex<<endl;
-   debug<<"Slope "<<slope<<" Intercept "<<intercept<<endl;
-   
-   std::vector<std::pair<double,double>> cluster(nodes);
-     for(int i=0;i<nodes;i++){
-       double first = min[bestIndex] + ((double)i) * ( max[bestIndex] - min[bestIndex])/(double)(nodes -1);
-       double second = first*slope + intercept;
-       if(bestIndex==0)cluster[i] = std::make_pair(first,second);
-       else cluster[i] = std::make_pair(second,first);
-     }
+    std::vector<std::pair<double, double>> cluster(nodes);
+    for (int i = 0; i < nodes; i++) {
+        double first = min[bestIndex] + ((double)i) * (max[bestIndex] - min[bestIndex]) / (double)(nodes - 1);
+        double second = first * slope + intercept;
+        if (bestIndex == 0)
+            cluster[i] = std::make_pair(first, second);
+        else
+            cluster[i] = std::make_pair(second, first);
+    }
 
-  return cluster;
-
+    return cluster;
 }
 
 //______________________________________________________________________________
-void TRestTrackLinearizationProcess::EndProcess() {
-
-}
-
+void TRestTrackLinearizationProcess::EndProcess() {}

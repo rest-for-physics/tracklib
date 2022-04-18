@@ -30,20 +30,18 @@
 //! A process to analyze alpha tracks
 class TRestTrackLinearizationProcess : public TRestEventProcess {
    private:
-   
 #ifndef __CINT__
     // Input event Track Event
     TRestTrackEvent* fTrackEvent;
-    // Output event Track event smoothed 
+    // Output event Track event smoothed
     TRestTrackEvent* fOutTrackEvent;
 #endif
 
     void Initialize();
 
    protected:
-
-   // A parameter to define the maximum number of nodes for the track linearization
-   Int_t fMaxNodes =6;
+    // A parameter to define the maximum number of nodes for the track linearization
+    Int_t fMaxNodes = 6;
 
    public:
     any GetInputEvent() { return fTrackEvent; }
@@ -55,7 +53,7 @@ class TRestTrackLinearizationProcess : public TRestEventProcess {
 
     void PrintMetadata() {
         BeginPrintProcess();
-        metadata<<"Max nodes: "<<fMaxNodes<<endl;
+        metadata << "Max nodes: " << fMaxNodes << endl;
         EndPrintProcess();
     }
 
@@ -63,13 +61,15 @@ class TRestTrackLinearizationProcess : public TRestEventProcess {
     // the nodes are extracted from the linear fit on GetBestNodes and afterwards
     // the closest hits to the nodes are merged to correct the position of the nodes
     // using kmeansClustering
-    void GetHitsProjection(TRestVolumeHits* hits, const int &nodes, TRestVolumeHits &vHits);
+    void GetHitsProjection(TRestVolumeHits* hits, const int& nodes, TRestVolumeHits& vHits);
 
     // This function performs a linear fit to the volumehits of the track weighthed by the
     // energy of the hits. Two fit are performed by rotating the axis and the best Chi2 is
     // selected. Afterwards, equidistant nodes following the fit and after the linear fit are
     // extracted
-    std::vector<std::pair<double,double>> GetBestNodes(const std::vector<Float_t> &fXY, const std::vector<Float_t> &fZ, const std::vector<Float_t> &fEn, const int & nodes);
+    std::vector<std::pair<double, double>> GetBestNodes(const std::vector<Float_t>& fXY,
+                                                        const std::vector<Float_t>& fZ,
+                                                        const std::vector<Float_t>& fEn, const int& nodes);
 
     TString GetProcessName() { return (TString) "trackLinearization"; }
 
@@ -79,6 +79,6 @@ class TRestTrackLinearizationProcess : public TRestEventProcess {
     ~TRestTrackLinearizationProcess();
 
     ClassDef(TRestTrackLinearizationProcess, 1);
-                   // Template for a REST "event process" class inherited from TRestEventProcess
+    // Template for a REST "event process" class inherited from TRestEventProcess
 };
 #endif
