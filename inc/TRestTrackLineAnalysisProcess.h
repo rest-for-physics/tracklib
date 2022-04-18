@@ -42,7 +42,7 @@ class TRestTrackLineAnalysisProcess : public TRestEventProcess {
 
    protected:
 
-   // A parameter to define the track balance, otherwise the eent is rejected 
+   /// A parameter to define the track balance, otherwise the event is rejected 
    Double_t fTrackBalance = 0.65;
 
    public:
