@@ -30,17 +30,16 @@
 //! A process to analyze alpha tracks
 class TRestTrackLineAnalysisProcess : public TRestEventProcess {
    private:
-#ifndef __CINT__
-    // Input event Track Event
+    /// A pointer to the input event Track Event
     TRestTrackEvent* fTrackEvent;
-    // Output event Track event smoothed
+
+    /// A pointer to the output event Track event (after smoothing)
     TRestTrackEvent* fOutTrackEvent;
-#endif
 
     void Initialize();
 
    protected:
-    // A parameter to define the track balance, otherwise the eent is rejected
+    /// A parameter to define the track balance, otherwise the event is rejected
     Double_t fTrackBalance = 0.65;
 
    public:
