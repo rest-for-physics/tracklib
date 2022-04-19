@@ -124,60 +124,24 @@ void TRestTrackLineAnalysisProcess::InitProcess() {}
 ///
 TRestEvent* TRestTrackLineAnalysisProcess::ProcessEvent(TRestEvent* evInput) {
     fTrackEvent = (TRestTrackEvent*)evInput;
-    fOutTrackEvent->SetEventInfo(fTrackEvent);
 
+    // Initialize outputTrackEvent
     for (int t = 0; t < fTrackEvent->GetNumberOfTracks(); t++)
         fOutTrackEvent->AddTrack(fTrackEvent->GetTrack(t));
 
-    Int_t nTracksX = fTrackEvent->GetNumberOfTracks("X");
-    Int_t nTracksY = fTrackEvent->GetNumberOfTracks("Y");
+    TRestTrack* tckX = fTrackEvent->GetMaxEnergyTrackInX();
+    TRestTrack* tckY = fTrackEvent->GetMaxEnergyTrackInY();
 
-    debug << "Ntracks X " << nTracksX << " Y " << nTracksY << " " << fTrackEvent->GetNumberOfTracks() << endl;
-
-    // No tracks in X or Y nothing to do
-    if (nTracksX == 0 || nTracksY == 0) return nullptr;
-
-    Double_t totEnergyX = 0, totEnergyY = 0;
-    Double_t maxTrackEnergyX = 0, maxTrackEnergyY = 0;
-    Int_t maxIndexX = -1, maxIndexY = -1;
-
-    for (int t = 0; t < fTrackEvent->GetNumberOfTracks(); t++) {
-        if (!fTrackEvent->isTopLevel(t)) continue;
-        TRestTrack* track = fTrackEvent->GetTrack(t);
-        Double_t trackEn = track->GetEnergy();
-        if (track->isXZ()) {
-            if (trackEn > maxTrackEnergyX) {
-                maxTrackEnergyX = trackEn;
-                maxIndexX = t;
-            }
-            totEnergyX += trackEn;
-        } else if (track->isYZ()) {
-            if (trackEn > maxTrackEnergyY) {
-                maxTrackEnergyY = trackEn;
-                maxIndexY = t;
-            }
-            totEnergyY += trackEn;
-        }
-    }
-
-    if (maxTrackEnergyX < totEnergyX * fTrackBalance || maxTrackEnergyY < totEnergyY * fTrackBalance)
-        return nullptr;
-
-    debug << "MaxIndex X " << maxIndexX << " Y " << maxIndexY << endl;
-
-    if (maxIndexX == -1 || maxIndexY == -1) return nullptr;
-
-    TRestTrack* tckX = fTrackEvent->GetTrack(maxIndexX);
-    TRestTrack* tckY = fTrackEvent->GetTrack(maxIndexY);
-
-    Double_t trackEnergy = maxTrackEnergyX + maxTrackEnergyY;
+    if (!tckX || !tckY) return nullptr;
 
     TRestVolumeHits vHitsX = (TRestVolumeHits) * (tckX->GetVolumeHits());
     TRestVolumeHits vHitsY = (TRestVolumeHits) * (tckY->GetVolumeHits());
 
     TVector3 origX, endX;
+    // Retreive origin and end of the track for the XZ projection
     GetOriginEnd(vHitsX, origX, endX);
     TVector3 origY, endY;
+    // Retreive origin and end of the track for the YZ projection
     GetOriginEnd(vHitsY, origY, endY);
 
     double originZ = (origX.Z() + origY.Z()) / 2.;
@@ -186,6 +150,7 @@ TRestEvent* TRestTrackLineAnalysisProcess::ProcessEvent(TRestEvent* evInput) {
     debug << "Origin: " << origX.X() << " y: " << origY.Y() << " z: " << originZ << endl;
     debug << "End : " << endX.X() << " y: " << endY.Y() << " z: " << endZ << endl;
 
+    // Compute some observables
     double dX = (origX.X() - endX.X());
     double dY = (origY.Y() - endY.Y());
     double dZ = (originZ - endZ);
@@ -195,7 +160,19 @@ TRestEvent* TRestTrackLineAnalysisProcess::ProcessEvent(TRestEvent* evInput) {
 
     debug << "Track length " << length << " angle: " << angle << endl;
 
+    Double_t trackEnergyX = tckX->GetEnergy();
+    Double_t trackEnergyY = tckY->GetEnergy();
+    Double_t trackEnergy = trackEnergyX + trackEnergyY;
+
+    Double_t trackBalanceX = 0;
+    if (trackEnergyX > 0) trackBalanceX = fTrackEvent->GetEnergy("X") / trackEnergyX;
+
+    Double_t trackBalanceY = 0;
+    if (trackEnergyY > 0) trackBalanceY = fTrackEvent->GetEnergy("Y") / trackEnergyY;
+
     // A new value for each observable is added
+    SetObservableValue("trackBalanceX", trackBalanceX);
+    SetObservableValue("trackBalanceY", trackBalanceY);
     SetObservableValue("originX", origX.X());
     SetObservableValue("originY", origY.Y());
     SetObservableValue("originZ", originZ);
@@ -207,12 +184,14 @@ TRestEvent* TRestTrackLineAnalysisProcess::ProcessEvent(TRestEvent* evInput) {
     SetObservableValue("downwards", downwards);
     SetObservableValue("totalEnergy", trackEnergy);
 
+    // Save most energetic XZ track
     TRestTrack newTrackX;
     newTrackX.SetVolumeHits(vHitsX);
     newTrackX.SetParentID(tckX->GetTrackID());
     newTrackX.SetTrackID(fOutTrackEvent->GetNumberOfTracks() + 1);
     fOutTrackEvent->AddTrack(&newTrackX);
 
+    // Save most energetic YZ track
     TRestTrack newTrackY;
     newTrackY.SetVolumeHits(vHitsY);
     newTrackY.SetParentID(tckY->GetTrackID());

@@ -39,9 +39,6 @@ class TRestTrackLineAnalysisProcess : public TRestEventProcess {
     void Initialize();
 
    protected:
-    /// A parameter to define the track balance, otherwise the event is rejected
-    Double_t fTrackBalance = 0.65;
-
    public:
     any GetInputEvent() { return fTrackEvent; }
     any GetOutputEvent() { return fOutTrackEvent; }
@@ -52,7 +49,6 @@ class TRestTrackLineAnalysisProcess : public TRestEventProcess {
 
     void PrintMetadata() {
         BeginPrintProcess();
-        metadata << "Track Balance: " << fTrackBalance << endl;
         EndPrintProcess();
     }
 
