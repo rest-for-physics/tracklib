@@ -88,13 +88,16 @@ void TRestTrackLinearizationProcess::Initialize() {
     fOutTrackEvent = new TRestTrackEvent();
 }
 
-//______________________________________________________________________________
+///////////////////////////////////////////////
+/// \brief Process initialization. Nothing to do here.
+///
 void TRestTrackLinearizationProcess::InitProcess() {}
 
-//______________________________________________________________________________
+///////////////////////////////////////////////
+/// \brief The main processing event function
+///
 TRestEvent* TRestTrackLinearizationProcess::ProcessEvent(TRestEvent* evInput) {
     fTrackEvent = (TRestTrackEvent*)evInput;
-    fOutTrackEvent->SetEventInfo(fTrackEvent);
 
     for (int t = 0; t < fTrackEvent->GetNumberOfTracks(); t++)
         fOutTrackEvent->AddTrack(fTrackEvent->GetTrack(t));
@@ -104,10 +107,12 @@ TRestEvent* TRestTrackLinearizationProcess::ProcessEvent(TRestEvent* evInput) {
         TRestTrack* track = fTrackEvent->GetTrack(t);
         TRestVolumeHits* hits = track->GetVolumeHits();
         TRestVolumeHits vHits;
+        // Perform track linearization
         GetHitsProjection(hits, fMaxNodes, vHits);
         if (vHits.GetNumberOfHits() == 0) continue;
 
         debug << "Adding track " << endl;
+        // Store tracks after tinearization
         TRestTrack newTrack;
         newTrack.SetTrackID(fOutTrackEvent->GetNumberOfTracks() + 1);
         newTrack.SetParentID(track->GetTrackID());
