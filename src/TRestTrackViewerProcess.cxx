@@ -95,7 +95,7 @@ TRestEvent* TRestTrackViewerProcess::ProcessEvent(TRestEvent* evInput) {
     fCanvas->cd();
     TPad* pad = fTrackEvent->DrawEvent();
     if (fDrawOriginEnd) {
-        GetOriginEnd(fAnalysisTree, originGr, endGr, legOrEnd);
+        GetOriginEnd(GetAnalysisTree(), originGr, endGr, legOrEnd);
         DrawOriginEnd(pad, originGr, endGr, legOrEnd);
     }
 
@@ -167,12 +167,15 @@ void TRestTrackViewerProcess::GetOriginEnd(TRestAnalysisTree* anaTree, std::vect
         leg[i]->AddEntry(end[i], "End", "p");
     }
 }
+
 ///////////////////////////////////////////////
 /// \brief Draw origin and end of the track if trackLineAnalysis have
 /// been performed
 ///
 void TRestTrackViewerProcess::DrawOriginEnd(TPad* pad, std::vector<TGraph*>& origin,
                                             std::vector<TGraph*>& end, std::vector<TLegend*>& leg) {
+    if (origin.size() != 2 || end.size() != 2 || leg.size() != 2) return;
+
     for (int i = 0; i < 2; i++) {
         pad->cd(i + 1);
         if (origin[i]) origin[i]->Draw("LP");
