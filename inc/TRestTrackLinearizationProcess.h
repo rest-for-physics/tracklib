@@ -57,16 +57,7 @@ class TRestTrackLinearizationProcess : public TRestEventProcess {
         EndPrintProcess();
     }
 
-    // This function performs the track linearization towards a given number of nodes
-    // the nodes are extracted from the linear fit on GetBestNodes and afterwards
-    // the closest hits to the nodes are merged to correct the position of the nodes
-    // using kmeansClustering
     void GetHitsProjection(TRestVolumeHits* hits, const int& nodes, TRestVolumeHits& vHits);
-
-    // This function performs a linear fit to the volumehits of the track weighthed by the
-    // energy of the hits. Two fit are performed by rotating the axis and the best Chi2 is
-    // selected. Afterwards, equidistant nodes following the fit and after the linear fit are
-    // extracted
     std::vector<std::pair<double, double>> GetBestNodes(const std::vector<Float_t>& fXY,
                                                         const std::vector<Float_t>& fZ,
                                                         const std::vector<Float_t>& fEn, const int& nodes);

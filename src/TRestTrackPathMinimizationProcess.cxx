@@ -160,9 +160,10 @@ void TRestTrackPathMinimizationProcess::NearestNeighbour(TRestVolumeHits* hits, 
 }
 
 ///////////////////////////////////////////////
-/// \brief Return the index with the shortest path solving Travelling Salesman Problem (TSP)
-/// using brute force, algorithm complexity is n!, the minimum path is guarantee
-//______________________________________________________________________________
+/// \brief This function return the index with the shortest path solving
+/// Travelling Salesman Problem (TSP) using brute force,
+/// algorithm complexity is n!, the minimum path is guarantee
+///
 void TRestTrackPathMinimizationProcess::BruteForce(TRestVolumeHits* hits, std::vector<int>& bestPath) {
     const int nHits = hits->GetNumberOfHits();
     double dist[nHits][nHits];
@@ -237,7 +238,9 @@ void TRestTrackPathMinimizationProcess::BruteForce(TRestVolumeHits* hits, std::v
 }
 
 ///////////////////////////////////////////////
-/// \brief Return the index with the shortest path
+/// \brief This function eturn the index with the shortest path
+/// Note that this method calls external tsp library and
+/// assumes cyclic data
 ///
 void TRestTrackPathMinimizationProcess::HeldKarp(TRestVolumeHits* hits, std::vector<int>& bestPath) {
     const int nHits = hits->GetNumberOfHits();
