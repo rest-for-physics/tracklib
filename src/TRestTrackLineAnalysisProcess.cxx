@@ -137,23 +137,17 @@ TRestEvent* TRestTrackLineAnalysisProcess::ProcessEvent(TRestEvent* evInput) {
     TRestVolumeHits vHitsX = (TRestVolumeHits) * (tckX->GetVolumeHits());
     TRestVolumeHits vHitsY = (TRestVolumeHits) * (tckY->GetVolumeHits());
 
-    TVector3 origX, endX;
+    TVector3 orig, end;
     // Retreive origin and end of the track for the XZ projection
-    GetOriginEnd(vHitsX, origX, endX);
-    TVector3 origY, endY;
-    // Retreive origin and end of the track for the YZ projection
-    GetOriginEnd(vHitsY, origY, endY);
+    GetOriginEnd(vHitsX, vHitsY, orig, end);
 
-    double originZ = (origX.Z() + origY.Z()) / 2.;
-    double endZ = (endX.Z() + endY.Z()) / 2.;
-
-    debug << "Origin: " << origX.X() << " y: " << origY.Y() << " z: " << originZ << endl;
-    debug << "End : " << endX.X() << " y: " << endY.Y() << " z: " << endZ << endl;
+    debug << "Origin: " << orig.X() << " y: " << orig.Y() << " z: " << orig.Z() << endl;
+    debug << "End : " << end.X() << " y: " << end.Y() << " z: " << end.Z() << endl;
 
     // Compute some observables
-    double dX = (origX.X() - endX.X());
-    double dY = (origY.Y() - endY.Y());
-    double dZ = (originZ - endZ);
+    double dX = (orig.X() - end.X());
+    double dY = (orig.Y() - end.Y());
+    double dZ = (orig.Z() - end.Z());
     Double_t length = TMath::Sqrt(dX * dX + dY * dY + dZ * dZ);
     Double_t angle = TMath::ACos(dZ / length);
     bool downwards = dZ > 0;
@@ -173,12 +167,12 @@ TRestEvent* TRestTrackLineAnalysisProcess::ProcessEvent(TRestEvent* evInput) {
     // A new value for each observable is added
     SetObservableValue("trackBalanceX", trackBalanceX);
     SetObservableValue("trackBalanceY", trackBalanceY);
-    SetObservableValue("originX", origX.X());
-    SetObservableValue("originY", origY.Y());
-    SetObservableValue("originZ", originZ);
-    SetObservableValue("endX", endX.X());
-    SetObservableValue("endY", endY.Y());
-    SetObservableValue("endZ", endZ);
+    SetObservableValue("originX", orig.X());
+    SetObservableValue("originY", orig.Y());
+    SetObservableValue("originZ", orig.Z());
+    SetObservableValue("endX", end.X());
+    SetObservableValue("endY", end.Y());
+    SetObservableValue("endZ", end.Z());
     SetObservableValue("length", length);
     SetObservableValue("angle", angle);
     SetObservableValue("downwards", downwards);
@@ -208,7 +202,29 @@ TRestEvent* TRestTrackLineAnalysisProcess::ProcessEvent(TRestEvent* evInput) {
 /// hit deposition edge to the most energetic hit, while the track end is
 /// defined as the closest edge to the most energetic hit.
 ///
-void TRestTrackLineAnalysisProcess::GetOriginEnd(TRestVolumeHits& hits, TVector3& orig, TVector3& end) {
+void TRestTrackLineAnalysisProcess::GetOriginEnd(TRestVolumeHits& hitsX, TRestVolumeHits& hitsY,
+                                                 TVector3& orig, TVector3& end) {
+    TVector3 origX, endX;
+    // Retreive origin and end of the track for the XZ projection
+    GetBoundaries(hitsX, origX, endX);
+    TVector3 origY, endY;
+    // Retreive origin and end of the track for the YZ projection
+    GetBoundaries(hitsY, origY, endY);
+
+    double originZ = (origX.Z() + origY.Z()) / 2.;
+    double endZ = (endX.Z() + endY.Z()) / 2.;
+
+    orig = TVector3(origX.X(), origY.Y(), originZ);
+    end = TVector3(endX.X(), endY.Y(), endZ);
+}
+
+///////////////////////////////////////////////
+/// \brief This function retreive the origin and the end of a single
+/// track projection (XZ or YZ) based on the most energetic hit. The origin
+/// is defined as the further hit deposition edge to the most energetic hit,
+/// while the track end is defined as the closest edge to the most energetic hit.
+///
+void TRestTrackLineAnalysisProcess::GetBoundaries(TRestVolumeHits& hits, TVector3& orig, TVector3& end) {
     const int nHits = hits.GetNumberOfHits();
     int maxBin;
     double maxEn = 0;
@@ -229,7 +245,6 @@ void TRestTrackLineAnalysisProcess::GetOriginEnd(TRestVolumeHits& hits, TVector3
     const double maxToFirst = (pos0 - maxPos).Mag();
     const double maxToLast = (posE - maxPos).Mag();
 
-    debug << "Max index " << maxBin << " Pos to first " << maxToFirst << " last " << maxToLast << endl;
     if (maxToFirst < maxToLast) {
         end = pos0;
         orig = posE;
@@ -237,9 +252,6 @@ void TRestTrackLineAnalysisProcess::GetOriginEnd(TRestVolumeHits& hits, TVector3
         orig = pos0;
         end = posE;
     }
-
-    debug << "Origin " << orig.X() << " " << orig.Y() << " " << orig.Z() << endl;
-    debug << "End    " << end.X() << " " << end.Y() << " " << end.Z() << endl;
 }
 
 ///////////////////////////////////////////////

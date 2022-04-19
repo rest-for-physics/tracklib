@@ -70,9 +70,9 @@ class TRestTrackViewerProcess : public TRestEventProcess {
 
     TString GetProcessName() { return (TString) "trackViewer"; }
 
-    static void GetOriginEnd(TRestAnalysisTree* anaTree, std::vector<TGraph*>& origin,
-                             std::vector<TGraph*>& end, std::vector<TLegend*>& leg);
-    static void DrawOriginEnd(TPad* pad, std::vector<TGraph*>& origin, std::vector<TGraph*>& end,
+    static void GetOriginEnd(TRestTrackEvent* trackEvent, std::vector<TGraph*>& originGr,
+                             std::vector<TGraph*>& endGr, std::vector<TLegend*>& leg);
+    static void DrawOriginEnd(TPad* pad, std::vector<TGraph*>& originGr, std::vector<TGraph*>& endGr,
                               std::vector<TLegend*>& leg);
 
     // Constructor
