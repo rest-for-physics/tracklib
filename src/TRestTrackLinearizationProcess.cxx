@@ -33,10 +33,11 @@
 /// hits to the nodes are computed using kMeansClustering analysis. If a node is found
 /// with no hits is rejected. The nodes are stored as a top node track for further
 /// processing.
-/// The different parameters required by this process are:
+///
+/// ### Parameters
 /// * fMaxNodes : Maximum number of nodes (hits) to reduce the hits to a line
 ///
-/// Metadata example for this process:
+/// ### Examples
 /// \code
 ///            <addProcess type="TRestTrackLinearizationProcess" name="alphaTrackAna" value="ON"
 ///            verboseLevel="info" >
@@ -46,14 +47,15 @@
 ///
 ///--------------------------------------------------------------------------
 ///
-/// RESTsoft - Software for Rare Event Searches with TPCs
+/// REST-for-Physics - Software for Rare Event Searches Toolkit
 ///
 /// History of developments:
 ///
 /// 2022-March First implementation
+/// JuanAn Garcia
 ///
-///              JuanAn Garcia
-///
+/// \class TRestTrackLineAnalysisProcess
+/// \author: JuanAn Garcia   e-mail: juanangp@unizar.es
 ///
 /// <hr>
 ///
@@ -64,13 +66,20 @@ using namespace std;
 
 ClassImp(TRestTrackLinearizationProcess);
 
-//______________________________________________________________________________
+///////////////////////////////////////////////
+/// \brief Default constructor
+///
 TRestTrackLinearizationProcess::TRestTrackLinearizationProcess() { Initialize(); }
 
-//______________________________________________________________________________
+///////////////////////////////////////////////
+/// \brief Default destructor
+///
 TRestTrackLinearizationProcess::~TRestTrackLinearizationProcess() { delete fOutTrackEvent; }
 
-//______________________________________________________________________________
+///////////////////////////////////////////////
+/// \brief Function to initialize input/output event members and define
+/// the section name
+///
 void TRestTrackLinearizationProcess::Initialize() {
     SetSectionName(this->ClassName());
     SetLibraryVersion(LIBRARY_VERSION);
@@ -116,7 +125,12 @@ TRestEvent* TRestTrackLinearizationProcess::ProcessEvent(TRestEvent* evInput) {
     return fOutTrackEvent;
 }
 
-//______________________________________________________________________________
+///////////////////////////////////////////////
+/// \brief This function performs the track linearization towards a given number of nodes
+/// the nodes are extracted from the linear fit on GetBestNodes and afterwards
+/// the closest hits to the nodes are merged to correct the position of the nodes
+/// using kmeansClustering.
+///
 void TRestTrackLinearizationProcess::GetHitsProjection(TRestVolumeHits* hits, const int& nodes,
                                                        TRestVolumeHits& vHits) {
     const int nHits = hits->GetNumberOfHits();
@@ -153,6 +167,12 @@ void TRestTrackLinearizationProcess::GetHitsProjection(TRestVolumeHits* hits, co
                   << vHits.GetType(i) << endl;
 }
 
+///////////////////////////////////////////////
+/// \brief This function performs a linear fit to the volumehits of the track weighthed by the
+/// energy of the hits. Two fit are performed by rotating the axis and the best Chi2 is
+/// selected. Afterwards, equidistant nodes following the fit and after the linear fit are
+/// extracted.
+///
 std::vector<std::pair<double, double>> TRestTrackLinearizationProcess::GetBestNodes(
     const std::vector<Float_t>& fXY, const std::vector<Float_t>& fZ, const std::vector<Float_t>& fEn,
     const int& nodes) {
@@ -226,5 +246,8 @@ std::vector<std::pair<double, double>> TRestTrackLinearizationProcess::GetBestNo
     return cluster;
 }
 
-//______________________________________________________________________________
+///////////////////////////////////////////////
+/// \brief Function to include required actions after all events have been
+/// processed.
+///
 void TRestTrackLinearizationProcess::EndProcess() {}

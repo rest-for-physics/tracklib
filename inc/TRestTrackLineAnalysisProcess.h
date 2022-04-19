@@ -27,13 +27,13 @@
 
 #include "TRestEventProcess.h"
 
-//! A process to analyze alpha tracks
+//! A process to identify and extrack origin and end of a track assuming a linear track
 class TRestTrackLineAnalysisProcess : public TRestEventProcess {
    private:
     /// A pointer to the input event Track Event
     TRestTrackEvent* fTrackEvent;
 
-    /// A pointer to the output event Track event (after smoothing)
+    /// A pointer to the output event Track event
     TRestTrackEvent* fOutTrackEvent;
 
     void Initialize();
@@ -56,7 +56,6 @@ class TRestTrackLineAnalysisProcess : public TRestEventProcess {
         EndPrintProcess();
     }
 
-    // This function retreive the origin and the end
     void GetOriginEnd(TRestVolumeHits& hits, TVector3& orig, TVector3& end);
 
     TString GetProcessName() { return (TString) "trackLineAna"; }

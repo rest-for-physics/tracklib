@@ -27,20 +27,20 @@
 
 #include "TRestEventProcess.h"
 
-//! A process to analyze alpha tracks
+//! A process to perform track linearization
 class TRestTrackLinearizationProcess : public TRestEventProcess {
    private:
 #ifndef __CINT__
     // Input event Track Event
     TRestTrackEvent* fTrackEvent;
-    // Output event Track event smoothed
+    // Output event after track linearization
     TRestTrackEvent* fOutTrackEvent;
 #endif
 
     void Initialize();
 
    protected:
-    // A parameter to define the maximum number of nodes for the track linearization
+    // A parameter which defines the maximum number of nodes for the track linearization
     Int_t fMaxNodes = 6;
 
    public:
@@ -73,12 +73,11 @@ class TRestTrackLinearizationProcess : public TRestEventProcess {
 
     TString GetProcessName() { return (TString) "trackLinearization"; }
 
-    // Constructor
     TRestTrackLinearizationProcess();
-    // Destructor
     ~TRestTrackLinearizationProcess();
 
+    // ROOT class definition helper. Increase the number in it every time
+    // you add/rename/remove the process parameters
     ClassDef(TRestTrackLinearizationProcess, 1);
-    // Template for a REST "event process" class inherited from TRestEventProcess
 };
 #endif

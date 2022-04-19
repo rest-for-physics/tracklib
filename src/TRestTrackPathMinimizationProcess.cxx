@@ -83,10 +83,11 @@ TRestEvent* TRestTrackPathMinimizationProcess::ProcessEvent(TRestEvent* evInput)
     return fOutputTrackEvent;
 }
 
-// Return the index with the shortest path solving Travelling Salesman Problem (TSP) using
-// nearest neighbour algorithm, complexity is n2*n, it doesn't guarantee that the minimum
-// path is reached, but the solution should be within 25% of the distance to the minimum path
-//______________________________________________________________________________
+///////////////////////////////////////////////
+/// \brief Return the index with the shortest path solving Travelling Salesman Problem (TSP) using
+/// nearest neighbour algorithm, complexity is n2*n, it doesn't guarantee that the minimum
+/// path is reached, but the solution should be within 25% of the distance to the minimum path
+///
 void TRestTrackPathMinimizationProcess::NearestNeighbour(TRestVolumeHits* hits, std::vector<int>& bestPath) {
     const int nHits = hits->GetNumberOfHits();
     double dist[nHits][nHits];
@@ -158,8 +159,9 @@ void TRestTrackPathMinimizationProcess::NearestNeighbour(TRestVolumeHits* hits, 
     }
 }
 
-// Return the index with the shortest path solving Travelling Salesman Problem (TSP) using
-// brute force, algorithm complexity is n!, the minimum path is guarantee
+///////////////////////////////////////////////
+/// \brief Return the index with the shortest path solving Travelling Salesman Problem (TSP)
+/// using brute force, algorithm complexity is n!, the minimum path is guarantee
 //______________________________________________________________________________
 void TRestTrackPathMinimizationProcess::BruteForce(TRestVolumeHits* hits, std::vector<int>& bestPath) {
     const int nHits = hits->GetNumberOfHits();
@@ -234,8 +236,9 @@ void TRestTrackPathMinimizationProcess::BruteForce(TRestVolumeHits* hits, std::v
     }
 }
 
-// Return the index with the shortest path
-//______________________________________________________________________________
+///////////////////////////////////////////////
+/// \brief Return the index with the shortest path
+///
 void TRestTrackPathMinimizationProcess::HeldKarp(TRestVolumeHits* hits, std::vector<int>& bestPath) {
     const int nHits = hits->GetNumberOfHits();
 

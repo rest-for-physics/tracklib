@@ -21,22 +21,24 @@
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
-/// The TRestTrackLineAnalysis process is meant to analyze lienar tracks,
+/// The TRestTrackLineAnalysis process is meant to analyze linear tracks,
 /// such as alpha tracks. It should retreive the information after performing
-/// TRestTrackLinearization process, for the time being only works when
+/// the track reduction with the hits arranged following the minimum path. Which
+/// can be archieved by performing TRestTrackPathMinimizationProcess after
+/// TRestTrackReductionProcess; alternatively it can be achieved performing
+/// TRestTrackLinearization process. For the time being, this process only works when
 /// XZ and YZ are present in the readout. Moreover, the hits have to be stored
-/// following the minimum path. It assumes that only one alpha track
-/// is present, using the parameter fTrackBalance to define the minimun energy
-/// fTrackBalance*totalEnergy of the total XZ or YZ energy to assume a single
-/// track event, if the condition is not fulfilled the event is rejected.
+/// following the minimum path. It assumes single track events, otherwise, the most
+/// energetic track is used in the analysis.
 /// Several parameters of the alphaTrack are extracted such as origin, end,
 /// length, energy and downwards (bool).
-/// The different parameters required by this process are:
-/// * fTrackBalance : Minimum energy balance to consider single track event,
-/// (see above for more details.)
+///
+/// ### Parameters
+/// None
 ///
 /// ### Observables
-///
+/// * **trackBalanceXZ**: Track balance between the most energetic track and all tracks in the XZ projection
+/// * **trackBalanceYZ**: Track balance between the most energetic track and all tracks in the YZ projection
 /// * **originX**: Track origin in the X cordinate
 /// * **originY**: Track origin in the Y cordinate
 /// * **originZ**: Track origin in the Z cordinate
@@ -48,11 +50,12 @@
 /// * **downwards**: (bool) true if the track direction is downwards, false otherwise
 /// * **totalEnergy**: Energy of the track
 ///
-/// Metadata example for this process:
+/// ### Examples
 /// \code
 ///            <addProcess type="TRestTrackLineAnalysisProcess" name="alphaTrackAna" value="ON"
 ///            verboseLevel="silent" >
-///                   <parameter name="trackBalance" value="0.75" />
+///                   <observable name="trackBalanceXZ" value="ON" />
+///                   <observable name="trackBalanceYZ" value="ON" />
 ///                   <observable name="originX" value="ON" />
 ///                   <observable name="originY" value="ON" />
 ///                   <observable name="originZ" value="ON" />
@@ -68,7 +71,7 @@
 ///
 ///--------------------------------------------------------------------------
 ///
-/// RESTsoft - Software for Rare Event Searches with TPCs
+/// REST-for-Physics - Software for Rare Event Searches Toolkit
 ///
 /// History of developments:
 ///
@@ -76,7 +79,8 @@
 ///
 ///              JuanAn Garcia
 ///
-///
+/// \class TRestTrackLineAnalysisProcess
+/// \author: JuanAn Garcia   e-mail: juanangp@unizar.es
 ///
 /// <hr>
 ///
@@ -87,13 +91,20 @@ using namespace std;
 
 ClassImp(TRestTrackLineAnalysisProcess);
 
-//______________________________________________________________________________
+///////////////////////////////////////////////
+/// \brief Default constructor
+///
 TRestTrackLineAnalysisProcess::TRestTrackLineAnalysisProcess() { Initialize(); }
 
-//______________________________________________________________________________
+///////////////////////////////////////////////
+/// \brief Default destructor
+///
 TRestTrackLineAnalysisProcess::~TRestTrackLineAnalysisProcess() { delete fOutTrackEvent; }
 
-//______________________________________________________________________________
+///////////////////////////////////////////////
+/// \brief Function to initialize input/output event members and define
+/// the section name
+///
 void TRestTrackLineAnalysisProcess::Initialize() {
     SetSectionName(this->ClassName());
     SetLibraryVersion(LIBRARY_VERSION);
@@ -102,10 +113,15 @@ void TRestTrackLineAnalysisProcess::Initialize() {
     fOutTrackEvent = new TRestTrackEvent();
 }
 
-//______________________________________________________________________________
+///////////////////////////////////////////////
+/// \brief Process initialization.
+/// Nothing to do...
+///
 void TRestTrackLineAnalysisProcess::InitProcess() {}
 
-//______________________________________________________________________________
+///////////////////////////////////////////////
+/// \brief The main processing event function
+///
 TRestEvent* TRestTrackLineAnalysisProcess::ProcessEvent(TRestEvent* evInput) {
     fTrackEvent = (TRestTrackEvent*)evInput;
     fOutTrackEvent->SetEventInfo(fTrackEvent);
@@ -207,6 +223,12 @@ TRestEvent* TRestTrackLineAnalysisProcess::ProcessEvent(TRestEvent* evInput) {
     return fOutTrackEvent;
 }
 
+///////////////////////////////////////////////
+/// \brief This function retreive the origin and the end of the track
+/// based on the most energetic hit. The origin is defined as the further
+/// hit deposition edge to the most energetic hit, while the track end is
+/// defined as the closest edge to the most energetic hit.
+///
 void TRestTrackLineAnalysisProcess::GetOriginEnd(TRestVolumeHits& hits, TVector3& orig, TVector3& end) {
     const int nHits = hits.GetNumberOfHits();
     int maxBin;
@@ -241,12 +263,8 @@ void TRestTrackLineAnalysisProcess::GetOriginEnd(TRestVolumeHits& hits, TVector3
     debug << "End    " << end.X() << " " << end.Y() << " " << end.Z() << endl;
 }
 
-//______________________________________________________________________________
-void TRestTrackLineAnalysisProcess::EndProcess() {
-    // Function to be executed once at the end of the process
-    // (after all events have been processed)
-
-    // Start by calling the EndProcess function of the abstract class.
-    // Comment this if you don't want it.
-    // TRestEventProcess::EndProcess();
-}
+///////////////////////////////////////////////
+/// \brief Function to include required actions after all events have been
+/// processed. Nothing to do...
+///
+void TRestTrackLineAnalysisProcess::EndProcess() {}
