@@ -103,7 +103,7 @@ TRestEvent* TRestTrackLinearizationProcess::ProcessEvent(TRestEvent* evInput) {
         fOutTrackEvent->AddTrack(fTrackEvent->GetTrack(t));
 
     for (int t = 0; t < fTrackEvent->GetNumberOfTracks(); t++) {
-        if (!fTrackEvent->isTopLevel(t)) continue;
+        if (fTrackEvent->GetLevel(t) != 1) continue;
         TRestTrack* track = fTrackEvent->GetTrack(t);
         TRestVolumeHits* hits = track->GetVolumeHits();
         TRestVolumeHits vHits;
