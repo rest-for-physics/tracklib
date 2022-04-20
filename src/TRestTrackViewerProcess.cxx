@@ -96,8 +96,8 @@ TRestEvent* TRestTrackViewerProcess::ProcessEvent(TRestEvent* evInput) {
     fCanvas->cd();
     TPad* pad = fTrackEvent->DrawEvent();
     if (fDrawOriginEnd) {
-        GetOriginEnd(fTrackEvent, originGr, endGr, legOrEnd);
-        DrawOriginEnd(pad, originGr, endGr, legOrEnd);
+        fTrackEvent->GetOriginEnd(originGr, endGr, legOrEnd);
+        fTrackEvent->DrawOriginEnd(pad, originGr, endGr, legOrEnd);
     }
 
     fCanvas->cd();
@@ -109,7 +109,7 @@ TRestEvent* TRestTrackViewerProcess::ProcessEvent(TRestEvent* evInput) {
     hCanvas->cd();
     TPad* hPad = fTrackEvent->DrawHits();
     if (fDrawOriginEnd) {
-        DrawOriginEnd(hPad, originGr, endGr, legOrEnd);
+        fTrackEvent->DrawOriginEnd(hPad, originGr, endGr, legOrEnd);
     }
 
     hCanvas->cd();
@@ -117,67 +117,6 @@ TRestEvent* TRestTrackViewerProcess::ProcessEvent(TRestEvent* evInput) {
     hCanvas->Update();
 
     return fTrackEvent;
-}
-
-///////////////////////////////////////////////
-/// \brief Get origin and end of the track if trackLineAnalysis have
-/// been performed
-///
-void TRestTrackViewerProcess::GetOriginEnd(TRestTrackEvent* trackEvent, std::vector<TGraph*>& originGr,
-                                           std::vector<TGraph*>& endGr, std::vector<TLegend*>& leg) {
-    if (originGr.size() != 2 || endGr.size() != 2 || leg.size() != 2) return;
-
-    if (!trackEvent) return;
-
-    for (auto gr : originGr)
-        if (gr) delete gr;
-
-    for (auto gr : endGr)
-        if (gr) delete gr;
-
-    for (auto l : leg)
-        if (l) delete l;
-
-    TRestTrack* tckX = trackEvent->GetMaxEnergyTrackInX();
-    TRestTrack* tckY = trackEvent->GetMaxEnergyTrackInY();
-
-    if (!tckX || !tckY) return;
-
-    TRestVolumeHits vHitsX = (TRestVolumeHits) * (tckX->GetVolumeHits());
-    TRestVolumeHits vHitsY = (TRestVolumeHits) * (tckY->GetVolumeHits());
-    TVector3 orig, end;
-    TRestTrackLineAnalysisProcess::GetOriginEnd(vHitsX, vHitsY, orig, end);
-
-    for (int i = 0; i < 2; i++) {
-        originGr[i] = new TGraph();
-        originGr[i]->SetPoint(0, orig[i], orig[2]);
-        originGr[i]->SetMarkerColor(kRed);
-        originGr[i]->SetMarkerStyle(20);
-        endGr[i] = new TGraph();
-        endGr[i]->SetPoint(0, end[i], end[2]);
-        endGr[i]->SetMarkerColor(kBlack);
-        endGr[i]->SetMarkerStyle(20);
-        leg[i] = new TLegend(0.7, 0.7, 0.9, 0.9);
-        leg[i]->AddEntry(originGr[i], "Origin", "p");
-        leg[i]->AddEntry(endGr[i], "End", "p");
-    }
-}
-
-///////////////////////////////////////////////
-/// \brief Draw origin and end of the track if trackLineAnalysis have
-/// been performed
-///
-void TRestTrackViewerProcess::DrawOriginEnd(TPad* pad, std::vector<TGraph*>& originGr,
-                                            std::vector<TGraph*>& endGr, std::vector<TLegend*>& leg) {
-    if (originGr.size() != 2 || endGr.size() != 2 || leg.size() != 2) return;
-
-    for (int i = 0; i < 2; i++) {
-        pad->cd(i + 1);
-        if (originGr[i]) originGr[i]->Draw("LP");
-        if (endGr[i]) endGr[i]->Draw("LP");
-        if (leg[i]) leg[i]->Draw();
-        pad->Update();
-    }
 }
 
 ///////////////////////////////////////////////

@@ -333,6 +333,30 @@ void TRestTrackEvent::SetLevels() {
     fLevels = maxLevel;
 }
 
+///////////////////////////////////////////////
+/// \brief This function retreive the origin and the end of the track
+/// based on the most energetic hit. The origin is defined as the further
+/// hit deposition edge to the most energetic hit, while the track end is
+/// defined as the closest edge to the most energetic hit.
+///
+void TRestTrackEvent::GetMaxTrackBoundaries(TVector3& orig, TVector3& end) {
+    TRestTrack* tckX = GetMaxEnergyTrackInX();
+    TRestTrack* tckY = GetMaxEnergyTrackInY();
+
+    TVector3 origX, endX;
+    // Retreive origin and end of the track for the XZ projection
+    tckX->GetBoundaries(origX, endX);
+    TVector3 origY, endY;
+    // Retreive origin and end of the track for the YZ projection
+    tckY->GetBoundaries(origY, endY);
+
+    double originZ = (origX.Z() + origY.Z()) / 2.;
+    double endZ = (endX.Z() + endY.Z()) / 2.;
+
+    orig = TVector3(origX.X(), origY.Y(), originZ);
+    end = TVector3(endX.X(), endY.Y(), endZ);
+}
+
 void TRestTrackEvent::PrintOnlyTracks() {
     cout << "TrackEvent " << GetID() << endl;
     cout << "-----------------------" << endl;
@@ -784,4 +808,56 @@ TPad* TRestTrackEvent::DrawEvent(const TString& option) {
     }
 
     return fPad;
+}
+
+///////////////////////////////////////////////
+/// \brief Retreive origin and end of the track and store in a TGraph
+/// and legend
+///
+void TRestTrackEvent::GetOriginEnd(std::vector<TGraph*>& originGr, std::vector<TGraph*>& endGr,
+                                   std::vector<TLegend*>& leg) {
+    if (originGr.size() != 2 || endGr.size() != 2 || leg.size() != 2) return;
+
+    for (auto gr : originGr)
+        if (gr) delete gr;
+
+    for (auto gr : endGr)
+        if (gr) delete gr;
+
+    for (auto l : leg)
+        if (l) delete l;
+
+    TVector3 orig, end;
+    GetMaxTrackBoundaries(orig, end);
+
+    for (int i = 0; i < 2; i++) {
+        originGr[i] = new TGraph();
+        originGr[i]->SetPoint(0, orig[i], orig[2]);
+        originGr[i]->SetMarkerColor(kRed);
+        originGr[i]->SetMarkerStyle(20);
+        endGr[i] = new TGraph();
+        endGr[i]->SetPoint(0, end[i], end[2]);
+        endGr[i]->SetMarkerColor(kBlack);
+        endGr[i]->SetMarkerStyle(20);
+        leg[i] = new TLegend(0.7, 0.7, 0.9, 0.9);
+        leg[i]->AddEntry(originGr[i], "Origin", "p");
+        leg[i]->AddEntry(endGr[i], "End", "p");
+    }
+}
+
+///////////////////////////////////////////////
+/// \brief Draw origin and end of the track in a pad passed to the function
+/// Note that GetOriginEnd has to be issued in advance
+///
+void TRestTrackEvent::DrawOriginEnd(TPad* pad, std::vector<TGraph*>& originGr, std::vector<TGraph*>& endGr,
+                                    std::vector<TLegend*>& leg) {
+    if (originGr.size() != 2 || endGr.size() != 2 || leg.size() != 2) return;
+
+    for (int i = 0; i < 2; i++) {
+        pad->cd(i + 1);
+        if (originGr[i]) originGr[i]->Draw("LP");
+        if (endGr[i]) endGr[i]->Draw("LP");
+        if (leg[i]) leg[i]->Draw();
+        pad->Update();
+    }
 }

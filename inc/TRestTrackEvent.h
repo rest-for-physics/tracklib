@@ -23,6 +23,7 @@
 #include <TGraph.h>
 #include <TGraph2D.h>
 #include <TH2F.h>
+#include <TLegend.h>
 #include <TMultiGraph.h>
 #include <TObject.h>
 #include <TRestEvent.h>
@@ -107,6 +108,12 @@ class TRestTrackEvent : public TRestEvent {
     Bool_t isTopLevel(Int_t tck);
 
     Int_t GetOriginTrackID(Int_t tck);
+
+    void GetMaxTrackBoundaries(TVector3& orig, TVector3& end);
+    void GetOriginEnd(std::vector<TGraph*>& originGr, std::vector<TGraph*>& endGr,
+                      std::vector<TLegend*>& leg);
+    void DrawOriginEnd(TPad* pad, std::vector<TGraph*>& originGr, std::vector<TGraph*>& endGr,
+                       std::vector<TLegend*>& leg);
 
     void SetNumberOfXTracks(Int_t x) { fNtracksX = x; }
     void SetNumberOfYTracks(Int_t y) { fNtracksY = y; }

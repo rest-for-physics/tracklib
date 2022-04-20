@@ -134,12 +134,9 @@ TRestEvent* TRestTrackLineAnalysisProcess::ProcessEvent(TRestEvent* evInput) {
 
     if (!tckX || !tckY) return nullptr;
 
-    TRestVolumeHits vHitsX = (TRestVolumeHits) * (tckX->GetVolumeHits());
-    TRestVolumeHits vHitsY = (TRestVolumeHits) * (tckY->GetVolumeHits());
-
     TVector3 orig, end;
     // Retreive origin and end of the track for the XZ projection
-    GetOriginEnd(vHitsX, vHitsY, orig, end);
+    fTrackEvent->GetMaxTrackBoundaries(orig, end);
 
     debug << "Origin: " << orig.X() << " y: " << orig.Y() << " z: " << orig.Z() << endl;
     debug << "End : " << end.X() << " y: " << end.Y() << " z: " << end.Z() << endl;
@@ -179,79 +176,17 @@ TRestEvent* TRestTrackLineAnalysisProcess::ProcessEvent(TRestEvent* evInput) {
     SetObservableValue("totalEnergy", trackEnergy);
 
     // Save most energetic XZ track
-    TRestTrack newTrackX;
-    newTrackX.SetVolumeHits(vHitsX);
-    newTrackX.SetParentID(tckX->GetTrackID());
-    newTrackX.SetTrackID(fOutTrackEvent->GetNumberOfTracks() + 1);
-    fOutTrackEvent->AddTrack(&newTrackX);
+    tckX->SetParentID(tckX->GetTrackID());
+    tckX->SetTrackID(fOutTrackEvent->GetNumberOfTracks() + 1);
+    fOutTrackEvent->AddTrack(tckX);
 
     // Save most energetic YZ track
-    TRestTrack newTrackY;
-    newTrackY.SetVolumeHits(vHitsY);
-    newTrackY.SetParentID(tckY->GetTrackID());
-    newTrackY.SetTrackID(fOutTrackEvent->GetNumberOfTracks() + 1);
-    fOutTrackEvent->AddTrack(&newTrackY);
+    tckY->SetParentID(tckY->GetTrackID());
+    tckY->SetTrackID(fOutTrackEvent->GetNumberOfTracks() + 1);
+    fOutTrackEvent->AddTrack(tckY);
 
     fOutTrackEvent->SetLevels();
     return fOutTrackEvent;
-}
-
-///////////////////////////////////////////////
-/// \brief This function retreive the origin and the end of the track
-/// based on the most energetic hit. The origin is defined as the further
-/// hit deposition edge to the most energetic hit, while the track end is
-/// defined as the closest edge to the most energetic hit.
-///
-void TRestTrackLineAnalysisProcess::GetOriginEnd(TRestVolumeHits& hitsX, TRestVolumeHits& hitsY,
-                                                 TVector3& orig, TVector3& end) {
-    TVector3 origX, endX;
-    // Retreive origin and end of the track for the XZ projection
-    GetBoundaries(hitsX, origX, endX);
-    TVector3 origY, endY;
-    // Retreive origin and end of the track for the YZ projection
-    GetBoundaries(hitsY, origY, endY);
-
-    double originZ = (origX.Z() + origY.Z()) / 2.;
-    double endZ = (endX.Z() + endY.Z()) / 2.;
-
-    orig = TVector3(origX.X(), origY.Y(), originZ);
-    end = TVector3(endX.X(), endY.Y(), endZ);
-}
-
-///////////////////////////////////////////////
-/// \brief This function retreive the origin and the end of a single
-/// track projection (XZ or YZ) based on the most energetic hit. The origin
-/// is defined as the further hit deposition edge to the most energetic hit,
-/// while the track end is defined as the closest edge to the most energetic hit.
-///
-void TRestTrackLineAnalysisProcess::GetBoundaries(TRestVolumeHits& hits, TVector3& orig, TVector3& end) {
-    const int nHits = hits.GetNumberOfHits();
-    int maxBin;
-    double maxEn = 0;
-
-    for (int i = 0; i < nHits; i++) {
-        double en = hits.GetEnergy(i);
-        if (en > maxEn) {
-            maxEn = en;
-            maxBin = i;
-        }
-    }
-
-    TVector3 maxPos = hits.GetPosition(maxBin);
-
-    TVector3 pos0 = hits.GetPosition(0);
-    TVector3 posE = hits.GetPosition(nHits - 1);
-
-    const double maxToFirst = (pos0 - maxPos).Mag();
-    const double maxToLast = (posE - maxPos).Mag();
-
-    if (maxToFirst < maxToLast) {
-        end = pos0;
-        orig = posE;
-    } else {
-        orig = pos0;
-        end = posE;
-    }
 }
 
 ///////////////////////////////////////////////

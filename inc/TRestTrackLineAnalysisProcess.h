@@ -52,9 +52,6 @@ class TRestTrackLineAnalysisProcess : public TRestEventProcess {
         EndPrintProcess();
     }
 
-    static void GetOriginEnd(TRestVolumeHits& hitsX, TRestVolumeHits& hitsY, TVector3& orig, TVector3& end);
-    static void GetBoundaries(TRestVolumeHits& hits, TVector3& orig, TVector3& end);
-
     TString GetProcessName() { return (TString) "trackLineAna"; }
 
     // Constructor
