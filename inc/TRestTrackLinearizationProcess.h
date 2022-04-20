@@ -30,12 +30,8 @@
 //! A process to perform track linearization
 class TRestTrackLinearizationProcess : public TRestEventProcess {
    private:
-#ifndef __CINT__
-    // Input event Track Event
-    TRestTrackEvent* fTrackEvent;
-    // Output event after track linearization
-    TRestTrackEvent* fOutTrackEvent;
-#endif
+    TRestTrackEvent* fTrackEvent;     //!
+    TRestTrackEvent* fOutTrackEvent;  //!
 
     void Initialize();
 
