@@ -132,48 +132,50 @@ TRestEvent* TRestTrackLineAnalysisProcess::ProcessEvent(TRestEvent* evInput) {
     TRestTrack* tckX = fTrackEvent->GetMaxEnergyTrackInX();
     TRestTrack* tckY = fTrackEvent->GetMaxEnergyTrackInY();
 
-    if (!tckX || !tckY) return nullptr;
+    if (tckX && tckY) {
+        TVector3 orig, end;
+        // Retreive origin and end of the track for the XZ projection
+        fTrackEvent->GetMaxTrackBoundaries(orig, end);
 
-    TVector3 orig, end;
-    // Retreive origin and end of the track for the XZ projection
-    fTrackEvent->GetMaxTrackBoundaries(orig, end);
+        debug << "Origin: " << orig.X() << " y: " << orig.Y() << " z: " << orig.Z() << endl;
+        debug << "End : " << end.X() << " y: " << end.Y() << " z: " << end.Z() << endl;
 
-    debug << "Origin: " << orig.X() << " y: " << orig.Y() << " z: " << orig.Z() << endl;
-    debug << "End : " << end.X() << " y: " << end.Y() << " z: " << end.Z() << endl;
+        // Compute some observables
+        double dX = (orig.X() - end.X());
+        double dY = (orig.Y() - end.Y());
+        double dZ = (orig.Z() - end.Z());
+        Double_t length = TMath::Sqrt(dX * dX + dY * dY + dZ * dZ);
+        Double_t angle = TMath::ACos(dZ / length);
+        bool downwards = dZ > 0;
 
-    // Compute some observables
-    double dX = (orig.X() - end.X());
-    double dY = (orig.Y() - end.Y());
-    double dZ = (orig.Z() - end.Z());
-    Double_t length = TMath::Sqrt(dX * dX + dY * dY + dZ * dZ);
-    Double_t angle = TMath::ACos(dZ / length);
-    bool downwards = dZ > 0;
+        debug << "Track length " << length << " angle: " << angle << endl;
 
-    debug << "Track length " << length << " angle: " << angle << endl;
+        Double_t trackEnergyX = tckX->GetEnergy();
+        Double_t trackEnergyY = tckY->GetEnergy();
+        Double_t trackEnergy = trackEnergyX + trackEnergyY;
 
-    Double_t trackEnergyX = tckX->GetEnergy();
-    Double_t trackEnergyY = tckY->GetEnergy();
-    Double_t trackEnergy = trackEnergyX + trackEnergyY;
+        Double_t trackBalanceX = 0;
+        if (trackEnergyX > 0) trackBalanceX = fTrackEvent->GetEnergy("X") / trackEnergyX;
 
-    Double_t trackBalanceX = 0;
-    if (trackEnergyX > 0) trackBalanceX = fTrackEvent->GetEnergy("X") / trackEnergyX;
+        Double_t trackBalanceY = 0;
+        if (trackEnergyY > 0) trackBalanceY = fTrackEvent->GetEnergy("Y") / trackEnergyY;
 
-    Double_t trackBalanceY = 0;
-    if (trackEnergyY > 0) trackBalanceY = fTrackEvent->GetEnergy("Y") / trackEnergyY;
-
-    // A new value for each observable is added
-    SetObservableValue("trackBalanceX", trackBalanceX);
-    SetObservableValue("trackBalanceY", trackBalanceY);
-    SetObservableValue("originX", orig.X());
-    SetObservableValue("originY", orig.Y());
-    SetObservableValue("originZ", orig.Z());
-    SetObservableValue("endX", end.X());
-    SetObservableValue("endY", end.Y());
-    SetObservableValue("endZ", end.Z());
-    SetObservableValue("length", length);
-    SetObservableValue("angle", angle);
-    SetObservableValue("downwards", downwards);
-    SetObservableValue("totalEnergy", trackEnergy);
+        // A new value for each observable is added
+        SetObservableValue("trackBalanceX", trackBalanceX);
+        SetObservableValue("trackBalanceY", trackBalanceY);
+        SetObservableValue("originX", orig.X());
+        SetObservableValue("originY", orig.Y());
+        SetObservableValue("originZ", orig.Z());
+        SetObservableValue("endX", end.X());
+        SetObservableValue("endY", end.Y());
+        SetObservableValue("endZ", end.Z());
+        SetObservableValue("length", length);
+        SetObservableValue("angle", angle);
+        SetObservableValue("downwards", downwards);
+        SetObservableValue("totalEnergy", trackEnergy);
+    } else {
+        return nullptr;
+    }
 
     // Save most energetic XZ track
     tckX->SetParentID(tckX->GetTrackID());
