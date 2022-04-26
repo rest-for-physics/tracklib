@@ -29,14 +29,14 @@ class TRestTrackPathMinimizationProcess : public TRestEventProcess {
     TRestTrackEvent* fOutputTrackEvent;  //!
 #endif
 
-    void InitFromConfigFile();
-
     void Initialize();
 
    protected:
-    // Int_t fMaxNodes;
+    Bool_t fWeightHits = false;
 
-    Bool_t fWeightHits;
+    TString fMinMethod = "default";  // Minimization method, default is HeldKarp
+    Bool_t fCyclic = false;  // In case you want to find the minimum path using a cyclic loop (e.g. first hit
+                             // is connected to last hit)
 
    public:
     any GetInputEvent() { return fInputTrackEvent; }
@@ -44,10 +44,10 @@ class TRestTrackPathMinimizationProcess : public TRestEventProcess {
 
     void InitProcess();
     TRestEvent* ProcessEvent(TRestEvent* eventInput);
+    void BruteForce(TRestVolumeHits* hits, std::vector<int>& bestPath);
+    void NearestNeighbour(TRestVolumeHits* hits, std::vector<int>& bestPath);
+    void HeldKarp(TRestVolumeHits* hits, std::vector<int>& bestPath);
     void EndProcess();
-    void LoadDefaultConfig();
-
-    void LoadConfig(std::string cfgFilename, std::string name = "");
 
     void PrintMetadata() {
         BeginPrintProcess();
@@ -60,6 +60,7 @@ class TRestTrackPathMinimizationProcess : public TRestEventProcess {
         else
             metadata << "Weight hits : disabled" << endl;
 
+        metadata << "Minimization method " << fMinMethod << endl;
         EndPrintProcess();
     }
 
@@ -67,10 +68,9 @@ class TRestTrackPathMinimizationProcess : public TRestEventProcess {
 
     // Constructor
     TRestTrackPathMinimizationProcess();
-    TRestTrackPathMinimizationProcess(char* cfgFileName);
     // Destructor
     ~TRestTrackPathMinimizationProcess();
 
-    ClassDef(TRestTrackPathMinimizationProcess, 1);
+    ClassDef(TRestTrackPathMinimizationProcess, 2);
 };
 #endif

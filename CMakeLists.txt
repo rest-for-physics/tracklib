@@ -1,4 +1,4 @@
-set( LibraryVersion "1.2" )
+set( LibraryVersion "1.3" )
 add_definitions(-DLIBRARY_VERSION="${LibraryVersion}")
 
 file(GLOB_RECURSE addon_src
@@ -11,3 +11,4 @@ file(GLOB_RECURSE addon_src
 set(addon_inc ${CMAKE_CURRENT_SOURCE_DIR}/tsp/inc)
 
 COMPILELIB("")
+

@@ -333,6 +333,30 @@ void TRestTrackEvent::SetLevels() {
     fLevels = maxLevel;
 }
 
+///////////////////////////////////////////////
+/// \brief This function retreive the origin and the end of the track
+/// based on the most energetic hit. The origin is defined as the further
+/// hit deposition edge to the most energetic hit, while the track end is
+/// defined as the closest edge to the most energetic hit.
+///
+void TRestTrackEvent::GetMaxTrackBoundaries(TVector3& orig, TVector3& end) {
+    TRestTrack* tckX = GetMaxEnergyTrackInX();
+    TRestTrack* tckY = GetMaxEnergyTrackInY();
+
+    TVector3 origX, endX;
+    // Retreive origin and end of the track for the XZ projection
+    tckX->GetBoundaries(origX, endX);
+    TVector3 origY, endY;
+    // Retreive origin and end of the track for the YZ projection
+    tckY->GetBoundaries(origY, endY);
+
+    double originZ = (origX.Z() + origY.Z()) / 2.;
+    double endZ = (endX.Z() + endY.Z()) / 2.;
+
+    orig = TVector3(origX.X(), origY.Y(), originZ);
+    end = TVector3(endX.X(), endY.Y(), endZ);
+}
+
 void TRestTrackEvent::PrintOnlyTracks() {
     cout << "TrackEvent " << GetID() << endl;
     cout << "-----------------------" << endl;
@@ -354,6 +378,69 @@ void TRestTrackEvent::PrintEvent(Bool_t fullInfo) {
     cout << "Track levels : " << GetLevels() << endl;
     cout << "+++++++++++++++++++++++++++++++++++" << endl;
     for (int i = 0; i < GetNumberOfTracks(); i++) this->GetTrack(i)->PrintTrack(fullInfo);
+}
+
+TPad* TRestTrackEvent::DrawHits() {
+    if (fXZHits) {
+        delete fXZHits;
+        fXZHits = nullptr;
+    }
+    if (fYZHits) {
+        delete fYZHits;
+        fYZHits = nullptr;
+    }
+    if (fHitsPad) {
+        delete fHitsPad;
+        fHitsPad = nullptr;
+    }
+
+    std::vector<double> fX, fY, fZ;
+
+    for (int t = 0; t < GetNumberOfTracks(); t++) {
+        TRestTrack* tck = GetTrack(t);
+        if (GetLevel(t) != 1) continue;
+        TRestVolumeHits* hits = tck->GetVolumeHits();
+        for (int i = 0; i < hits->GetNumberOfHits(); i++) {
+            if (hits->GetType(i) % X == 0) fX.emplace_back(hits->GetX(i));
+            if (hits->GetType(i) % Y == 0) fY.emplace_back(hits->GetY(i));
+            if (hits->GetType(i) % Z == 0) fZ.emplace_back(hits->GetZ(i));
+        }
+    }
+
+    double maxX, minX, maxY, minY, maxZ, minZ;
+    int nBinsX, nBinsY, nBinsZ;
+    TRestHits::GetBoundaries(fX, maxX, minX, nBinsX);
+    TRestHits::GetBoundaries(fY, maxY, minY, nBinsY);
+    TRestHits::GetBoundaries(fZ, maxZ, minZ, nBinsZ);
+
+    fXZHits = new TH2F("TXZ", "TXZ", nBinsX, minX, maxX, nBinsZ, minZ, maxZ);
+    fYZHits = new TH2F("TYZ", "TYZ", nBinsY, minY, maxY, nBinsZ, minZ, maxZ);
+
+    for (int t = 0; t < GetNumberOfTracks(); t++) {
+        TRestTrack* tck = GetTrack(t);
+        if (GetLevel(t) != 1) continue;
+        TRestVolumeHits* hits = tck->GetVolumeHits();
+        for (int i = 0; i < hits->GetNumberOfHits(); i++) {
+            if (hits->GetType(i) == XZ) fXZHits->Fill(hits->GetX(i), hits->GetZ(i), hits->GetEnergy(i));
+            if (hits->GetType(i) == YZ) fYZHits->Fill(hits->GetY(i), hits->GetZ(i), hits->GetEnergy(i));
+        }
+    }
+
+    fHitsPad = new TPad("TrackHits", "TrackHits", 0, 0, 1, 1);
+    fHitsPad->Divide(2, 1);
+    fHitsPad->Draw();
+
+    fHitsPad->cd(1);
+    fXZHits->GetXaxis()->SetTitle("X-axis (mm)");
+    fXZHits->GetYaxis()->SetTitle("Z-axis (mm)");
+    fXZHits->Draw("COLZ");
+
+    fHitsPad->cd(2);
+    fYZHits->GetXaxis()->SetTitle("Y-axis (mm)");
+    fYZHits->GetYaxis()->SetTitle("Z-axis (mm)");
+    fYZHits->Draw("COLZ");
+
+    return fHitsPad;
 }
 
 // Draw current event in a Tpad
@@ -469,16 +556,10 @@ TPad* TRestTrackEvent::DrawEvent(const TString& option) {
     fYZTrack = new TGraph[nTracks];
     fXYZTrack = new TGraph2D[nTracks];
 
-    vector<Int_t> drawLinesXY(nTracks);
-    vector<Int_t> drawLinesXZ(nTracks);
-    vector<Int_t> drawLinesYZ(nTracks);
-    vector<Int_t> drawLinesXYZ(nTracks);
-
-    for (int i = 0; i < nTracks; i++) {
-        drawLinesXY[i] = 0;
-        drawLinesXZ[i] = 0;
-        drawLinesYZ[i] = 0;
-    }
+    vector<Int_t> drawLinesXY(nTracks, 0);
+    vector<Int_t> drawLinesXZ(nTracks, 0);
+    vector<Int_t> drawLinesYZ(nTracks, 0);
+    vector<Int_t> drawLinesXYZ(nTracks, 0);
 
     int countXY = 0, countYZ = 0, countXZ = 0, countXYZ = 0;
     int nTckXY = 0, nTckXZ = 0, nTckYZ = 0, nTckXYZ = 0;
@@ -616,12 +697,20 @@ TPad* TRestTrackEvent::DrawEvent(const TString& option) {
                 countYZ++;
             }
 
-            if (x > maxX) maxX = x;
-            if (x < minX) minX = x;
-            if (y > maxY) maxY = y;
-            if (y < minY) minY = y;
-            if (z > maxZ) maxZ = z;
-            if (z < minZ) minZ = z;
+            if (type % X == 0) {
+                if (x > maxX) maxX = x;
+                if (x < minX) minX = x;
+            }
+
+            if (type % Y == 0) {
+                if (y > maxY) maxY = y;
+                if (y < minY) minY = y;
+            }
+
+            if (type % Z == 0) {
+                if (z > maxZ) maxZ = z;
+                if (z < minZ) minZ = z;
+            }
         }
     }
 
@@ -719,4 +808,56 @@ TPad* TRestTrackEvent::DrawEvent(const TString& option) {
     }
 
     return fPad;
+}
+
+///////////////////////////////////////////////
+/// \brief Retreive origin and end of the track and store in a TGraph
+/// and legend
+///
+void TRestTrackEvent::GetOriginEnd(std::vector<TGraph*>& originGr, std::vector<TGraph*>& endGr,
+                                   std::vector<TLegend*>& leg) {
+    if (originGr.size() != 2 || endGr.size() != 2 || leg.size() != 2) return;
+
+    for (auto gr : originGr)
+        if (gr) delete gr;
+
+    for (auto gr : endGr)
+        if (gr) delete gr;
+
+    for (auto l : leg)
+        if (l) delete l;
+
+    TVector3 orig, end;
+    GetMaxTrackBoundaries(orig, end);
+
+    for (int i = 0; i < 2; i++) {
+        originGr[i] = new TGraph();
+        originGr[i]->SetPoint(0, orig[i], orig[2]);
+        originGr[i]->SetMarkerColor(kRed);
+        originGr[i]->SetMarkerStyle(20);
+        endGr[i] = new TGraph();
+        endGr[i]->SetPoint(0, end[i], end[2]);
+        endGr[i]->SetMarkerColor(kBlack);
+        endGr[i]->SetMarkerStyle(20);
+        leg[i] = new TLegend(0.7, 0.7, 0.9, 0.9);
+        leg[i]->AddEntry(originGr[i], "Origin", "p");
+        leg[i]->AddEntry(endGr[i], "End", "p");
+    }
+}
+
+///////////////////////////////////////////////
+/// \brief Draw origin and end of the track in a pad passed to the function
+/// Note that GetOriginEnd has to be issued in advance
+///
+void TRestTrackEvent::DrawOriginEnd(TPad* pad, std::vector<TGraph*>& originGr, std::vector<TGraph*>& endGr,
+                                    std::vector<TLegend*>& leg) {
+    if (originGr.size() != 2 || endGr.size() != 2 || leg.size() != 2) return;
+
+    for (int i = 0; i < 2; i++) {
+        pad->cd(i + 1);
+        if (originGr[i]) originGr[i]->Draw("LP");
+        if (endGr[i]) endGr[i]->Draw("LP");
+        if (leg[i]) leg[i]->Draw();
+        pad->Update();
+    }
 }

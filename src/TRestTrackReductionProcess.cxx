@@ -16,24 +16,7 @@ ClassImp(TRestTrackReductionProcess);
 
 TRestTrackReductionProcess::TRestTrackReductionProcess() { Initialize(); }
 
-TRestTrackReductionProcess::TRestTrackReductionProcess(char* cfgFileName) {
-    Initialize();
-    if (LoadConfigFromFile(cfgFileName) == -1) {
-        LoadDefaultConfig();
-    }
-}
-
 TRestTrackReductionProcess::~TRestTrackReductionProcess() { delete fOutputTrackEvent; }
-
-void TRestTrackReductionProcess::LoadDefaultConfig() {
-    SetName("trackReductionProcess");
-    SetTitle("Default config");
-
-    fStartingDistance = 0.5;
-    fMinimumDistance = 3;
-    fDistanceFactor = 1.5;
-    fMaxNodes = 30;
-}
 
 void TRestTrackReductionProcess::Initialize() {
     SetSectionName(this->ClassName());
@@ -43,15 +26,12 @@ void TRestTrackReductionProcess::Initialize() {
     fOutputTrackEvent = new TRestTrackEvent();
 }
 
-void TRestTrackReductionProcess::LoadConfig(std::string cfgFilename, std::string name) {
-    if (LoadConfigFromFile(cfgFilename, name) == -1) LoadDefaultConfig();
-}
-
 void TRestTrackReductionProcess::InitProcess() {}
 
 TRestEvent* TRestTrackReductionProcess::ProcessEvent(TRestEvent* evInput) {
     fInputTrackEvent = (TRestTrackEvent*)evInput;
     fOutputTrackEvent->SetEventInfo(fInputTrackEvent);
+
     // Copying the input tracks to the output track
     for (int tck = 0; tck < fInputTrackEvent->GetNumberOfTracks(); tck++)
         fOutputTrackEvent->AddTrack(fInputTrackEvent->GetTrack(tck));
@@ -68,75 +48,61 @@ TRestEvent* TRestTrackReductionProcess::ProcessEvent(TRestEvent* evInput) {
         if (this->GetVerboseLevel() >= REST_Debug)
             cout << "TRestTrackReductionProcess. Reducing hits in track id : " << track->GetTrackID() << endl;
 
-        Double_t distance = fStartingDistance;
-        while (distance < fMinimumDistance || hits->GetNumberOfHits() > fMaxNodes) {
-            if (this->GetVerboseLevel() >= REST_Debug) {
-                cout << "TRestTrackReductionProcess. Merging track hits within a "
-                        "distance : "
-                     << distance << " mm" << endl;
-                cout << "TRestTrackReductionProcess. Hits now : " << hits->GetNumberOfHits() << endl;
-            }
-
-            Int_t mergedHits = 0;
-
-            Bool_t merged = true;
-            while (merged) {
-                merged = false;
-                for (int i = 0; i < hits->GetNumberOfHits(); i++) {
-                    for (int j = i + 1; j < hits->GetNumberOfHits(); j++) {
-                        if (hits->GetDistance2(i, j) < distance * distance) {
-                            mergedHits++;
-                            hits->MergeHits(i, j);
-                            merged = true;
-                        }
-                    }
-                }
-            }
-
-            if (this->GetVerboseLevel() >= REST_Debug) {
-                cout << "TRestTrackReductionProcess. Number of hits merged : " << mergedHits << endl;
-            }
-
-            mergedHits = 0;
-
-            distance *= fDistanceFactor;
+        TRestVolumeHits vHits = (TRestVolumeHits)(*hits);
+        getHitsMerged(vHits);
+        if (fKmeans) {
+            TRestVolumeHits::kMeansClustering(hits, vHits, fMaxIt);
+            int nHitsBefore;
+            int nHitsAfter;
+            do {
+                nHitsBefore = vHits.GetNumberOfHits();
+                getHitsMerged(vHits);
+                TRestVolumeHits::kMeansClustering(hits, vHits, fMaxIt);
+                nHitsAfter = vHits.GetNumberOfHits();
+            } while (nHitsBefore != nHitsAfter);
         }
-
-        track->SetParentID(track->GetTrackID());
-        track->SetTrackID(fOutputTrackEvent->GetNumberOfTracks() + 1);
-
-        fOutputTrackEvent->AddTrack(track);
+        TRestTrack newTrack;
+        newTrack.SetVolumeHits(vHits);
+        newTrack.SetParentID(track->GetTrackID());
+        newTrack.SetTrackID(fOutputTrackEvent->GetNumberOfTracks() + 1);
+        fOutputTrackEvent->AddTrack(&newTrack);
     }
-
-    /*
-    cout << "output event" << endl;
-    cout << "+++++++++++++++++" << endl;
-    fOutputTrackEvent->PrintOnlyTracks();
-    cout << "+++++++++++++++++" << endl;
-    getchar();
-
-    cout << "Checking levels " << endl;
-    cout << "---------------------------------------------_" << endl;
-    cout << "TrackEvent pointer : " << fOutputTrackEvent << endl;
-    cout << fOutputTrackEvent->GetNumberOfTracks() << endl;
-    cout << "TrackEvent pointer : " << fOutputTrackEvent << endl;
-
-    fOutputTrackEvent->GetLevels();
-    cout << "---------------" << endl;
-    */
-
-    // cout << "Number output of tracks : " <<
-    // fOutputTrackEvent->GetNumberOfTracks() << endl;
 
     fOutputTrackEvent->SetLevels();
     return fOutputTrackEvent;
 }
 
-void TRestTrackReductionProcess::EndProcess() {}
+//______________________________________________________________________________
+void TRestTrackReductionProcess::getHitsMerged(TRestVolumeHits& hits) {
+    Double_t distance = fStartingDistance;
+    while (distance < fMinimumDistance || hits.GetNumberOfHits() > fMaxNodes) {
+        if (this->GetVerboseLevel() >= REST_Debug) {
+            cout << "TRestTrackReductionProcess. Merging track hits within a "
+                 << "distance : " << distance << " mm" << endl;
+            cout << "TRestTrackReductionProcess. Hits now : " << hits.GetNumberOfHits() << endl;
+        }
 
-void TRestTrackReductionProcess::InitFromConfigFile() {
-    fStartingDistance = GetDblParameterWithUnits("startingDistance");
-    fMinimumDistance = GetDblParameterWithUnits("minimumDistance");
-    fDistanceFactor = StringToDouble(GetParameter("distanceStepFactor"));
-    fMaxNodes = StringToDouble(GetParameter("maxNodes"));
+        Int_t mergedHits = 0;
+
+        Bool_t merged = true;
+        while (merged) {
+            merged = false;
+            for (int i = 0; i < hits.GetNumberOfHits(); i++) {
+                for (int j = i + 1; j < hits.GetNumberOfHits(); j++) {
+                    if (hits.GetDistance2(i, j) < distance * distance) {
+                        mergedHits++;
+                        hits.MergeHits(i, j);
+                        merged = true;
+                    }
+                }
+            }
+        }
+
+        debug << "TRestTrackReductionProcess. Number of hits merged : " << mergedHits << endl;
+        mergedHits = 0;
+
+        distance *= fDistanceStepFactor;
+    }
 }
+
+void TRestTrackReductionProcess::EndProcess() {}

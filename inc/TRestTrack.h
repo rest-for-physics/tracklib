@@ -74,6 +74,8 @@ class TRestTrack : public TObject {
 
     void PrintTrack(Bool_t fullInfo = true);
 
+    void GetBoundaries(TVector3& orig, TVector3& end);
+
     // Construtor
     TRestTrack();
     // Destructor

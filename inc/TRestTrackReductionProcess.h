@@ -23,15 +23,15 @@ class TRestTrackReductionProcess : public TRestEventProcess {
     TRestTrackEvent* fOutputTrackEvent;  //!
 #endif
 
-    void InitFromConfigFile();
-
     void Initialize();
 
    protected:
-    Double_t fStartingDistance;
-    Double_t fMinimumDistance;
-    Double_t fDistanceFactor;
-    Double_t fMaxNodes;
+    Double_t fStartingDistance = 0.5;
+    Double_t fMinimumDistance = 3;
+    Double_t fDistanceStepFactor = 1.5;
+    Double_t fMaxNodes = 30;
+    Int_t fMaxIt = 100;
+    Bool_t fKmeans = false;
 
    public:
     any GetInputEvent() { return fInputTrackEvent; }
@@ -39,18 +39,18 @@ class TRestTrackReductionProcess : public TRestEventProcess {
 
     void InitProcess();
     TRestEvent* ProcessEvent(TRestEvent* eventInput);
+    void getHitsMerged(TRestVolumeHits& hits);
     void EndProcess();
-    void LoadDefaultConfig();
-
-    void LoadConfig(std::string cfgFilename, std::string name = "");
 
     void PrintMetadata() {
         BeginPrintProcess();
 
         metadata << " Starting distance : " << fStartingDistance << endl;
         metadata << " Minimum distance : " << fMinimumDistance << endl;
-        metadata << " Distance step factor : " << fDistanceFactor << endl;
+        metadata << " Distance step factor : " << fDistanceStepFactor << endl;
         metadata << " Maximum number of nodes : " << fMaxNodes << endl;
+        metadata << " Perform kMeans clustering : " << fKmeans << endl;
+        if (fKmeans) metadata << " Maximum iterations : " << fMaxIt << endl;
 
         EndPrintProcess();
     }
@@ -59,11 +59,10 @@ class TRestTrackReductionProcess : public TRestEventProcess {
 
     // Constructor
     TRestTrackReductionProcess();
-    TRestTrackReductionProcess(char* cfgFileName);
     // Destructor
     ~TRestTrackReductionProcess();
 
-    ClassDef(TRestTrackReductionProcess, 1);  // Template for a REST "event process" class inherited from
+    ClassDef(TRestTrackReductionProcess, 2);  // Template for a REST "event process" class inherited from
                                               // TRestEventProcess
 };
 #endif
