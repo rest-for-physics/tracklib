@@ -34,8 +34,8 @@ class TRestTrackReductionProcess : public TRestEventProcess {
     Bool_t fKmeans = false;
 
    public:
-    any GetInputEvent() { return fInputTrackEvent; }
-    any GetOutputEvent() { return fOutputTrackEvent; }
+   inline any GetInputEvent() const { return fInputTrackEvent; }
+   inline any GetOutputEvent() const { return fOutputTrackEvent; }
 
     void InitProcess();
     TRestEvent* ProcessEvent(TRestEvent* eventInput);

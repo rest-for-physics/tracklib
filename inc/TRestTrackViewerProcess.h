@@ -53,8 +53,8 @@ class TRestTrackViewerProcess : public TRestEventProcess {
     // add here the members of your event process
 
    public:
-    any GetInputEvent() { return fTrackEvent; }
-    any GetOutputEvent() { return fTrackEvent; }
+    inline any GetInputEvent() const { return fTrackEvent; }
+    inline any GetOutputEvent() const { return fTrackEvent; }
 
     void InitProcess();
     TRestEvent* ProcessEvent(TRestEvent* eventInput);
