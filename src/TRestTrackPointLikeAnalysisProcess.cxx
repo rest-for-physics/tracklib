@@ -16,10 +16,10 @@ ClassImp(TRestTrackPointLikeAnalysisProcess);
 
 TRestTrackPointLikeAnalysisProcess::TRestTrackPointLikeAnalysisProcess() { Initialize(); }
 
-TRestTrackPointLikeAnalysisProcess::TRestTrackPointLikeAnalysisProcess(char* cfgFileName) {
+TRestTrackPointLikeAnalysisProcess::TRestTrackPointLikeAnalysisProcess(char* configFilename) {
     Initialize();
 
-    if (LoadConfigFromFile(cfgFileName)) LoadDefaultConfig();
+    if (LoadConfigFromFile(configFilename)) LoadDefaultConfig();
 }
 
 TRestTrackPointLikeAnalysisProcess::~TRestTrackPointLikeAnalysisProcess() {}
@@ -33,10 +33,10 @@ void TRestTrackPointLikeAnalysisProcess::Initialize() {
     fTrackEvent = nullptr;
 }
 
-void TRestTrackPointLikeAnalysisProcess::LoadConfig(string cfgFilename) {
-    if (LoadConfigFromFile(cfgFilename)) LoadDefaultConfig();
+void TRestTrackPointLikeAnalysisProcess::LoadConfig(string configFilename) {
+    if (LoadConfigFromFile(configFilename)) LoadDefaultConfig();
 
-    // fReadout = new TRestDetectorReadout( cfgFilename.c_str() );
+    // fReadout = new TRestDetectorReadout( configFilename.c_str() );
 }
 
 void TRestTrackPointLikeAnalysisProcess::InitProcess() { TRestEventProcess::ReadObservables(); }

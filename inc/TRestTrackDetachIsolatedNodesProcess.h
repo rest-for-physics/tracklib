@@ -43,7 +43,7 @@ class TRestTrackDetachIsolatedNodesProcess : public TRestEventProcess {
     void EndProcess();
     void LoadDefaultConfig();
 
-    void LoadConfig(std::string cfgFilename, std::string name = "");
+    void LoadConfig(std::string configFilename, std::string name = "");
 
     void PrintMetadata() {
         BeginPrintProcess();
@@ -51,11 +51,11 @@ class TRestTrackDetachIsolatedNodesProcess : public TRestEventProcess {
         EndPrintProcess();
     }
 
-    TString GetProcessName() { return (TString) "trackDetachIsolatedNode"; }
+    inline TString GetProcessName() const { return (TString) "trackDetachIsolatedNode"; }
 
     // Constructor
     TRestTrackDetachIsolatedNodesProcess();
-    TRestTrackDetachIsolatedNodesProcess(char* cfgFileName);
+    TRestTrackDetachIsolatedNodesProcess(char* configFilename);
     // Destructor
     ~TRestTrackDetachIsolatedNodesProcess();
 

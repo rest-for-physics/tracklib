@@ -58,7 +58,7 @@ class TRestTrackLinearizationProcess : public TRestEventProcess {
                                                         const std::vector<Float_t>& fZ,
                                                         const std::vector<Float_t>& fEn, const int& nodes);
 
-    TString GetProcessName() { return (TString) "trackLinearization"; }
+    inline TString GetProcessName() const { return (TString) "trackLinearization"; }
 
     TRestTrackLinearizationProcess();
     ~TRestTrackLinearizationProcess();

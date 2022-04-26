@@ -68,7 +68,7 @@ class TRestTrackViewerProcess : public TRestEventProcess {
         EndPrintProcess();
     }
 
-    TString GetProcessName() { return (TString) "trackViewer"; }
+    inline TString GetProcessName() const { return (TString) "trackViewer"; }
 
     // Constructor
     TRestTrackViewerProcess();

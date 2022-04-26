@@ -21,10 +21,10 @@ ClassImp(TRestTrackBlobAnalysisProcess);
 
 TRestTrackBlobAnalysisProcess::TRestTrackBlobAnalysisProcess() { Initialize(); }
 
-TRestTrackBlobAnalysisProcess::TRestTrackBlobAnalysisProcess(char* cfgFileName) {
+TRestTrackBlobAnalysisProcess::TRestTrackBlobAnalysisProcess(char* configFilename) {
     Initialize();
 
-    if (LoadConfigFromFile(cfgFileName)) LoadDefaultConfig();
+    if (LoadConfigFromFile(configFilename)) LoadDefaultConfig();
 }
 
 TRestTrackBlobAnalysisProcess::~TRestTrackBlobAnalysisProcess() { delete fOutputTrackEvent; }
@@ -41,8 +41,8 @@ void TRestTrackBlobAnalysisProcess::Initialize() {
     fHitsToCheckFraction = 0.2;
 }
 
-void TRestTrackBlobAnalysisProcess::LoadConfig(std::string cfgFilename, std::string name) {
-    if (LoadConfigFromFile(cfgFilename, name)) LoadDefaultConfig();
+void TRestTrackBlobAnalysisProcess::LoadConfig(std::string configFilename, std::string name) {
+    if (LoadConfigFromFile(configFilename, name)) LoadDefaultConfig();
 }
 
 void TRestTrackBlobAnalysisProcess::InitProcess() {

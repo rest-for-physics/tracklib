@@ -146,7 +146,7 @@ class TRestTrackAnalysisProcess : public TRestEventProcess {
     TRestEvent* ProcessEvent(TRestEvent* eventInput);
     void EndProcess();
 
-    void LoadConfig(std::string cfgFilename, std::string name = "");
+    void LoadConfig(std::string configFilename, std::string name = "");
 
     void PrintMetadata() {
         BeginPrintProcess();
@@ -164,11 +164,11 @@ class TRestTrackAnalysisProcess : public TRestEventProcess {
         EndPrintProcess();
     }
 
-    TString GetProcessName() { return (TString) "trackAnalysis"; }
+    inline TString GetProcessName() const { return (TString) "trackAnalysis"; }
 
     // Constructor
     TRestTrackAnalysisProcess();
-    TRestTrackAnalysisProcess(char* cfgFileName);
+    TRestTrackAnalysisProcess(char* configFilename);
     // Destructor
     ~TRestTrackAnalysisProcess();
 

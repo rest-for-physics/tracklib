@@ -18,10 +18,10 @@ ClassImp(TRestTrackDetachIsolatedNodesProcess);
 
 TRestTrackDetachIsolatedNodesProcess::TRestTrackDetachIsolatedNodesProcess() { Initialize(); }
 
-TRestTrackDetachIsolatedNodesProcess::TRestTrackDetachIsolatedNodesProcess(char* cfgFileName) {
+TRestTrackDetachIsolatedNodesProcess::TRestTrackDetachIsolatedNodesProcess(char* configFilename) {
     Initialize();
 
-    if (LoadConfigFromFile(cfgFileName) == -1) LoadDefaultConfig();
+    if (LoadConfigFromFile(configFilename) == -1) LoadDefaultConfig();
     PrintMetadata();
 }
 
@@ -40,8 +40,8 @@ void TRestTrackDetachIsolatedNodesProcess::Initialize() {
     fOutputTrackEvent = new TRestTrackEvent();
 }
 
-void TRestTrackDetachIsolatedNodesProcess::LoadConfig(std::string cfgFilename, std::string name) {
-    if (LoadConfigFromFile(cfgFilename, name) == -1) LoadDefaultConfig();
+void TRestTrackDetachIsolatedNodesProcess::LoadConfig(std::string configFilename, std::string name) {
+    if (LoadConfigFromFile(configFilename, name) == -1) LoadDefaultConfig();
 
     PrintMetadata();
 }

@@ -45,7 +45,7 @@ class TRestTrackReconnectionProcess : public TRestEventProcess {
     void EndProcess();
     void LoadDefaultConfig();
 
-    void LoadConfig(std::string cfgFilename, std::string name = "");
+    void LoadConfig(std::string configFilename, std::string name = "");
 
     void PrintMetadata() {
         BeginPrintProcess();
@@ -61,7 +61,7 @@ class TRestTrackReconnectionProcess : public TRestEventProcess {
         EndPrintProcess();
     }
 
-    TString GetProcessName() { return (TString) "trackReconnection"; }
+    inline TString GetProcessName() const { return (TString) "trackReconnection"; }
 
     void BreakTracks(TRestVolumeHits* hits, std::vector<TRestVolumeHits>& hitSets, Double_t nSigma = 2.);
     void ReconnectTracks(std::vector<TRestVolumeHits>& hitSets);
@@ -69,7 +69,7 @@ class TRestTrackReconnectionProcess : public TRestEventProcess {
 
     // Constructor
     TRestTrackReconnectionProcess();
-    TRestTrackReconnectionProcess(char* cfgFileName);
+    TRestTrackReconnectionProcess(char* configFilename);
     // Destructor
     ~TRestTrackReconnectionProcess();
 

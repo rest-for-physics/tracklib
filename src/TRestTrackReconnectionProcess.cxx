@@ -17,10 +17,10 @@ ClassImp(TRestTrackReconnectionProcess);
 
 TRestTrackReconnectionProcess::TRestTrackReconnectionProcess() { Initialize(); }
 
-TRestTrackReconnectionProcess::TRestTrackReconnectionProcess(char* cfgFileName) {
+TRestTrackReconnectionProcess::TRestTrackReconnectionProcess(char* configFilename) {
     Initialize();
 
-    if (LoadConfigFromFile(cfgFileName) == -1) LoadDefaultConfig();
+    if (LoadConfigFromFile(configFilename) == -1) LoadDefaultConfig();
     PrintMetadata();
 }
 
@@ -41,8 +41,8 @@ void TRestTrackReconnectionProcess::Initialize() {
     fSplitTrack = false;
 }
 
-void TRestTrackReconnectionProcess::LoadConfig(std::string cfgFilename, std::string name) {
-    if (LoadConfigFromFile(cfgFilename, name) == -1) LoadDefaultConfig();
+void TRestTrackReconnectionProcess::LoadConfig(std::string configFilename, std::string name) {
+    if (LoadConfigFromFile(configFilename, name) == -1) LoadDefaultConfig();
 
     PrintMetadata();
 }

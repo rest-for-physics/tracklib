@@ -55,7 +55,7 @@ class TRestTrackReductionProcess : public TRestEventProcess {
         EndPrintProcess();
     }
 
-    TString GetProcessName() { return (TString) "trackReduction"; }
+    inline TString GetProcessName() const { return (TString) "trackReduction"; }
 
     // Constructor
     TRestTrackReductionProcess();

@@ -41,7 +41,7 @@ class TRestTrackPointLikeAnalysisProcess : public TRestEventProcess {
     TRestEvent* ProcessEvent(TRestEvent* eventInput);
     void EndProcess();
 
-    void LoadConfig(std::string cfgFilename);
+    void LoadConfig(std::string configFilename);
 
     void PrintMetadata() {
         BeginPrintProcess();
@@ -49,13 +49,13 @@ class TRestTrackPointLikeAnalysisProcess : public TRestEventProcess {
         EndPrintProcess();
     }
 
-    TString GetProcessName() { return (TString) "pointLikeTrackAna"; }
+    inline TString GetProcessName() const { return (TString) "pointLikeTrackAna"; }
     //       Double_t GetCalibFactor();           ///< Calibration factor is
     //       found.
 
     // Constructor
     TRestTrackPointLikeAnalysisProcess();
-    TRestTrackPointLikeAnalysisProcess(char* cfgFileName);
+    TRestTrackPointLikeAnalysisProcess(char* configFilename);
     // Destructor
     ~TRestTrackPointLikeAnalysisProcess();
 

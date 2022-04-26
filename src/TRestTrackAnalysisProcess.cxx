@@ -184,10 +184,10 @@ ClassImp(TRestTrackAnalysisProcess);
 
 TRestTrackAnalysisProcess::TRestTrackAnalysisProcess() { Initialize(); }
 
-TRestTrackAnalysisProcess::TRestTrackAnalysisProcess(char* cfgFileName) {
+TRestTrackAnalysisProcess::TRestTrackAnalysisProcess(char* configFilename) {
     Initialize();
 
-    if (LoadConfigFromFile(cfgFileName)) LoadDefaultConfig();
+    if (LoadConfigFromFile(configFilename)) LoadDefaultConfig();
 }
 
 TRestTrackAnalysisProcess::~TRestTrackAnalysisProcess() { delete fOutputTrackEvent; }
@@ -206,8 +206,8 @@ void TRestTrackAnalysisProcess::Initialize() {
     fEnableTwistParameters = false;
 }
 
-void TRestTrackAnalysisProcess::LoadConfig(std::string cfgFilename, std::string name) {
-    if (LoadConfigFromFile(cfgFilename, name)) LoadDefaultConfig();
+void TRestTrackAnalysisProcess::LoadConfig(std::string configFilename, std::string name) {
+    if (LoadConfigFromFile(configFilename, name)) LoadDefaultConfig();
 }
 
 void TRestTrackAnalysisProcess::InitProcess() {

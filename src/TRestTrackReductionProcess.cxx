@@ -72,7 +72,7 @@ TRestEvent* TRestTrackReductionProcess::ProcessEvent(TRestEvent* evInput) {
     return fOutputTrackEvent;
 }
 
-//______________________________________________________________________________
+
 void TRestTrackReductionProcess::getHitsMerged(TRestVolumeHits& hits) {
     Double_t distance = fStartingDistance;
     while (distance < fMinimumDistance || hits.GetNumberOfHits() > fMaxNodes) {
