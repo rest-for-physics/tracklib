@@ -96,8 +96,8 @@ class TRestTrackBlobAnalysisProcess : public TRestEventProcess {
     // add here the members of your event process
 
    public:
-   inline any GetInputEvent() const { return fInputTrackEvent; }
-   inline any GetOutputEvent() const { return fOutputTrackEvent; }
+    inline any GetInputEvent() const { return fInputTrackEvent; }
+    inline any GetOutputEvent() const { return fOutputTrackEvent; }
 
     void InitProcess();
     TRestEvent* ProcessEvent(TRestEvent* eventInput);

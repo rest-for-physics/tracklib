@@ -34,8 +34,8 @@ class TRestTrackPointLikeAnalysisProcess : public TRestEventProcess {
     // add here the members of your event process
 
    public:
-   inline any GetInputEvent() const { return fTrackEvent; }
-   inline any GetOutputEvent() const { return fTrackEvent; }
+    inline any GetInputEvent() const { return fTrackEvent; }
+    inline any GetOutputEvent() const { return fTrackEvent; }
 
     void InitProcess();
     TRestEvent* ProcessEvent(TRestEvent* eventInput);

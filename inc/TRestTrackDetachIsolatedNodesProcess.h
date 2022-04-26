@@ -35,8 +35,8 @@ class TRestTrackDetachIsolatedNodesProcess : public TRestEventProcess {
 
    protected:
    public:
-   inline any GetInputEvent() const { return fInputTrackEvent; }
-   inline any GetOutputEvent() const { return fOutputTrackEvent; }
+    inline any GetInputEvent() const { return fInputTrackEvent; }
+    inline any GetOutputEvent() const { return fOutputTrackEvent; }
 
     void InitProcess();
     TRestEvent* ProcessEvent(TRestEvent* eventInput);
