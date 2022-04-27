@@ -178,8 +178,8 @@ void TRestTrackBlobAnalysisProcess::InitProcess() {
     }
 }
 
-TRestEvent* TRestTrackBlobAnalysisProcess::ProcessEvent(TRestEvent* evInput) {
-    fInputTrackEvent = (TRestTrackEvent*)evInput;
+TRestEvent* TRestTrackBlobAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
+    fInputTrackEvent = (TRestTrackEvent*)inputEvent;
 
     // Copying the input tracks to the output track
     for (int tck = 0; tck < fInputTrackEvent->GetNumberOfTracks(); tck++)

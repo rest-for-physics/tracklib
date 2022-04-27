@@ -28,8 +28,8 @@ void TRestTrackPathMinimizationProcess::Initialize() {
 
 void TRestTrackPathMinimizationProcess::InitProcess() {}
 
-TRestEvent* TRestTrackPathMinimizationProcess::ProcessEvent(TRestEvent* evInput) {
-    fInputTrackEvent = (TRestTrackEvent*)evInput;
+TRestEvent* TRestTrackPathMinimizationProcess::ProcessEvent(TRestEvent* inputEvent) {
+    fInputTrackEvent = (TRestTrackEvent*)inputEvent;
 
     if (this->GetVerboseLevel() >= REST_Debug)
         cout << "TRestTrackPathMinimizationProcess. Number of tracks : "

@@ -48,8 +48,8 @@ void TRestTrackDetachIsolatedNodesProcess::LoadConfig(const string& configFilena
 
 void TRestTrackDetachIsolatedNodesProcess::InitProcess() {}
 
-TRestEvent* TRestTrackDetachIsolatedNodesProcess::ProcessEvent(TRestEvent* evInput) {
-    fInputTrackEvent = (TRestTrackEvent*)evInput;
+TRestEvent* TRestTrackDetachIsolatedNodesProcess::ProcessEvent(TRestEvent* inputEvent) {
+    fInputTrackEvent = (TRestTrackEvent*)inputEvent;
 
     if (this->GetVerboseLevel() >= REST_Debug)
         cout << "TRestTrackDetachIsolatedNodesProcess. Number of tracks : "

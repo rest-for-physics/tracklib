@@ -38,7 +38,7 @@ class TRestTrackReductionProcess : public TRestEventProcess {
     any GetOutputEvent() const override { return fOutputTrackEvent; }
 
     void InitProcess();
-    TRestEvent* ProcessEvent(TRestEvent* eventInput);
+    TRestEvent* ProcessEvent(TRestEvent* inputEvent);
     void getHitsMerged(TRestVolumeHits& hits);
     void EndProcess();
 

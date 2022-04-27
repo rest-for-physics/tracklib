@@ -123,8 +123,8 @@ void TRestTrackLineAnalysisProcess::InitProcess() {}
 ///////////////////////////////////////////////
 /// \brief The main processing event function
 ///
-TRestEvent* TRestTrackLineAnalysisProcess::ProcessEvent(TRestEvent* evInput) {
-    fTrackEvent = (TRestTrackEvent*)evInput;
+TRestEvent* TRestTrackLineAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
+    fTrackEvent = (TRestTrackEvent*)inputEvent;
 
     // Initialize outputTrackEvent
     for (int t = 0; t < fTrackEvent->GetNumberOfTracks(); t++)

@@ -49,10 +49,10 @@ void TRestTrackReconnectionProcess::LoadConfig(const string& configFilename, con
 
 void TRestTrackReconnectionProcess::InitProcess() { TRestEventProcess::ReadObservables(); }
 
-TRestEvent* TRestTrackReconnectionProcess::ProcessEvent(TRestEvent* evInput) {
+TRestEvent* TRestTrackReconnectionProcess::ProcessEvent(TRestEvent* inputEvent) {
     Int_t trackBranches = 0;
 
-    fInputTrackEvent = (TRestTrackEvent*)evInput;
+    fInputTrackEvent = (TRestTrackEvent*)inputEvent;
 
     // Copying the input tracks to the output track
     for (int tck = 0; tck < fInputTrackEvent->GetNumberOfTracks(); tck++)

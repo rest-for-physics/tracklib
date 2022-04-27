@@ -39,7 +39,7 @@ class TRestTrackDetachIsolatedNodesProcess : public TRestEventProcess {
     any GetOutputEvent() const override { return fOutputTrackEvent; }
 
     void InitProcess();
-    TRestEvent* ProcessEvent(TRestEvent* eventInput);
+    TRestEvent* ProcessEvent(TRestEvent* inputEvent);
     void EndProcess();
     void LoadDefaultConfig();
 

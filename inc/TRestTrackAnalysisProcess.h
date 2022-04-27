@@ -142,8 +142,8 @@ class TRestTrackAnalysisProcess : public TRestEventProcess {
     any GetInputEvent() const override { return fInputTrackEvent; }
     any GetOutputEvent() const override { return fOutputTrackEvent; }
 
-    void InitProcess();
-    TRestEvent* ProcessEvent(TRestEvent* eventInput);
+    void InitProcess() override;
+    TRestEvent* ProcessEvent(TRestEvent* inputEvent);
     void EndProcess();
 
     void LoadConfig(const std::string& configFilename, const std::string& name = "");

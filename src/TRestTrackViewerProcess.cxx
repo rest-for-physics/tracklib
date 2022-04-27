@@ -90,9 +90,9 @@ void TRestTrackViewerProcess::InitProcess() {
 ///////////////////////////////////////////////
 /// \brief The main processing event function
 ///
-TRestEvent* TRestTrackViewerProcess::ProcessEvent(TRestEvent* evInput) {
+TRestEvent* TRestTrackViewerProcess::ProcessEvent(TRestEvent* inputEvent) {
     // no need for verbose copy now
-    fTrackEvent = (TRestTrackEvent*)evInput;
+    fTrackEvent = (TRestTrackEvent*)inputEvent;
 
     fCanvas->cd();
     TPad* pad = fTrackEvent->DrawEvent();

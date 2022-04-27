@@ -41,8 +41,8 @@ void TRestTrackPointLikeAnalysisProcess::LoadConfig(string configFilename) {
 
 void TRestTrackPointLikeAnalysisProcess::InitProcess() { TRestEventProcess::ReadObservables(); }
 
-TRestEvent* TRestTrackPointLikeAnalysisProcess::ProcessEvent(TRestEvent* evInput) {
-    fTrackEvent = (TRestTrackEvent*)evInput;
+TRestEvent* TRestTrackPointLikeAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
+    fTrackEvent = (TRestTrackEvent*)inputEvent;
 
     Int_t nTracks = fTrackEvent->GetNumberOfTracks();
     Int_t nTotalHits = fTrackEvent->GetTotalHits();
