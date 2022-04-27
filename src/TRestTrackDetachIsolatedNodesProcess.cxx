@@ -18,7 +18,7 @@ ClassImp(TRestTrackDetachIsolatedNodesProcess);
 
 TRestTrackDetachIsolatedNodesProcess::TRestTrackDetachIsolatedNodesProcess() { Initialize(); }
 
-TRestTrackDetachIsolatedNodesProcess::TRestTrackDetachIsolatedNodesProcess(char* configFilename) {
+TRestTrackDetachIsolatedNodesProcess::TRestTrackDetachIsolatedNodesProcess(const char* configFilename) {
     Initialize();
 
     if (LoadConfigFromFile(configFilename) == -1) LoadDefaultConfig();

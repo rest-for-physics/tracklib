@@ -16,7 +16,7 @@ ClassImp(TRestTrackPointLikeAnalysisProcess);
 
 TRestTrackPointLikeAnalysisProcess::TRestTrackPointLikeAnalysisProcess() { Initialize(); }
 
-TRestTrackPointLikeAnalysisProcess::TRestTrackPointLikeAnalysisProcess(char* configFilename) {
+TRestTrackPointLikeAnalysisProcess::TRestTrackPointLikeAnalysisProcess(const char* configFilename) {
     Initialize();
 
     if (LoadConfigFromFile(configFilename)) LoadDefaultConfig();

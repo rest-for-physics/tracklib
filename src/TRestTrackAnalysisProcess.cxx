@@ -184,7 +184,7 @@ ClassImp(TRestTrackAnalysisProcess);
 
 TRestTrackAnalysisProcess::TRestTrackAnalysisProcess() { Initialize(); }
 
-TRestTrackAnalysisProcess::TRestTrackAnalysisProcess(char* configFilename) {
+TRestTrackAnalysisProcess::TRestTrackAnalysisProcess(const char* configFilename) {
     Initialize();
 
     if (LoadConfigFromFile(configFilename)) LoadDefaultConfig();

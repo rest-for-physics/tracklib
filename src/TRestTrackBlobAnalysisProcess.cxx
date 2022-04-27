@@ -21,7 +21,7 @@ ClassImp(TRestTrackBlobAnalysisProcess);
 
 TRestTrackBlobAnalysisProcess::TRestTrackBlobAnalysisProcess() { Initialize(); }
 
-TRestTrackBlobAnalysisProcess::TRestTrackBlobAnalysisProcess(char* configFilename) {
+TRestTrackBlobAnalysisProcess::TRestTrackBlobAnalysisProcess(const char* configFilename) {
     Initialize();
 
     if (LoadConfigFromFile(configFilename)) LoadDefaultConfig();

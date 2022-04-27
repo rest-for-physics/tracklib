@@ -168,7 +168,7 @@ class TRestTrackAnalysisProcess : public TRestEventProcess {
 
     // Constructor
     TRestTrackAnalysisProcess();
-    TRestTrackAnalysisProcess(char* configFilename);
+    TRestTrackAnalysisProcess(const char* configFilename);
     // Destructor
     ~TRestTrackAnalysisProcess();
 

@@ -17,7 +17,7 @@ ClassImp(TRestTrackReconnectionProcess);
 
 TRestTrackReconnectionProcess::TRestTrackReconnectionProcess() { Initialize(); }
 
-TRestTrackReconnectionProcess::TRestTrackReconnectionProcess(char* configFilename) {
+TRestTrackReconnectionProcess::TRestTrackReconnectionProcess(const char* configFilename) {
     Initialize();
 
     if (LoadConfigFromFile(configFilename) == -1) LoadDefaultConfig();

@@ -55,7 +55,7 @@ class TRestTrackPointLikeAnalysisProcess : public TRestEventProcess {
 
     // Constructor
     TRestTrackPointLikeAnalysisProcess();
-    TRestTrackPointLikeAnalysisProcess(char* configFilename);
+    TRestTrackPointLikeAnalysisProcess(const char* configFilename);
     // Destructor
     ~TRestTrackPointLikeAnalysisProcess();
 

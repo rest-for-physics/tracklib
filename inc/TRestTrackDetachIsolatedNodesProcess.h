@@ -55,7 +55,7 @@ class TRestTrackDetachIsolatedNodesProcess : public TRestEventProcess {
 
     // Constructor
     TRestTrackDetachIsolatedNodesProcess();
-    TRestTrackDetachIsolatedNodesProcess(char* configFilename);
+    TRestTrackDetachIsolatedNodesProcess(const char* configFilename);
     // Destructor
     ~TRestTrackDetachIsolatedNodesProcess();
 

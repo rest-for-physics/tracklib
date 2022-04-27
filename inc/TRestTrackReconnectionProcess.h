@@ -69,7 +69,7 @@ class TRestTrackReconnectionProcess : public TRestEventProcess {
 
     // Constructor
     TRestTrackReconnectionProcess();
-    TRestTrackReconnectionProcess(char* configFilename);
+    TRestTrackReconnectionProcess(const char* configFilename);
     // Destructor
     ~TRestTrackReconnectionProcess();
 
