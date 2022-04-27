@@ -61,7 +61,7 @@ class TRestTrackReconnectionProcess : public TRestEventProcess {
         EndPrintProcess();
     }
 
-    inline const char* GetProcessName() const { return "trackReconnection"; }
+    const char* GetProcessName() const override { return "trackReconnection"; }
 
     void BreakTracks(TRestVolumeHits* hits, std::vector<TRestVolumeHits>& hitSets, Double_t nSigma = 2.);
     void ReconnectTracks(std::vector<TRestVolumeHits>& hitSets);

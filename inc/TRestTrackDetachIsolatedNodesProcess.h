@@ -51,7 +51,7 @@ class TRestTrackDetachIsolatedNodesProcess : public TRestEventProcess {
         EndPrintProcess();
     }
 
-    inline const char* GetProcessName() const { return "trackDetachIsolatedNode"; }
+    const char* GetProcessName() const override { return "trackDetachIsolatedNode"; }
 
     // Constructor
     TRestTrackDetachIsolatedNodesProcess();

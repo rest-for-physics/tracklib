@@ -52,7 +52,7 @@ class TRestTrackLineAnalysisProcess : public TRestEventProcess {
         EndPrintProcess();
     }
 
-    inline const char* GetProcessName() const { return "trackLineAna"; }
+    const char* GetProcessName() const override { return "trackLineAna"; }
 
     // Constructor
     TRestTrackLineAnalysisProcess();

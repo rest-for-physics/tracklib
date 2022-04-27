@@ -64,7 +64,7 @@ class TRestTrackPathMinimizationProcess : public TRestEventProcess {
         EndPrintProcess();
     }
 
-    inline const char* GetProcessName() const { return "trackPathMinimization"; }
+    const char* GetProcessName() const override { return "trackPathMinimization"; }
 
     // Constructor
     TRestTrackPathMinimizationProcess();

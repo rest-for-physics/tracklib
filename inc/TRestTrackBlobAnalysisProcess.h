@@ -113,7 +113,7 @@ class TRestTrackBlobAnalysisProcess : public TRestEventProcess {
         EndPrintProcess();
     }
 
-    inline const char* GetProcessName() const { return "findTrackBlobs"; }
+    const char* GetProcessName() const override { return "findTrackBlobs"; }
 
     // Constructor
     TRestTrackBlobAnalysisProcess();
