@@ -40,8 +40,8 @@ class TRestTrackLineAnalysisProcess : public TRestEventProcess {
 
    protected:
    public:
-    inline any GetInputEvent() const { return fTrackEvent; }
-    inline any GetOutputEvent() const { return fOutTrackEvent; }
+    any GetInputEvent() const override { return fTrackEvent; }
+    any GetOutputEvent() const override { return fOutTrackEvent; }
 
     void InitProcess();
     TRestEvent* ProcessEvent(TRestEvent* eventInput);

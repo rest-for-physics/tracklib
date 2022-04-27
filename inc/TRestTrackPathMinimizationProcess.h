@@ -39,8 +39,8 @@ class TRestTrackPathMinimizationProcess : public TRestEventProcess {
                              // is connected to last hit)
 
    public:
-    inline any GetInputEvent() const { return fInputTrackEvent; }
-    inline any GetOutputEvent() const { return fOutputTrackEvent; }
+    any GetInputEvent() const override { return fInputTrackEvent; }
+    any GetOutputEvent() const override { return fOutputTrackEvent; }
 
     void InitProcess();
     TRestEvent* ProcessEvent(TRestEvent* eventInput);
