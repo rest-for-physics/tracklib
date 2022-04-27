@@ -76,7 +76,7 @@ class TRestTrack : public TObject {
 
     void GetBoundaries(TVector3& orig, TVector3& end);
 
-    // Construtor
+    // Constructor
     TRestTrack();
     // Destructor
     ~TRestTrack();

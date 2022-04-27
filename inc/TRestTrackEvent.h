@@ -127,7 +127,7 @@ class TRestTrackEvent : public TRestEvent {
     void PrintOnlyTracks();
     void PrintEvent(Bool_t fullInfo = false);
 
-    // Construtor
+    // Constructor
     TRestTrackEvent();
     // Destructor
     virtual ~TRestTrackEvent();
