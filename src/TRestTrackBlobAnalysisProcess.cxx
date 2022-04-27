@@ -41,7 +41,7 @@ void TRestTrackBlobAnalysisProcess::Initialize() {
     fHitsToCheckFraction = 0.2;
 }
 
-void TRestTrackBlobAnalysisProcess::LoadConfig(std::string configFilename, std::string name) {
+void TRestTrackBlobAnalysisProcess::LoadConfig(const string& configFilename, const string& name) {
     if (LoadConfigFromFile(configFilename, name)) LoadDefaultConfig();
 }
 

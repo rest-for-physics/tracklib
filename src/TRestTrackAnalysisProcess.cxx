@@ -206,7 +206,7 @@ void TRestTrackAnalysisProcess::Initialize() {
     fEnableTwistParameters = false;
 }
 
-void TRestTrackAnalysisProcess::LoadConfig(std::string configFilename, std::string name) {
+void TRestTrackAnalysisProcess::LoadConfig(const string& configFilename, const string& name) {
     if (LoadConfigFromFile(configFilename, name)) LoadDefaultConfig();
 }
 

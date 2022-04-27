@@ -40,7 +40,7 @@ void TRestTrackDetachIsolatedNodesProcess::Initialize() {
     fOutputTrackEvent = new TRestTrackEvent();
 }
 
-void TRestTrackDetachIsolatedNodesProcess::LoadConfig(std::string configFilename, std::string name) {
+void TRestTrackDetachIsolatedNodesProcess::LoadConfig(const string& configFilename, const string& name) {
     if (LoadConfigFromFile(configFilename, name) == -1) LoadDefaultConfig();
 
     PrintMetadata();

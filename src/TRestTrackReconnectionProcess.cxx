@@ -41,7 +41,7 @@ void TRestTrackReconnectionProcess::Initialize() {
     fSplitTrack = false;
 }
 
-void TRestTrackReconnectionProcess::LoadConfig(std::string configFilename, std::string name) {
+void TRestTrackReconnectionProcess::LoadConfig(const string& configFilename, const string& name) {
     if (LoadConfigFromFile(configFilename, name) == -1) LoadDefaultConfig();
 
     PrintMetadata();

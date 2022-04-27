@@ -45,7 +45,7 @@ class TRestTrackReconnectionProcess : public TRestEventProcess {
     void EndProcess();
     void LoadDefaultConfig();
 
-    void LoadConfig(std::string configFilename, std::string name = "");
+    void LoadConfig(const std::string& configFilename, const std::string& name = "");
 
     void PrintMetadata() {
         BeginPrintProcess();
