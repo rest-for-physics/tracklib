@@ -49,7 +49,7 @@ class TRestTrackPointLikeAnalysisProcess : public TRestEventProcess {
         EndPrintProcess();
     }
 
-    inline TString GetProcessName() const { return (TString) "pointLikeTrackAna"; }
+    inline const char* GetProcessName() const { return "pointLikeTrackAna"; }
     //       Double_t GetCalibFactor();           ///< Calibration factor is
     //       found.
 
