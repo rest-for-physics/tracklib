@@ -125,7 +125,7 @@ class TRestTrackAnalysisProcess : public TRestEventProcess {
     std::vector<Double_t> fTwistWeightedHighValue_Y;           //!
 #endif
 
-    void InitFromConfigFile();
+    void InitFromConfigFile() override;
 
     void Initialize();
 
@@ -143,8 +143,8 @@ class TRestTrackAnalysisProcess : public TRestEventProcess {
     any GetOutputEvent() const override { return fOutputTrackEvent; }
 
     void InitProcess() override;
-    TRestEvent* ProcessEvent(TRestEvent* inputEvent);
-    void EndProcess();
+    TRestEvent* ProcessEvent(TRestEvent* inputEvent) override;
+    void EndProcess() override;
 
     void LoadConfig(const std::string& configFilename, const std::string& name = "");
 

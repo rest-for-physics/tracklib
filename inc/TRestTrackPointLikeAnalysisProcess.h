@@ -24,7 +24,7 @@ class TRestTrackPointLikeAnalysisProcess : public TRestEventProcess {
                                    // In order to convert the parameters to time using the sampling time
 #endif
 
-    void InitFromConfigFile();
+    void InitFromConfigFile() override;
 
     void Initialize();
 
@@ -37,9 +37,9 @@ class TRestTrackPointLikeAnalysisProcess : public TRestEventProcess {
     any GetInputEvent() const override { return fTrackEvent; }
     any GetOutputEvent() const override { return fTrackEvent; }
 
-    void InitProcess();
-    TRestEvent* ProcessEvent(TRestEvent* inputEvent);
-    void EndProcess();
+    void InitProcess() override;
+    TRestEvent* ProcessEvent(TRestEvent* inputEvent) override;
+    void EndProcess() override;
 
     void LoadConfig(std::string configFilename);
 

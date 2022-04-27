@@ -42,12 +42,12 @@ class TRestTrackPathMinimizationProcess : public TRestEventProcess {
     any GetInputEvent() const override { return fInputTrackEvent; }
     any GetOutputEvent() const override { return fOutputTrackEvent; }
 
-    void InitProcess();
-    TRestEvent* ProcessEvent(TRestEvent* inputEvent);
+    void InitProcess() override;
+    TRestEvent* ProcessEvent(TRestEvent* inputEvent) override;
     void BruteForce(TRestVolumeHits* hits, std::vector<int>& bestPath);
     void NearestNeighbour(TRestVolumeHits* hits, std::vector<int>& bestPath);
     void HeldKarp(TRestVolumeHits* hits, std::vector<int>& bestPath);
-    void EndProcess();
+    void EndProcess() override;
 
     void PrintMetadata() {
         BeginPrintProcess();

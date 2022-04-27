@@ -29,7 +29,7 @@ class TRestTrackReconnectionProcess : public TRestEventProcess {
     Bool_t fSplitTrack;
     Double_t fNSigmas;
 
-    void InitFromConfigFile();
+    void InitFromConfigFile() override;
 
     void Initialize();
 
@@ -40,9 +40,9 @@ class TRestTrackReconnectionProcess : public TRestEventProcess {
     any GetInputEvent() const override { return fInputTrackEvent; }
     any GetOutputEvent() const override { return fOutputTrackEvent; }
 
-    void InitProcess();
-    TRestEvent* ProcessEvent(TRestEvent* inputEvent);
-    void EndProcess();
+    void InitProcess() override;
+    TRestEvent* ProcessEvent(TRestEvent* inputEvent) override;
+    void EndProcess() override;
     void LoadDefaultConfig();
 
     void LoadConfig(const std::string& configFilename, const std::string& name = "");

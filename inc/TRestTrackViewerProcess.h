@@ -56,9 +56,9 @@ class TRestTrackViewerProcess : public TRestEventProcess {
     any GetInputEvent() const override { return fTrackEvent; }
     any GetOutputEvent() const override { return fTrackEvent; }
 
-    void InitProcess();
-    TRestEvent* ProcessEvent(TRestEvent* inputEvent);
-    void EndProcess();
+    void InitProcess() override;
+    TRestEvent* ProcessEvent(TRestEvent* inputEvent) override;
+    void EndProcess() override;
 
     void PrintMetadata() {
         BeginPrintProcess();

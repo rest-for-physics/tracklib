@@ -43,9 +43,9 @@ class TRestTrackLineAnalysisProcess : public TRestEventProcess {
     any GetInputEvent() const override { return fTrackEvent; }
     any GetOutputEvent() const override { return fOutTrackEvent; }
 
-    void InitProcess();
-    TRestEvent* ProcessEvent(TRestEvent* inputEvent);
-    void EndProcess();
+    void InitProcess() override;
+    TRestEvent* ProcessEvent(TRestEvent* inputEvent) override;
+    void EndProcess() override;
 
     void PrintMetadata() {
         BeginPrintProcess();
