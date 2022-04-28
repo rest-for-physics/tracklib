@@ -25,7 +25,7 @@ class TRestTrackDetachIsolatedNodesProcess : public TRestEventProcess {
 
     void InitFromConfigFile() override;
 
-    void Initialize()override;
+    void Initialize() override;
 
     Double_t fThresholdDistance;
     Double_t fConnectivityThreshold;
@@ -45,7 +45,7 @@ class TRestTrackDetachIsolatedNodesProcess : public TRestEventProcess {
 
     void LoadConfig(const std::string& configFilename, const std::string& name = "");
 
-    void PrintMetadata()override {
+    void PrintMetadata() override {
         BeginPrintProcess();
 
         EndPrintProcess();

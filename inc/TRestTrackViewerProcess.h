@@ -76,6 +76,6 @@ class TRestTrackViewerProcess : public TRestEventProcess {
     ~TRestTrackViewerProcess();
 
     ClassDefOverride(TRestTrackViewerProcess, 1);  // Template for a REST "event process" class inherited from
-                                           // TRestEventProcess
+                                                   // TRestEventProcess
 };
 #endif

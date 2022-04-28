@@ -60,7 +60,7 @@ class TRestTrackPointLikeAnalysisProcess : public TRestEventProcess {
     ~TRestTrackPointLikeAnalysisProcess();
 
     ClassDefOverride(TRestTrackPointLikeAnalysisProcess,
-             1);  // Template for a REST "event process" class inherited from
-                  // TRestEventProcess
+                     1);  // Template for a REST "event process" class inherited from
+                          // TRestEventProcess
 };
 #endif
