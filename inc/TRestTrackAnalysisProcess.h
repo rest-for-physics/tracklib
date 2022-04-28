@@ -127,7 +127,7 @@ class TRestTrackAnalysisProcess : public TRestEventProcess {
 
     void InitFromConfigFile() override;
 
-    void Initialize();
+    void Initialize() override;
 
     void LoadDefaultConfig();
 
@@ -148,7 +148,7 @@ class TRestTrackAnalysisProcess : public TRestEventProcess {
 
     void LoadConfig(const std::string& configFilename, const std::string& name = "");
 
-    void PrintMetadata() {
+    void PrintMetadata() override {
         BeginPrintProcess();
 
         if (fCutsEnabled) {
@@ -172,7 +172,7 @@ class TRestTrackAnalysisProcess : public TRestEventProcess {
     // Destructor
     ~TRestTrackAnalysisProcess();
 
-    ClassDef(TRestTrackAnalysisProcess, 1);  // Template for a REST "event process" class inherited from
+    ClassDefOverride(TRestTrackAnalysisProcess, 1);  // Template for a REST "event process" class inherited from
                                              // TRestEventProcess
 };
 #endif

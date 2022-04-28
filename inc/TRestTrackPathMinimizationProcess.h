@@ -29,7 +29,7 @@ class TRestTrackPathMinimizationProcess : public TRestEventProcess {
     TRestTrackEvent* fOutputTrackEvent;  //!
 #endif
 
-    void Initialize();
+    void Initialize() override;
 
    protected:
     Bool_t fWeightHits = false;
@@ -49,7 +49,7 @@ class TRestTrackPathMinimizationProcess : public TRestEventProcess {
     void HeldKarp(TRestVolumeHits* hits, std::vector<int>& bestPath);
     void EndProcess() override;
 
-    void PrintMetadata() {
+    void PrintMetadata() override {
         BeginPrintProcess();
 
         //           std::cout << "Maximum number of nodes (hits) allowed : " <<
@@ -71,6 +71,6 @@ class TRestTrackPathMinimizationProcess : public TRestEventProcess {
     // Destructor
     ~TRestTrackPathMinimizationProcess();
 
-    ClassDef(TRestTrackPathMinimizationProcess, 2);
+    ClassDefOverride(TRestTrackPathMinimizationProcess, 2);
 };
 #endif

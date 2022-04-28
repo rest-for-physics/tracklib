@@ -33,7 +33,7 @@ class TRestTrackLinearizationProcess : public TRestEventProcess {
     TRestTrackEvent* fTrackEvent;     //!
     TRestTrackEvent* fOutTrackEvent;  //!
 
-    void Initialize();
+    void Initialize() override;
 
    protected:
     // A parameter which defines the maximum number of nodes for the track linearization
@@ -47,7 +47,7 @@ class TRestTrackLinearizationProcess : public TRestEventProcess {
     TRestEvent* ProcessEvent(TRestEvent* inputEvent) override;
     void EndProcess() override;
 
-    void PrintMetadata() {
+    void PrintMetadata() override {
         BeginPrintProcess();
         metadata << "Max nodes: " << fMaxNodes << endl;
         EndPrintProcess();
@@ -65,6 +65,6 @@ class TRestTrackLinearizationProcess : public TRestEventProcess {
 
     // ROOT class definition helper. Increase the number in it every time
     // you add/rename/remove the process parameters
-    ClassDef(TRestTrackLinearizationProcess, 1);
+    ClassDefOverride(TRestTrackLinearizationProcess, 1);
 };
 #endif

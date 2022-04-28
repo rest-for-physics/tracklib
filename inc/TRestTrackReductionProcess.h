@@ -23,7 +23,7 @@ class TRestTrackReductionProcess : public TRestEventProcess {
     TRestTrackEvent* fOutputTrackEvent;  //!
 #endif
 
-    void Initialize();
+    void Initialize() override;
 
    protected:
     Double_t fStartingDistance = 0.5;
@@ -42,7 +42,7 @@ class TRestTrackReductionProcess : public TRestEventProcess {
     void getHitsMerged(TRestVolumeHits& hits);
     void EndProcess() override;
 
-    void PrintMetadata() {
+    void PrintMetadata() override {
         BeginPrintProcess();
 
         metadata << " Starting distance : " << fStartingDistance << endl;
@@ -62,7 +62,7 @@ class TRestTrackReductionProcess : public TRestEventProcess {
     // Destructor
     ~TRestTrackReductionProcess();
 
-    ClassDef(TRestTrackReductionProcess, 2);  // Template for a REST "event process" class inherited from
+    ClassDefOverride(TRestTrackReductionProcess, 2);  // Template for a REST "event process" class inherited from
                                               // TRestEventProcess
 };
 #endif

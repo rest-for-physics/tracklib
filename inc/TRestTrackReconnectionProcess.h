@@ -31,7 +31,7 @@ class TRestTrackReconnectionProcess : public TRestEventProcess {
 
     void InitFromConfigFile() override;
 
-    void Initialize();
+    void Initialize() override;
 
     void SetDistanceMeanAndSigma(TRestHits* h);
 
@@ -47,7 +47,7 @@ class TRestTrackReconnectionProcess : public TRestEventProcess {
 
     void LoadConfig(const std::string& configFilename, const std::string& name = "");
 
-    void PrintMetadata() {
+    void PrintMetadata() override {
         BeginPrintProcess();
 
         metadata << "Split track : ";
@@ -73,6 +73,6 @@ class TRestTrackReconnectionProcess : public TRestEventProcess {
     // Destructor
     ~TRestTrackReconnectionProcess();
 
-    ClassDef(TRestTrackReconnectionProcess, 1);
+    ClassDefOverride(TRestTrackReconnectionProcess, 1);
 };
 #endif

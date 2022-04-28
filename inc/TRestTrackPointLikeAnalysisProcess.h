@@ -26,7 +26,7 @@ class TRestTrackPointLikeAnalysisProcess : public TRestEventProcess {
 
     void InitFromConfigFile() override;
 
-    void Initialize();
+    void Initialize() override;
 
     void LoadDefaultConfig();
 
@@ -43,7 +43,7 @@ class TRestTrackPointLikeAnalysisProcess : public TRestEventProcess {
 
     void LoadConfig(std::string configFilename);
 
-    void PrintMetadata() {
+    void PrintMetadata() override {
         BeginPrintProcess();
 
         EndPrintProcess();
@@ -59,7 +59,7 @@ class TRestTrackPointLikeAnalysisProcess : public TRestEventProcess {
     // Destructor
     ~TRestTrackPointLikeAnalysisProcess();
 
-    ClassDef(TRestTrackPointLikeAnalysisProcess,
+    ClassDefOverride(TRestTrackPointLikeAnalysisProcess,
              1);  // Template for a REST "event process" class inherited from
                   // TRestEventProcess
 };

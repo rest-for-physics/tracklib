@@ -88,7 +88,7 @@ class TRestTrackBlobAnalysisProcess : public TRestEventProcess {
 
     void InitFromConfigFile() override;
 
-    void Initialize();
+    void Initialize() override;
 
     void LoadDefaultConfig();
 
@@ -105,7 +105,7 @@ class TRestTrackBlobAnalysisProcess : public TRestEventProcess {
 
     void LoadConfig(const std::string& configFilename, const std::string& name = "");
 
-    void PrintMetadata() {
+    void PrintMetadata() override {
         BeginPrintProcess();
 
         metadata << " Hits to check factor : " << fHitsToCheckFraction << endl;
@@ -121,7 +121,7 @@ class TRestTrackBlobAnalysisProcess : public TRestEventProcess {
     // Destructor
     ~TRestTrackBlobAnalysisProcess();
 
-    ClassDef(TRestTrackBlobAnalysisProcess, 1);  // Template for a REST "event process" class inherited from
+    ClassDefOverride(TRestTrackBlobAnalysisProcess, 1);  // Template for a REST "event process" class inherited from
                                                  // TRestEventProcess
 };
 #endif

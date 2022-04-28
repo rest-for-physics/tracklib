@@ -47,7 +47,7 @@ class TRestTrackViewerProcess : public TRestEventProcess {
 
     TCanvas* hCanvas = nullptr;
 
-    void Initialize();
+    void Initialize() override;
 
    protected:
     // add here the members of your event process
@@ -60,7 +60,7 @@ class TRestTrackViewerProcess : public TRestEventProcess {
     TRestEvent* ProcessEvent(TRestEvent* inputEvent) override;
     void EndProcess() override;
 
-    void PrintMetadata() {
+    void PrintMetadata() override {
         BeginPrintProcess();
 
         metadata << "Draw Origin End : " << fDrawOriginEnd << endl;
@@ -75,7 +75,7 @@ class TRestTrackViewerProcess : public TRestEventProcess {
     // Destructor
     ~TRestTrackViewerProcess();
 
-    ClassDef(TRestTrackViewerProcess, 1);  // Template for a REST "event process" class inherited from
+    ClassDefOverride(TRestTrackViewerProcess, 1);  // Template for a REST "event process" class inherited from
                                            // TRestEventProcess
 };
 #endif

@@ -36,7 +36,7 @@ class TRestTrackLineAnalysisProcess : public TRestEventProcess {
     /// A pointer to the output event Track event
     TRestTrackEvent* fOutTrackEvent;
 
-    void Initialize();
+    void Initialize() override;
 
    protected:
    public:
@@ -47,7 +47,7 @@ class TRestTrackLineAnalysisProcess : public TRestEventProcess {
     TRestEvent* ProcessEvent(TRestEvent* inputEvent) override;
     void EndProcess() override;
 
-    void PrintMetadata() {
+    void PrintMetadata() override {
         BeginPrintProcess();
         EndPrintProcess();
     }
@@ -59,6 +59,6 @@ class TRestTrackLineAnalysisProcess : public TRestEventProcess {
     // Destructor
     ~TRestTrackLineAnalysisProcess();
 
-    ClassDef(TRestTrackLineAnalysisProcess, 1);
+    ClassDefOverride(TRestTrackLineAnalysisProcess, 1);
 };
 #endif
