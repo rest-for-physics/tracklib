@@ -86,6 +86,7 @@
 ///
 
 #include "TRestTrackLineAnalysisProcess.h"
+
 #include "TRestTrackReductionProcess.h"
 using namespace std;
 
@@ -122,8 +123,8 @@ void TRestTrackLineAnalysisProcess::InitProcess() {}
 ///////////////////////////////////////////////
 /// \brief The main processing event function
 ///
-TRestEvent* TRestTrackLineAnalysisProcess::ProcessEvent(TRestEvent* evInput) {
-    fTrackEvent = (TRestTrackEvent*)evInput;
+TRestEvent* TRestTrackLineAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
+    fTrackEvent = (TRestTrackEvent*)inputEvent;
 
     // Initialize outputTrackEvent
     for (int t = 0; t < fTrackEvent->GetNumberOfTracks(); t++)
@@ -132,7 +133,7 @@ TRestEvent* TRestTrackLineAnalysisProcess::ProcessEvent(TRestEvent* evInput) {
     TRestTrack* tckX = fTrackEvent->GetMaxEnergyTrackInX();
     TRestTrack* tckY = fTrackEvent->GetMaxEnergyTrackInY();
 
-    TVector3 orig = TVector3(0,0,0), end =TVector3(0,0,0);
+    TVector3 orig = TVector3(0, 0, 0), end = TVector3(0, 0, 0);
     Double_t length = -1;
     Double_t angle = -10;
     bool downwards = true;
@@ -179,7 +180,7 @@ TRestEvent* TRestTrackLineAnalysisProcess::ProcessEvent(TRestEvent* evInput) {
     SetObservableValue("downwards", downwards);
     SetObservableValue("totalEnergy", trackEnergy);
 
-    if (!tckX || !tckY)return nullptr;
+    if (!tckX || !tckY) return nullptr;
 
     // Save most energetic XZ track
     tckX->SetParentID(tckX->GetTrackID());

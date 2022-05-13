@@ -86,9 +86,9 @@ class TRestTrackBlobAnalysisProcess : public TRestEventProcess {
 
     Double_t fHitsToCheckFraction;
 
-    void InitFromConfigFile();
+    void InitFromConfigFile() override;
 
-    void Initialize();
+    void Initialize() override;
 
     void LoadDefaultConfig();
 
@@ -96,16 +96,16 @@ class TRestTrackBlobAnalysisProcess : public TRestEventProcess {
     // add here the members of your event process
 
    public:
-    any GetInputEvent() { return fInputTrackEvent; }
-    any GetOutputEvent() { return fOutputTrackEvent; }
+    any GetInputEvent() const override { return fInputTrackEvent; }
+    any GetOutputEvent() const override { return fOutputTrackEvent; }
 
-    void InitProcess();
-    TRestEvent* ProcessEvent(TRestEvent* eventInput);
-    void EndProcess();
+    void InitProcess() override;
+    TRestEvent* ProcessEvent(TRestEvent* inputEvent) override;
+    void EndProcess() override;
 
-    void LoadConfig(std::string cfgFilename, std::string name = "");
+    void LoadConfig(const std::string& configFilename, const std::string& name = "");
 
-    void PrintMetadata() {
+    void PrintMetadata() override {
         BeginPrintProcess();
 
         metadata << " Hits to check factor : " << fHitsToCheckFraction << endl;
@@ -113,15 +113,15 @@ class TRestTrackBlobAnalysisProcess : public TRestEventProcess {
         EndPrintProcess();
     }
 
-    TString GetProcessName() { return (TString) "findTrackBlobs"; }
+    const char* GetProcessName() const override { return "findTrackBlobs"; }
 
     // Constructor
     TRestTrackBlobAnalysisProcess();
-    TRestTrackBlobAnalysisProcess(char* cfgFileName);
+    TRestTrackBlobAnalysisProcess(const char* configFilename);
     // Destructor
     ~TRestTrackBlobAnalysisProcess();
 
-    ClassDef(TRestTrackBlobAnalysisProcess, 1);  // Template for a REST "event process" class inherited from
-                                                 // TRestEventProcess
+    ClassDefOverride(TRestTrackBlobAnalysisProcess, 1);  // Template for a REST "event process" class
+                                                         // inherited from TRestEventProcess
 };
 #endif

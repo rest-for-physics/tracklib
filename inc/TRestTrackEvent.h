@@ -89,7 +89,7 @@ class TRestTrackEvent : public TRestEvent {
 
     Int_t GetLevel(Int_t tck);
     void SetLevels();
-    Int_t GetLevels() { return fLevels; }
+    inline Int_t GetLevels() const { return fLevels; }
 
     TPad* DrawEvent(const TString& option = "");
 
@@ -127,7 +127,7 @@ class TRestTrackEvent : public TRestEvent {
     void PrintOnlyTracks();
     void PrintEvent(Bool_t fullInfo = false);
 
-    // Construtor
+    // Constructor
     TRestTrackEvent();
     // Destructor
     virtual ~TRestTrackEvent();

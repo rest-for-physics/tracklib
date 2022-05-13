@@ -29,7 +29,7 @@ class TRestTrackPathMinimizationProcess : public TRestEventProcess {
     TRestTrackEvent* fOutputTrackEvent;  //!
 #endif
 
-    void Initialize();
+    void Initialize() override;
 
    protected:
     Bool_t fWeightHits = false;
@@ -39,17 +39,17 @@ class TRestTrackPathMinimizationProcess : public TRestEventProcess {
                              // is connected to last hit)
 
    public:
-    any GetInputEvent() { return fInputTrackEvent; }
-    any GetOutputEvent() { return fOutputTrackEvent; }
+    any GetInputEvent() const override { return fInputTrackEvent; }
+    any GetOutputEvent() const override { return fOutputTrackEvent; }
 
-    void InitProcess();
-    TRestEvent* ProcessEvent(TRestEvent* eventInput);
+    void InitProcess() override;
+    TRestEvent* ProcessEvent(TRestEvent* inputEvent) override;
     void BruteForce(TRestVolumeHits* hits, std::vector<int>& bestPath);
     void NearestNeighbour(TRestVolumeHits* hits, std::vector<int>& bestPath);
     void HeldKarp(TRestVolumeHits* hits, std::vector<int>& bestPath);
-    void EndProcess();
+    void EndProcess() override;
 
-    void PrintMetadata() {
+    void PrintMetadata() override {
         BeginPrintProcess();
 
         //           std::cout << "Maximum number of nodes (hits) allowed : " <<
@@ -64,13 +64,13 @@ class TRestTrackPathMinimizationProcess : public TRestEventProcess {
         EndPrintProcess();
     }
 
-    TString GetProcessName() { return (TString) "trackPathMinimization"; }
+    const char* GetProcessName() const override { return "trackPathMinimization"; }
 
     // Constructor
     TRestTrackPathMinimizationProcess();
     // Destructor
     ~TRestTrackPathMinimizationProcess();
 
-    ClassDef(TRestTrackPathMinimizationProcess, 2);
+    ClassDefOverride(TRestTrackPathMinimizationProcess, 2);
 };
 #endif

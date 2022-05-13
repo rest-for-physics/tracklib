@@ -29,25 +29,25 @@ class TRestTrackReconnectionProcess : public TRestEventProcess {
     Bool_t fSplitTrack;
     Double_t fNSigmas;
 
-    void InitFromConfigFile();
+    void InitFromConfigFile() override;
 
-    void Initialize();
+    void Initialize() override;
 
     void SetDistanceMeanAndSigma(TRestHits* h);
 
    protected:
    public:
-    any GetInputEvent() { return fInputTrackEvent; }
-    any GetOutputEvent() { return fOutputTrackEvent; }
+    any GetInputEvent() const override { return fInputTrackEvent; }
+    any GetOutputEvent() const override { return fOutputTrackEvent; }
 
-    void InitProcess();
-    TRestEvent* ProcessEvent(TRestEvent* eventInput);
-    void EndProcess();
+    void InitProcess() override;
+    TRestEvent* ProcessEvent(TRestEvent* inputEvent) override;
+    void EndProcess() override;
     void LoadDefaultConfig();
 
-    void LoadConfig(std::string cfgFilename, std::string name = "");
+    void LoadConfig(const std::string& configFilename, const std::string& name = "");
 
-    void PrintMetadata() {
+    void PrintMetadata() override {
         BeginPrintProcess();
 
         metadata << "Split track : ";
@@ -61,7 +61,7 @@ class TRestTrackReconnectionProcess : public TRestEventProcess {
         EndPrintProcess();
     }
 
-    TString GetProcessName() { return (TString) "trackReconnection"; }
+    const char* GetProcessName() const override { return "trackReconnection"; }
 
     void BreakTracks(TRestVolumeHits* hits, std::vector<TRestVolumeHits>& hitSets, Double_t nSigma = 2.);
     void ReconnectTracks(std::vector<TRestVolumeHits>& hitSets);
@@ -69,10 +69,10 @@ class TRestTrackReconnectionProcess : public TRestEventProcess {
 
     // Constructor
     TRestTrackReconnectionProcess();
-    TRestTrackReconnectionProcess(char* cfgFileName);
+    TRestTrackReconnectionProcess(const char* configFilename);
     // Destructor
     ~TRestTrackReconnectionProcess();
 
-    ClassDef(TRestTrackReconnectionProcess, 1);
+    ClassDefOverride(TRestTrackReconnectionProcess, 1);
 };
 #endif

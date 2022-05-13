@@ -23,7 +23,7 @@ class TRestTrackReductionProcess : public TRestEventProcess {
     TRestTrackEvent* fOutputTrackEvent;  //!
 #endif
 
-    void Initialize();
+    void Initialize() override;
 
    protected:
     Double_t fStartingDistance = 0.5;
@@ -34,15 +34,15 @@ class TRestTrackReductionProcess : public TRestEventProcess {
     Bool_t fKmeans = false;
 
    public:
-    any GetInputEvent() { return fInputTrackEvent; }
-    any GetOutputEvent() { return fOutputTrackEvent; }
+    any GetInputEvent() const override { return fInputTrackEvent; }
+    any GetOutputEvent() const override { return fOutputTrackEvent; }
 
-    void InitProcess();
-    TRestEvent* ProcessEvent(TRestEvent* eventInput);
+    void InitProcess() override;
+    TRestEvent* ProcessEvent(TRestEvent* inputEvent) override;
     void getHitsMerged(TRestVolumeHits& hits);
-    void EndProcess();
+    void EndProcess() override;
 
-    void PrintMetadata() {
+    void PrintMetadata() override {
         BeginPrintProcess();
 
         metadata << " Starting distance : " << fStartingDistance << endl;
@@ -55,14 +55,14 @@ class TRestTrackReductionProcess : public TRestEventProcess {
         EndPrintProcess();
     }
 
-    TString GetProcessName() { return (TString) "trackReduction"; }
+    const char* GetProcessName() const override { return "trackReduction"; }
 
     // Constructor
     TRestTrackReductionProcess();
     // Destructor
     ~TRestTrackReductionProcess();
 
-    ClassDef(TRestTrackReductionProcess, 2);  // Template for a REST "event process" class inherited from
-                                              // TRestEventProcess
+    ClassDefOverride(TRestTrackReductionProcess, 2);  // Template for a REST "event process" class inherited
+                                                      // from TRestEventProcess
 };
 #endif

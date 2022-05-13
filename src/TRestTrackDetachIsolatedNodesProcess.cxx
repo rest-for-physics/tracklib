@@ -18,10 +18,10 @@ ClassImp(TRestTrackDetachIsolatedNodesProcess);
 
 TRestTrackDetachIsolatedNodesProcess::TRestTrackDetachIsolatedNodesProcess() { Initialize(); }
 
-TRestTrackDetachIsolatedNodesProcess::TRestTrackDetachIsolatedNodesProcess(char* cfgFileName) {
+TRestTrackDetachIsolatedNodesProcess::TRestTrackDetachIsolatedNodesProcess(const char* configFilename) {
     Initialize();
 
-    if (LoadConfigFromFile(cfgFileName) == -1) LoadDefaultConfig();
+    if (LoadConfigFromFile(configFilename) == -1) LoadDefaultConfig();
     PrintMetadata();
 }
 
@@ -40,16 +40,16 @@ void TRestTrackDetachIsolatedNodesProcess::Initialize() {
     fOutputTrackEvent = new TRestTrackEvent();
 }
 
-void TRestTrackDetachIsolatedNodesProcess::LoadConfig(std::string cfgFilename, std::string name) {
-    if (LoadConfigFromFile(cfgFilename, name) == -1) LoadDefaultConfig();
+void TRestTrackDetachIsolatedNodesProcess::LoadConfig(const string& configFilename, const string& name) {
+    if (LoadConfigFromFile(configFilename, name) == -1) LoadDefaultConfig();
 
     PrintMetadata();
 }
 
 void TRestTrackDetachIsolatedNodesProcess::InitProcess() {}
 
-TRestEvent* TRestTrackDetachIsolatedNodesProcess::ProcessEvent(TRestEvent* evInput) {
-    fInputTrackEvent = (TRestTrackEvent*)evInput;
+TRestEvent* TRestTrackDetachIsolatedNodesProcess::ProcessEvent(TRestEvent* inputEvent) {
+    fInputTrackEvent = (TRestTrackEvent*)inputEvent;
 
     if (this->GetVerboseLevel() >= REST_Debug)
         cout << "TRestTrackDetachIsolatedNodesProcess. Number of tracks : "

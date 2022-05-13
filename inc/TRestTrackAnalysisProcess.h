@@ -125,9 +125,9 @@ class TRestTrackAnalysisProcess : public TRestEventProcess {
     std::vector<Double_t> fTwistWeightedHighValue_Y;           //!
 #endif
 
-    void InitFromConfigFile();
+    void InitFromConfigFile() override;
 
-    void Initialize();
+    void Initialize() override;
 
     void LoadDefaultConfig();
 
@@ -139,16 +139,16 @@ class TRestTrackAnalysisProcess : public TRestEventProcess {
     Double_t fDeltaEnergy;
 
    public:
-    any GetInputEvent() { return fInputTrackEvent; }
-    any GetOutputEvent() { return fOutputTrackEvent; }
+    any GetInputEvent() const override { return fInputTrackEvent; }
+    any GetOutputEvent() const override { return fOutputTrackEvent; }
 
-    void InitProcess();
-    TRestEvent* ProcessEvent(TRestEvent* eventInput);
-    void EndProcess();
+    void InitProcess() override;
+    TRestEvent* ProcessEvent(TRestEvent* inputEvent) override;
+    void EndProcess() override;
 
-    void LoadConfig(std::string cfgFilename, std::string name = "");
+    void LoadConfig(const std::string& configFilename, const std::string& name = "");
 
-    void PrintMetadata() {
+    void PrintMetadata() override {
         BeginPrintProcess();
 
         if (fCutsEnabled) {
@@ -164,15 +164,15 @@ class TRestTrackAnalysisProcess : public TRestEventProcess {
         EndPrintProcess();
     }
 
-    TString GetProcessName() { return (TString) "trackAnalysis"; }
+    const char* GetProcessName() const override { return "trackAnalysis"; }
 
     // Constructor
     TRestTrackAnalysisProcess();
-    TRestTrackAnalysisProcess(char* cfgFileName);
+    TRestTrackAnalysisProcess(const char* configFilename);
     // Destructor
     ~TRestTrackAnalysisProcess();
 
-    ClassDef(TRestTrackAnalysisProcess, 1);  // Template for a REST "event process" class inherited from
-                                             // TRestEventProcess
+    ClassDefOverride(TRestTrackAnalysisProcess, 1);  // Template for a REST "event process" class inherited
+                                                     // from TRestEventProcess
 };
 #endif

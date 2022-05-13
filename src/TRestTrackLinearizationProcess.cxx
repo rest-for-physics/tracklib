@@ -61,6 +61,7 @@
 ///
 
 #include "TRestTrackLinearizationProcess.h"
+
 #include "TRestTrackReductionProcess.h"
 using namespace std;
 
@@ -96,8 +97,8 @@ void TRestTrackLinearizationProcess::InitProcess() {}
 ///////////////////////////////////////////////
 /// \brief The main processing event function
 ///
-TRestEvent* TRestTrackLinearizationProcess::ProcessEvent(TRestEvent* evInput) {
-    fTrackEvent = (TRestTrackEvent*)evInput;
+TRestEvent* TRestTrackLinearizationProcess::ProcessEvent(TRestEvent* inputEvent) {
+    fTrackEvent = (TRestTrackEvent*)inputEvent;
 
     for (int t = 0; t < fTrackEvent->GetNumberOfTracks(); t++)
         fOutTrackEvent->AddTrack(fTrackEvent->GetTrack(t));

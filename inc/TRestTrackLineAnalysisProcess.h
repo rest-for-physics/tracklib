@@ -36,29 +36,29 @@ class TRestTrackLineAnalysisProcess : public TRestEventProcess {
     /// A pointer to the output event Track event
     TRestTrackEvent* fOutTrackEvent;
 
-    void Initialize();
+    void Initialize() override;
 
    protected:
    public:
-    any GetInputEvent() { return fTrackEvent; }
-    any GetOutputEvent() { return fOutTrackEvent; }
+    any GetInputEvent() const override { return fTrackEvent; }
+    any GetOutputEvent() const override { return fOutTrackEvent; }
 
-    void InitProcess();
-    TRestEvent* ProcessEvent(TRestEvent* eventInput);
-    void EndProcess();
+    void InitProcess() override;
+    TRestEvent* ProcessEvent(TRestEvent* inputEvent) override;
+    void EndProcess() override;
 
-    void PrintMetadata() {
+    void PrintMetadata() override {
         BeginPrintProcess();
         EndPrintProcess();
     }
 
-    TString GetProcessName() { return (TString) "trackLineAna"; }
+    const char* GetProcessName() const override { return "trackLineAna"; }
 
     // Constructor
     TRestTrackLineAnalysisProcess();
     // Destructor
     ~TRestTrackLineAnalysisProcess();
 
-    ClassDef(TRestTrackLineAnalysisProcess, 1);
+    ClassDefOverride(TRestTrackLineAnalysisProcess, 1);
 };
 #endif

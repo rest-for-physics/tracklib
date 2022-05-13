@@ -33,21 +33,21 @@ class TRestTrackLinearizationProcess : public TRestEventProcess {
     TRestTrackEvent* fTrackEvent;     //!
     TRestTrackEvent* fOutTrackEvent;  //!
 
-    void Initialize();
+    void Initialize() override;
 
    protected:
     // A parameter which defines the maximum number of nodes for the track linearization
     Int_t fMaxNodes = 6;
 
    public:
-    any GetInputEvent() { return fTrackEvent; }
-    any GetOutputEvent() { return fOutTrackEvent; }
+    any GetInputEvent() const override { return fTrackEvent; }
+    any GetOutputEvent() const override { return fOutTrackEvent; }
 
-    void InitProcess();
-    TRestEvent* ProcessEvent(TRestEvent* eventInput);
-    void EndProcess();
+    void InitProcess() override;
+    TRestEvent* ProcessEvent(TRestEvent* inputEvent) override;
+    void EndProcess() override;
 
-    void PrintMetadata() {
+    void PrintMetadata() override {
         BeginPrintProcess();
         metadata << "Max nodes: " << fMaxNodes << endl;
         EndPrintProcess();
@@ -58,13 +58,13 @@ class TRestTrackLinearizationProcess : public TRestEventProcess {
                                                         const std::vector<Float_t>& fZ,
                                                         const std::vector<Float_t>& fEn, const int& nodes);
 
-    TString GetProcessName() { return (TString) "trackLinearization"; }
+    const char* GetProcessName() const override { return "trackLinearization"; }
 
     TRestTrackLinearizationProcess();
     ~TRestTrackLinearizationProcess();
 
     // ROOT class definition helper. Increase the number in it every time
     // you add/rename/remove the process parameters
-    ClassDef(TRestTrackLinearizationProcess, 1);
+    ClassDefOverride(TRestTrackLinearizationProcess, 1);
 };
 #endif

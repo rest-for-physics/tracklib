@@ -24,9 +24,9 @@ class TRestTrackPointLikeAnalysisProcess : public TRestEventProcess {
                                    // In order to convert the parameters to time using the sampling time
 #endif
 
-    void InitFromConfigFile();
+    void InitFromConfigFile() override;
 
-    void Initialize();
+    void Initialize() override;
 
     void LoadDefaultConfig();
 
@@ -34,33 +34,33 @@ class TRestTrackPointLikeAnalysisProcess : public TRestEventProcess {
     // add here the members of your event process
 
    public:
-    any GetInputEvent() { return fTrackEvent; }
-    any GetOutputEvent() { return fTrackEvent; }
+    any GetInputEvent() const override { return fTrackEvent; }
+    any GetOutputEvent() const override { return fTrackEvent; }
 
-    void InitProcess();
-    TRestEvent* ProcessEvent(TRestEvent* eventInput);
-    void EndProcess();
+    void InitProcess() override;
+    TRestEvent* ProcessEvent(TRestEvent* inputEvent) override;
+    void EndProcess() override;
 
-    void LoadConfig(std::string cfgFilename);
+    void LoadConfig(std::string configFilename);
 
-    void PrintMetadata() {
+    void PrintMetadata() override {
         BeginPrintProcess();
 
         EndPrintProcess();
     }
 
-    TString GetProcessName() { return (TString) "pointLikeTrackAna"; }
+    const char* GetProcessName() const override { return "pointLikeTrackAna"; }
     //       Double_t GetCalibFactor();           ///< Calibration factor is
     //       found.
 
     // Constructor
     TRestTrackPointLikeAnalysisProcess();
-    TRestTrackPointLikeAnalysisProcess(char* cfgFileName);
+    TRestTrackPointLikeAnalysisProcess(const char* configFilename);
     // Destructor
     ~TRestTrackPointLikeAnalysisProcess();
 
-    ClassDef(TRestTrackPointLikeAnalysisProcess,
-             1);  // Template for a REST "event process" class inherited from
-                  // TRestEventProcess
+    ClassDefOverride(TRestTrackPointLikeAnalysisProcess,
+                     1);  // Template for a REST "event process" class inherited from
+                          // TRestEventProcess
 };
 #endif

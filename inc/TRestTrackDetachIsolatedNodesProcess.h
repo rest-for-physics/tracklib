@@ -23,9 +23,9 @@ class TRestTrackDetachIsolatedNodesProcess : public TRestEventProcess {
     TRestTrackEvent* fOutputTrackEvent;  //!
 #endif
 
-    void InitFromConfigFile();
+    void InitFromConfigFile() override;
 
-    void Initialize();
+    void Initialize() override;
 
     Double_t fThresholdDistance;
     Double_t fConnectivityThreshold;
@@ -35,30 +35,30 @@ class TRestTrackDetachIsolatedNodesProcess : public TRestEventProcess {
 
    protected:
    public:
-    any GetInputEvent() { return fInputTrackEvent; }
-    any GetOutputEvent() { return fOutputTrackEvent; }
+    any GetInputEvent() const override { return fInputTrackEvent; }
+    any GetOutputEvent() const override { return fOutputTrackEvent; }
 
-    void InitProcess();
-    TRestEvent* ProcessEvent(TRestEvent* eventInput);
-    void EndProcess();
+    void InitProcess() override;
+    TRestEvent* ProcessEvent(TRestEvent* inputEvent) override;
+    void EndProcess() override;
     void LoadDefaultConfig();
 
-    void LoadConfig(std::string cfgFilename, std::string name = "");
+    void LoadConfig(const std::string& configFilename, const std::string& name = "");
 
-    void PrintMetadata() {
+    void PrintMetadata() override {
         BeginPrintProcess();
 
         EndPrintProcess();
     }
 
-    TString GetProcessName() { return (TString) "trackDetachIsolatedNode"; }
+    const char* GetProcessName() const override { return "trackDetachIsolatedNode"; }
 
     // Constructor
     TRestTrackDetachIsolatedNodesProcess();
-    TRestTrackDetachIsolatedNodesProcess(char* cfgFileName);
+    TRestTrackDetachIsolatedNodesProcess(const char* configFilename);
     // Destructor
     ~TRestTrackDetachIsolatedNodesProcess();
 
-    ClassDef(TRestTrackDetachIsolatedNodesProcess, 1);
+    ClassDefOverride(TRestTrackDetachIsolatedNodesProcess, 1);
 };
 #endif

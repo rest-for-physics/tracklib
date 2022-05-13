@@ -28,8 +28,8 @@ void TRestTrackReductionProcess::Initialize() {
 
 void TRestTrackReductionProcess::InitProcess() {}
 
-TRestEvent* TRestTrackReductionProcess::ProcessEvent(TRestEvent* evInput) {
-    fInputTrackEvent = (TRestTrackEvent*)evInput;
+TRestEvent* TRestTrackReductionProcess::ProcessEvent(TRestEvent* inputEvent) {
+    fInputTrackEvent = (TRestTrackEvent*)inputEvent;
     fOutputTrackEvent->SetEventInfo(fInputTrackEvent);
 
     // Copying the input tracks to the output track
@@ -72,7 +72,6 @@ TRestEvent* TRestTrackReductionProcess::ProcessEvent(TRestEvent* evInput) {
     return fOutputTrackEvent;
 }
 
-//______________________________________________________________________________
 void TRestTrackReductionProcess::getHitsMerged(TRestVolumeHits& hits) {
     Double_t distance = fStartingDistance;
     while (distance < fMinimumDistance || hits.GetNumberOfHits() > fMaxNodes) {

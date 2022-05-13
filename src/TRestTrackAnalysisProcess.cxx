@@ -184,10 +184,10 @@ ClassImp(TRestTrackAnalysisProcess);
 
 TRestTrackAnalysisProcess::TRestTrackAnalysisProcess() { Initialize(); }
 
-TRestTrackAnalysisProcess::TRestTrackAnalysisProcess(char* cfgFileName) {
+TRestTrackAnalysisProcess::TRestTrackAnalysisProcess(const char* configFilename) {
     Initialize();
 
-    if (LoadConfigFromFile(cfgFileName)) LoadDefaultConfig();
+    if (LoadConfigFromFile(configFilename)) LoadDefaultConfig();
 }
 
 TRestTrackAnalysisProcess::~TRestTrackAnalysisProcess() { delete fOutputTrackEvent; }
@@ -206,8 +206,8 @@ void TRestTrackAnalysisProcess::Initialize() {
     fEnableTwistParameters = false;
 }
 
-void TRestTrackAnalysisProcess::LoadConfig(std::string cfgFilename, std::string name) {
-    if (LoadConfigFromFile(cfgFilename, name)) LoadDefaultConfig();
+void TRestTrackAnalysisProcess::LoadConfig(const string& configFilename, const string& name) {
+    if (LoadConfigFromFile(configFilename, name)) LoadDefaultConfig();
 }
 
 void TRestTrackAnalysisProcess::InitProcess() {
@@ -422,8 +422,8 @@ void TRestTrackAnalysisProcess::InitProcess() {
         }
 }
 
-TRestEvent* TRestTrackAnalysisProcess::ProcessEvent(TRestEvent* evInput) {
-    fInputTrackEvent = (TRestTrackEvent*)evInput;
+TRestEvent* TRestTrackAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
+    fInputTrackEvent = (TRestTrackEvent*)inputEvent;
 
     // Copying the input tracks to the output track
     for (int tck = 0; tck < fInputTrackEvent->GetNumberOfTracks(); tck++)

@@ -17,10 +17,10 @@ ClassImp(TRestTrackReconnectionProcess);
 
 TRestTrackReconnectionProcess::TRestTrackReconnectionProcess() { Initialize(); }
 
-TRestTrackReconnectionProcess::TRestTrackReconnectionProcess(char* cfgFileName) {
+TRestTrackReconnectionProcess::TRestTrackReconnectionProcess(const char* configFilename) {
     Initialize();
 
-    if (LoadConfigFromFile(cfgFileName) == -1) LoadDefaultConfig();
+    if (LoadConfigFromFile(configFilename) == -1) LoadDefaultConfig();
     PrintMetadata();
 }
 
@@ -41,18 +41,18 @@ void TRestTrackReconnectionProcess::Initialize() {
     fSplitTrack = false;
 }
 
-void TRestTrackReconnectionProcess::LoadConfig(std::string cfgFilename, std::string name) {
-    if (LoadConfigFromFile(cfgFilename, name) == -1) LoadDefaultConfig();
+void TRestTrackReconnectionProcess::LoadConfig(const string& configFilename, const string& name) {
+    if (LoadConfigFromFile(configFilename, name) == -1) LoadDefaultConfig();
 
     PrintMetadata();
 }
 
 void TRestTrackReconnectionProcess::InitProcess() { TRestEventProcess::ReadObservables(); }
 
-TRestEvent* TRestTrackReconnectionProcess::ProcessEvent(TRestEvent* evInput) {
+TRestEvent* TRestTrackReconnectionProcess::ProcessEvent(TRestEvent* inputEvent) {
     Int_t trackBranches = 0;
 
-    fInputTrackEvent = (TRestTrackEvent*)evInput;
+    fInputTrackEvent = (TRestTrackEvent*)inputEvent;
 
     // Copying the input tracks to the output track
     for (int tck = 0; tck < fInputTrackEvent->GetNumberOfTracks(); tck++)

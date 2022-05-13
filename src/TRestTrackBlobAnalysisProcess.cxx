@@ -21,10 +21,10 @@ ClassImp(TRestTrackBlobAnalysisProcess);
 
 TRestTrackBlobAnalysisProcess::TRestTrackBlobAnalysisProcess() { Initialize(); }
 
-TRestTrackBlobAnalysisProcess::TRestTrackBlobAnalysisProcess(char* cfgFileName) {
+TRestTrackBlobAnalysisProcess::TRestTrackBlobAnalysisProcess(const char* configFilename) {
     Initialize();
 
-    if (LoadConfigFromFile(cfgFileName)) LoadDefaultConfig();
+    if (LoadConfigFromFile(configFilename)) LoadDefaultConfig();
 }
 
 TRestTrackBlobAnalysisProcess::~TRestTrackBlobAnalysisProcess() { delete fOutputTrackEvent; }
@@ -41,8 +41,8 @@ void TRestTrackBlobAnalysisProcess::Initialize() {
     fHitsToCheckFraction = 0.2;
 }
 
-void TRestTrackBlobAnalysisProcess::LoadConfig(std::string cfgFilename, std::string name) {
-    if (LoadConfigFromFile(cfgFilename, name)) LoadDefaultConfig();
+void TRestTrackBlobAnalysisProcess::LoadConfig(const string& configFilename, const string& name) {
+    if (LoadConfigFromFile(configFilename, name)) LoadDefaultConfig();
 }
 
 void TRestTrackBlobAnalysisProcess::InitProcess() {
@@ -178,8 +178,8 @@ void TRestTrackBlobAnalysisProcess::InitProcess() {
     }
 }
 
-TRestEvent* TRestTrackBlobAnalysisProcess::ProcessEvent(TRestEvent* evInput) {
-    fInputTrackEvent = (TRestTrackEvent*)evInput;
+TRestEvent* TRestTrackBlobAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
+    fInputTrackEvent = (TRestTrackEvent*)inputEvent;
 
     // Copying the input tracks to the output track
     for (int tck = 0; tck < fInputTrackEvent->GetNumberOfTracks(); tck++)

@@ -16,10 +16,10 @@ ClassImp(TRestTrackPointLikeAnalysisProcess);
 
 TRestTrackPointLikeAnalysisProcess::TRestTrackPointLikeAnalysisProcess() { Initialize(); }
 
-TRestTrackPointLikeAnalysisProcess::TRestTrackPointLikeAnalysisProcess(char* cfgFileName) {
+TRestTrackPointLikeAnalysisProcess::TRestTrackPointLikeAnalysisProcess(const char* configFilename) {
     Initialize();
 
-    if (LoadConfigFromFile(cfgFileName)) LoadDefaultConfig();
+    if (LoadConfigFromFile(configFilename)) LoadDefaultConfig();
 }
 
 TRestTrackPointLikeAnalysisProcess::~TRestTrackPointLikeAnalysisProcess() {}
@@ -33,16 +33,16 @@ void TRestTrackPointLikeAnalysisProcess::Initialize() {
     fTrackEvent = nullptr;
 }
 
-void TRestTrackPointLikeAnalysisProcess::LoadConfig(string cfgFilename) {
-    if (LoadConfigFromFile(cfgFilename)) LoadDefaultConfig();
+void TRestTrackPointLikeAnalysisProcess::LoadConfig(string configFilename) {
+    if (LoadConfigFromFile(configFilename)) LoadDefaultConfig();
 
-    // fReadout = new TRestDetectorReadout( cfgFilename.c_str() );
+    // fReadout = new TRestDetectorReadout( configFilename.c_str() );
 }
 
 void TRestTrackPointLikeAnalysisProcess::InitProcess() { TRestEventProcess::ReadObservables(); }
 
-TRestEvent* TRestTrackPointLikeAnalysisProcess::ProcessEvent(TRestEvent* evInput) {
-    fTrackEvent = (TRestTrackEvent*)evInput;
+TRestEvent* TRestTrackPointLikeAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
+    fTrackEvent = (TRestTrackEvent*)inputEvent;
 
     Int_t nTracks = fTrackEvent->GetNumberOfTracks();
     Int_t nTotalHits = fTrackEvent->GetTotalHits();

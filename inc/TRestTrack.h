@@ -51,10 +51,10 @@ class TRestTrack : public TObject {
     Bool_t isXYZ() { return (&fVolumeHits)->areXYZ(); }
 
     // Getters
-    Int_t GetTrackID() { return fTrackID; }
-    Int_t GetParentID() { return fParentID; }
-    Double_t GetEnergy() { return fTrackEnergy; }
-    Double_t GetTrackEnergy() { return fTrackEnergy; }
+    inline Int_t GetTrackID() const { return fTrackID; }
+    inline Int_t GetParentID() const { return fParentID; }
+    inline Double_t GetEnergy() const { return fTrackEnergy; }
+    inline Double_t GetTrackEnergy() const { return fTrackEnergy; }
 
     Double_t GetLength(Bool_t update = true) { return GetTrackLength(update); }
     Double_t GetTrackLength(Bool_t update = true) {
@@ -62,21 +62,21 @@ class TRestTrack : public TObject {
         return fTrackLength;
     }
 
-    Double_t GetMaximumDistance() { return fVolumeHits.GetMaximumHitDistance(); }
-    Double_t GetMaximumDistance2() { return fVolumeHits.GetMaximumHitDistance2(); }
-    Double_t GetVolume() { return fVolumeHits.GetMaximumHitDistance2(); }
+    inline Double_t GetMaximumDistance() const { return fVolumeHits.GetMaximumHitDistance(); }
+    inline Double_t GetMaximumDistance2() const { return fVolumeHits.GetMaximumHitDistance2(); }
+    inline Double_t GetVolume() const { return fVolumeHits.GetMaximumHitDistance2(); }
 
-    TVector3 GetMeanPosition() { return fVolumeHits.GetMeanPosition(); }
+    inline TVector3 GetMeanPosition() const { return fVolumeHits.GetMeanPosition(); }
 
     TRestVolumeHits* GetVolumeHits() { return &fVolumeHits; }
     TRestHits* GetHits() { return (TRestHits*)&fVolumeHits; }
-    Int_t GetNumberOfHits() { return GetVolumeHits()->GetNumberOfHits(); }
+    inline Int_t GetNumberOfHits() { return GetVolumeHits()->GetNumberOfHits(); }
 
     void PrintTrack(Bool_t fullInfo = true);
 
     void GetBoundaries(TVector3& orig, TVector3& end);
 
-    // Construtor
+    // Constructor
     TRestTrack();
     // Destructor
     ~TRestTrack();
