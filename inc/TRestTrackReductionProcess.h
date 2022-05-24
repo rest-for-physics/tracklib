@@ -45,12 +45,12 @@ class TRestTrackReductionProcess : public TRestEventProcess {
     void PrintMetadata() override {
         BeginPrintProcess();
 
-        metadata << " Starting distance : " << fStartingDistance << endl;
-        metadata << " Minimum distance : " << fMinimumDistance << endl;
-        metadata << " Distance step factor : " << fDistanceStepFactor << endl;
-        metadata << " Maximum number of nodes : " << fMaxNodes << endl;
-        metadata << " Perform kMeans clustering : " << fKmeans << endl;
-        if (fKmeans) metadata << " Maximum iterations : " << fMaxIt << endl;
+        RESTMetadata << " Starting distance : " << fStartingDistance << RESTendl;
+        RESTMetadata << " Minimum distance : " << fMinimumDistance << RESTendl;
+        RESTMetadata << " Distance step factor : " << fDistanceStepFactor << RESTendl;
+        RESTMetadata << " Maximum number of nodes : " << fMaxNodes << RESTendl;
+        RESTMetadata << " Perform kMeans clustering : " << fKmeans << RESTendl;
+        if (fKmeans) RESTMetadata << " Maximum iterations : " << fMaxIt << RESTendl;
 
         EndPrintProcess();
     }

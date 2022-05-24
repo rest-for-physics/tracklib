@@ -429,7 +429,7 @@ TRestEvent* TRestTrackAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     for (int tck = 0; tck < fInputTrackEvent->GetNumberOfTracks(); tck++)
         fOutputTrackEvent->AddTrack(fInputTrackEvent->GetTrack(tck));
 
-    if (this->GetVerboseLevel() >= REST_Debug) fInputTrackEvent->PrintOnlyTracks();
+    if (this->GetVerboseLevel() >= TRestStringOutput::REST_Verbose_Level::REST_Debug) fInputTrackEvent->PrintOnlyTracks();
 
     /* {{{ Number of tracks observables */
     Int_t nTracksX = 0, nTracksY = 0, nTracksXYZ = 0;
@@ -872,8 +872,8 @@ TRestEvent* TRestTrackAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
         tckMaxXYZ_SigmaX = fInputTrackEvent->GetMaxEnergyTrack()->GetHits()->GetSigmaX();
         tckMaxXYZ_SigmaY = fInputTrackEvent->GetMaxEnergyTrack()->GetHits()->GetSigmaY();
         tckMaxXYZ_SigmaZ = fInputTrackEvent->GetMaxEnergyTrack()->GetHits()->GetSigmaZ2();
-        debug << "id: " << fInputTrackEvent->GetID() << " " << fInputTrackEvent->GetSubEventTag()
-              << " tckMaxEnXYZ: " << tckMaxEnXYZ << endl;
+        RESTDebug << "id: " << fInputTrackEvent->GetID() << " " << fInputTrackEvent->GetSubEventTag()
+              << " tckMaxEnXYZ: " << tckMaxEnXYZ << RESTendl;
         tckMaxXYZ_gausSigmaX = fInputTrackEvent->GetMaxEnergyTrack()->GetHits()->GetGaussSigmaX();
         tckMaxXYZ_gausSigmaY = fInputTrackEvent->GetMaxEnergyTrack()->GetHits()->GetGaussSigmaY();
         tckMaxXYZ_gausSigmaZ = fInputTrackEvent->GetMaxEnergyTrack()->GetHits()->GetGaussSigmaZ();
@@ -892,8 +892,8 @@ TRestEvent* TRestTrackAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
         tckMaxXZ_SigmaZ = fInputTrackEvent->GetMaxEnergyTrack("X")->GetHits()->GetSigmaZ2();
         tckMaxXZ_gausSigmaX = fInputTrackEvent->GetMaxEnergyTrack("X")->GetHits()->GetGaussSigmaX();
         tckMaxXZ_gausSigmaZ_XZ = fInputTrackEvent->GetMaxEnergyTrack("X")->GetHits()->GetGaussSigmaZ();
-        debug << "id: " << fInputTrackEvent->GetID() << " " << fInputTrackEvent->GetSubEventTag()
-              << " tckMaxEnX: " << tckMaxEnX << endl;
+        RESTDebug << "id: " << fInputTrackEvent->GetID() << " " << fInputTrackEvent->GetSubEventTag()
+              << " tckMaxEnX: " << tckMaxEnX << RESTendl;
     }
 
     SetObservableValue((string) "MaxTrackEnergy_X", tckMaxEnX);
@@ -908,8 +908,8 @@ TRestEvent* TRestTrackAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
         tckMaxYZ_SigmaZ = fInputTrackEvent->GetMaxEnergyTrack("Y")->GetHits()->GetSigmaZ2();
         tckMaxYZ_gausSigmaY = fInputTrackEvent->GetMaxEnergyTrack("Y")->GetHits()->GetGaussSigmaY();
         tckMaxYZ_gausSigmaZ_YZ = fInputTrackEvent->GetMaxEnergyTrack("Y")->GetHits()->GetGaussSigmaZ();
-        debug << "id: " << fInputTrackEvent->GetID() << " " << fInputTrackEvent->GetSubEventTag()
-              << " tckMaxEnY: " << tckMaxEnY << endl;
+        RESTDebug << "id: " << fInputTrackEvent->GetID() << " " << fInputTrackEvent->GetSubEventTag()
+              << " tckMaxEnY: " << tckMaxEnY << RESTendl;
     }
 
     SetObservableValue((string) "MaxTrackEnergy_Y", tckMaxEnY);
@@ -1210,7 +1210,7 @@ TRestEvent* TRestTrackAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
         if (nTracksY < fNTracksYCut.X() || nTracksY > fNTracksYCut.Y()) return nullptr;
     }
 
-    if (GetVerboseLevel() >= REST_Extreme) GetChar();
+    if (GetVerboseLevel() >= TRestStringOutput::REST_Verbose_Level::REST_Extreme) GetChar();
 
     return fOutputTrackEvent;
 }

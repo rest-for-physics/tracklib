@@ -56,11 +56,11 @@ class TRestTrackPathMinimizationProcess : public TRestEventProcess {
         //           fMaxNodes << endl;
 
         if (fWeightHits)
-            metadata << "Weight hits : enabled" << endl;
+            RESTMetadata << "Weight hits : enabled" << RESTendl;
         else
-            metadata << "Weight hits : disabled" << endl;
+            RESTMetadata << "Weight hits : disabled" << RESTendl;
 
-        metadata << "Minimization method " << fMinMethod << endl;
+        RESTMetadata << "Minimization method " << fMinMethod << RESTendl;
         EndPrintProcess();
     }
 

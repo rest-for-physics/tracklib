@@ -49,7 +49,7 @@ class TRestTrackLinearizationProcess : public TRestEventProcess {
 
     void PrintMetadata() override {
         BeginPrintProcess();
-        metadata << "Max nodes: " << fMaxNodes << endl;
+        RESTMetadata << "Max nodes: " << fMaxNodes << RESTendl;
         EndPrintProcess();
     }
 

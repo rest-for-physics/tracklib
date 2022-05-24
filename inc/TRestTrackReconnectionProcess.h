@@ -50,13 +50,13 @@ class TRestTrackReconnectionProcess : public TRestEventProcess {
     void PrintMetadata() override {
         BeginPrintProcess();
 
-        metadata << "Split track : ";
+        RESTMetadata << "Split track : ";
         if (fSplitTrack)
-            metadata << " enabled" << endl;
+            RESTMetadata << " enabled" << RESTendl;
         else
-            metadata << " disabled" << endl;
+            RESTMetadata << " disabled" << RESTendl;
 
-        metadata << "Number of sigmas to defined a branch : " << fNSigmas << endl;
+        RESTMetadata << "Number of sigmas to defined a branch : " << fNSigmas << RESTendl;
 
         EndPrintProcess();
     }

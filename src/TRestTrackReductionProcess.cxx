@@ -36,7 +36,7 @@ TRestEvent* TRestTrackReductionProcess::ProcessEvent(TRestEvent* inputEvent) {
     for (int tck = 0; tck < fInputTrackEvent->GetNumberOfTracks(); tck++)
         fOutputTrackEvent->AddTrack(fInputTrackEvent->GetTrack(tck));
 
-    if (this->GetVerboseLevel() >= REST_Debug) fInputTrackEvent->PrintOnlyTracks();
+    if (this->GetVerboseLevel() >= TRestStringOutput::REST_Verbose_Level::REST_Debug) fInputTrackEvent->PrintOnlyTracks();
 
     // Reducing the hits inside each track
     for (int tck = 0; tck < fInputTrackEvent->GetNumberOfTracks(); tck++) {
@@ -45,7 +45,7 @@ TRestEvent* TRestTrackReductionProcess::ProcessEvent(TRestEvent* inputEvent) {
         TRestTrack* track = fInputTrackEvent->GetTrack(tck);
         TRestVolumeHits* hits = track->GetVolumeHits();
 
-        if (this->GetVerboseLevel() >= REST_Debug)
+        if (this->GetVerboseLevel() >= TRestStringOutput::REST_Verbose_Level::REST_Debug)
             cout << "TRestTrackReductionProcess. Reducing hits in track id : " << track->GetTrackID() << endl;
 
         TRestVolumeHits vHits = (TRestVolumeHits)(*hits);
@@ -75,7 +75,7 @@ TRestEvent* TRestTrackReductionProcess::ProcessEvent(TRestEvent* inputEvent) {
 void TRestTrackReductionProcess::getHitsMerged(TRestVolumeHits& hits) {
     Double_t distance = fStartingDistance;
     while (distance < fMinimumDistance || hits.GetNumberOfHits() > fMaxNodes) {
-        if (this->GetVerboseLevel() >= REST_Debug) {
+        if (this->GetVerboseLevel() >= TRestStringOutput::REST_Verbose_Level::REST_Debug) {
             cout << "TRestTrackReductionProcess. Merging track hits within a "
                  << "distance : " << distance << " mm" << endl;
             cout << "TRestTrackReductionProcess. Hits now : " << hits.GetNumberOfHits() << endl;
@@ -97,7 +97,7 @@ void TRestTrackReductionProcess::getHitsMerged(TRestVolumeHits& hits) {
             }
         }
 
-        debug << "TRestTrackReductionProcess. Number of hits merged : " << mergedHits << endl;
+        RESTDebug << "TRestTrackReductionProcess. Number of hits merged : " << mergedHits << RESTendl;
         mergedHits = 0;
 
         distance *= fDistanceStepFactor;
