@@ -112,20 +112,20 @@ TRestEvent* TRestTrackLinearizationProcess::ProcessEvent(TRestEvent* inputEvent)
         GetHitsProjection(hits, fMaxNodes, vHits);
         if (vHits.GetNumberOfHits() == 0) continue;
 
-        debug << "Adding track " << endl;
+        RESTDebug << "Adding track " << RESTendl;
         // Store tracks after tinearization
         TRestTrack newTrack;
         newTrack.SetTrackID(fOutTrackEvent->GetNumberOfTracks() + 1);
         newTrack.SetParentID(track->GetTrackID());
         newTrack.SetVolumeHits(vHits);
 
-        debug << "Is XZ " << newTrack.isXZ() << " Is YZ " << newTrack.isYZ() << endl;
+        RESTDebug << "Is XZ " << newTrack.isXZ() << " Is YZ " << newTrack.isYZ() << RESTendl;
 
         fOutTrackEvent->AddTrack(&newTrack);
     }
 
-    debug << "NTracks  X " << fOutTrackEvent->GetNumberOfTracks("X") << " Y "
-          << fOutTrackEvent->GetNumberOfTracks("Y") << " " << fOutTrackEvent->GetNumberOfTracks("X") << endl;
+    RESTDebug << "NTracks  X " << fOutTrackEvent->GetNumberOfTracks("X") << " Y "
+          << fOutTrackEvent->GetNumberOfTracks("Y") << " " << fOutTrackEvent->GetNumberOfTracks("X") << RESTendl;
 
     fOutTrackEvent->SetLevels();
     return fOutTrackEvent;
@@ -143,7 +143,7 @@ void TRestTrackLinearizationProcess::GetHitsProjection(TRestVolumeHits* hits, co
     const REST_HitType hType = hits->GetType(0);
     vHits.RemoveHits();
 
-    debug << "NHits " << nHits << " hits Type " << hType << endl;
+    RESTDebug << "NHits " << nHits << " hits Type " << hType << RESTendl;
 
     if (hType == XZ) {
         auto cl = GetBestNodes(hits->fX, hits->fZ, hits->fEnergy, nodes);
@@ -161,16 +161,16 @@ void TRestTrackLinearizationProcess::GetHitsProjection(TRestVolumeHits* hits, co
             vHits.AddHit(xy, z, hits->GetZ(0), 0, 0, hType, 0, 0, 0);
         }
     } else {
-        warning << "Track linearization not implemented for XYZ tracks" << endl;
+        RESTWarning << "Track linearization not implemented for XYZ tracks" << RESTendl;
         return;
     }
 
     TRestVolumeHits::kMeansClustering(hits, vHits, 1);
 
-    if (GetVerboseLevel() >= REST_Debug)
+    if (GetVerboseLevel() >= TRestStringOutput::REST_Verbose_Level::REST_Debug)
         for (int i = 0; i < vHits.GetNumberOfHits(); i++)
-            debug << i << " " << vHits.GetX(i) << " " << vHits.GetY(i) << " " << vHits.GetZ(i) << " "
-                  << vHits.GetType(i) << endl;
+            RESTDebug << i << " " << vHits.GetX(i) << " " << vHits.GetY(i) << " " << vHits.GetZ(i) << " "
+                  << vHits.GetType(i) << RESTendl;
 }
 
 ///////////////////////////////////////////////
@@ -192,8 +192,8 @@ std::vector<std::pair<double, double>> TRestTrackLinearizationProcess::GetBestNo
     double totEn = 0;
     for (const auto& en : fEn) totEn += en;
 
-    debug << "Max " << max[0] << " " << max[1] << endl;
-    debug << "Min " << min[0] << " " << min[1] << endl;
+    RESTDebug << "Max " << max[0] << " " << max[1] << RESTendl;
+    RESTDebug << "Min " << min[0] << " " << min[1] << RESTendl;
 
     TGraph gr[2];
 
@@ -208,7 +208,7 @@ std::vector<std::pair<double, double>> TRestTrackLinearizationProcess::GetBestNo
         }
     }
 
-    debug << "Points graph " << c << " Hits " << nHits << endl;
+    RESTDebug << "Points graph " << c << " Hits " << nHits << RESTendl;
 
     int bestIndex = 0;
     double bestFit;
@@ -216,7 +216,7 @@ std::vector<std::pair<double, double>> TRestTrackLinearizationProcess::GetBestNo
     double intercept;
 
     std::string fitOpt = "";
-    if (GetVerboseLevel() < REST_Debug) fitOpt = "Q";
+    if (GetVerboseLevel() < TRestStringOutput::REST_Verbose_Level::REST_Debug) fitOpt = "Q";
 
     for (int l = 0; l < 2; l++) {
         TF1 f1("f1", "[0] * x + [1]", min[l], max[l]);
@@ -236,8 +236,8 @@ std::vector<std::pair<double, double>> TRestTrackLinearizationProcess::GetBestNo
         }
     }
 
-    debug << "Best fit " << bestFit << " " << bestIndex << endl;
-    debug << "Slope " << slope << " Intercept " << intercept << endl;
+    RESTDebug << "Best fit " << bestFit << " " << bestIndex << RESTendl;
+    RESTDebug << "Slope " << slope << " Intercept " << intercept << RESTendl;
 
     std::vector<std::pair<double, double>> cluster(nodes);
     for (int i = 0; i < nodes; i++) {

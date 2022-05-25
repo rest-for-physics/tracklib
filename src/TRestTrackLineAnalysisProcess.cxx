@@ -144,8 +144,8 @@ TRestEvent* TRestTrackLineAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) 
         // Retreive origin and end of the track for the XZ projection
         fTrackEvent->GetMaxTrackBoundaries(orig, end);
 
-        debug << "Origin: " << orig.X() << " y: " << orig.Y() << " z: " << orig.Z() << endl;
-        debug << "End : " << end.X() << " y: " << end.Y() << " z: " << end.Z() << endl;
+        RESTDebug << "Origin: " << orig.X() << " y: " << orig.Y() << " z: " << orig.Z() << RESTendl;
+        RESTDebug << "End : " << end.X() << " y: " << end.Y() << " z: " << end.Z() << RESTendl;
 
         // Compute some observables
         double dX = (orig.X() - end.X());
@@ -155,7 +155,7 @@ TRestEvent* TRestTrackLineAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) 
         angle = TMath::ACos(dZ / length);
         downwards = dZ > 0;
 
-        debug << "Track length " << length << " angle: " << angle << endl;
+        RESTDebug << "Track length " << length << " angle: " << angle << RESTendl;
 
         trackEnergyX = tckX->GetEnergy();
         trackEnergyY = tckY->GetEnergy();

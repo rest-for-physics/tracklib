@@ -108,7 +108,7 @@ class TRestTrackBlobAnalysisProcess : public TRestEventProcess {
     void PrintMetadata() override {
         BeginPrintProcess();
 
-        metadata << " Hits to check factor : " << fHitsToCheckFraction << endl;
+        RESTMetadata << " Hits to check factor : " << fHitsToCheckFraction << RESTendl;
 
         EndPrintProcess();
     }

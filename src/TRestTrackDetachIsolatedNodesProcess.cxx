@@ -51,11 +51,11 @@ void TRestTrackDetachIsolatedNodesProcess::InitProcess() {}
 TRestEvent* TRestTrackDetachIsolatedNodesProcess::ProcessEvent(TRestEvent* inputEvent) {
     fInputTrackEvent = (TRestTrackEvent*)inputEvent;
 
-    if (this->GetVerboseLevel() >= REST_Debug)
+    if (this->GetVerboseLevel() >= TRestStringOutput::REST_Verbose_Level::REST_Debug)
         cout << "TRestTrackDetachIsolatedNodesProcess. Number of tracks : "
              << fInputTrackEvent->GetNumberOfTracks() << endl;
 
-    if (GetVerboseLevel() >= REST_Debug) fInputTrackEvent->PrintEvent();
+    if (GetVerboseLevel() >= TRestStringOutput::REST_Verbose_Level::REST_Debug) fInputTrackEvent->PrintEvent();
 
     // Copying the input tracks to the output track
     for (int tck = 0; tck < fInputTrackEvent->GetNumberOfTracks(); tck++)
@@ -72,7 +72,7 @@ TRestEvent* TRestTrackDetachIsolatedNodesProcess::ProcessEvent(TRestEvent* input
 
         /* {{{ Debug output */
 
-        if (this->GetVerboseLevel() >= REST_Debug) {
+        if (this->GetVerboseLevel() >= TRestStringOutput::REST_Verbose_Level::REST_Debug) {
             Int_t pId = fInputTrackEvent->GetTrack(tck)->GetParentID();
             cout << "Track : " << tck << " TrackID : " << tckId << " ParentID : " << pId << endl;
             cout << "-----------------" << endl;
@@ -108,7 +108,7 @@ TRestEvent* TRestTrackDetachIsolatedNodesProcess::ProcessEvent(TRestEvent* input
                 hitConnectivity += originHits->GetEnergyInCylinder(pos0, pos1, fTubeRadius);
             }
 
-            if (GetVerboseLevel() >= REST_Debug)
+            if (GetVerboseLevel() >= TRestStringOutput::REST_Verbose_Level::REST_Debug)
                 cout << "Hit : " << n << " Connectivity : " << hitConnectivity
                      << " distance : " << distance / 2. << endl;
 
@@ -145,7 +145,7 @@ TRestEvent* TRestTrackDetachIsolatedNodesProcess::ProcessEvent(TRestEvent* input
         fOutputTrackEvent->AddTrack(&connectedTrack);
     }
 
-    if (GetVerboseLevel() >= REST_Debug) {
+    if (GetVerboseLevel() >= TRestStringOutput::REST_Verbose_Level::REST_Debug) {
         cout << "xxxx DetachIsolatedNodes trackEvent output xxxxx" << endl;
         fOutputTrackEvent->PrintEvent();
         cout << "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" << endl;

@@ -31,7 +31,7 @@ void TRestTrackPathMinimizationProcess::InitProcess() {}
 TRestEvent* TRestTrackPathMinimizationProcess::ProcessEvent(TRestEvent* inputEvent) {
     fInputTrackEvent = (TRestTrackEvent*)inputEvent;
 
-    if (this->GetVerboseLevel() >= REST_Debug)
+    if (this->GetVerboseLevel() >= TRestStringOutput::REST_Verbose_Level::REST_Debug)
         cout << "TRestTrackPathMinimizationProcess. Number of tracks : "
              << fInputTrackEvent->GetNumberOfTracks() << endl;
 
@@ -47,7 +47,7 @@ TRestEvent* TRestTrackPathMinimizationProcess::ProcessEvent(TRestEvent* inputEve
         const int nHits = hits->GetNumberOfHits();
 
         /* {{{ Debug output */
-        if (this->GetVerboseLevel() >= REST_Debug) {
+        if (this->GetVerboseLevel() >= TRestStringOutput::REST_Verbose_Level::REST_Debug) {
             Int_t pId = fInputTrackEvent->GetTrack(tck)->GetParentID();
             cout << "Track : " << tck << " TrackID : " << tckId << " ParentID : " << pId << endl;
             cout << "-----------------" << endl;
@@ -56,7 +56,7 @@ TRestEvent* TRestTrackPathMinimizationProcess::ProcessEvent(TRestEvent* inputEve
         }
         /* }}} */
 
-        debug << "hits : " << nHits << endl;
+        RESTDebug << "hits : " << nHits << RESTendl;
 
         std::vector<int> bestPath(nHits);
         for (int i = 0; i < nHits; i++) bestPath[i] = i;  // Initialize
@@ -91,7 +91,7 @@ TRestEvent* TRestTrackPathMinimizationProcess::ProcessEvent(TRestEvent* inputEve
 void TRestTrackPathMinimizationProcess::NearestNeighbour(TRestVolumeHits* hits, std::vector<int>& bestPath) {
     const int nHits = hits->GetNumberOfHits();
     double dist[nHits][nHits];
-    debug << "Nhits " << nHits << endl;
+    RESTDebug << "Nhits " << nHits << RESTendl;
 
     if (nHits < 3) return;
 
@@ -152,7 +152,7 @@ void TRestTrackPathMinimizationProcess::NearestNeighbour(TRestVolumeHits* hits, 
         }
     }
 
-    if (this->GetVerboseLevel() >= REST_Debug) {
+    if (this->GetVerboseLevel() >= TRestStringOutput::REST_Verbose_Level::REST_Debug) {
         cout << "Min path ";
         for (const auto& v : bestPath) cout << v << " ";
         cout << " " << min_path << endl;
@@ -167,7 +167,7 @@ void TRestTrackPathMinimizationProcess::NearestNeighbour(TRestVolumeHits* hits, 
 void TRestTrackPathMinimizationProcess::BruteForce(TRestVolumeHits* hits, std::vector<int>& bestPath) {
     const int nHits = hits->GetNumberOfHits();
     double dist[nHits][nHits];
-    debug << "Nhits " << nHits << endl;
+    RESTDebug << "Nhits " << nHits << RESTendl;
 
     if (nHits < 3) return;
 
@@ -182,7 +182,7 @@ void TRestTrackPathMinimizationProcess::BruteForce(TRestVolumeHits* hits, std::v
         }
     }
 
-    if (this->GetVerboseLevel() >= REST_Debug) {
+    if (this->GetVerboseLevel() >= TRestStringOutput::REST_Verbose_Level::REST_Debug) {
         for (int i = 0; i < nHits; i++) {
             for (int j = 0; j < nHits; j++) {
                 cout << dist[i][j] << " ";
@@ -230,7 +230,7 @@ void TRestTrackPathMinimizationProcess::BruteForce(TRestVolumeHits* hits, std::v
         } while (std::next_permutation(vertex.begin(), vertex.end()));
     }
 
-    if (this->GetVerboseLevel() >= REST_Debug) {
+    if (this->GetVerboseLevel() >= TRestStringOutput::REST_Verbose_Level::REST_Debug) {
         cout << "Min path ";
         for (const auto& v : bestPath) cout << v << " ";
         cout << " " << min_path << endl;
@@ -325,7 +325,7 @@ void TRestTrackPathMinimizationProcess::HeldKarp(TRestVolumeHits* hits, std::vec
         GetChar();
     */
 
-    if (GetVerboseLevel() >= REST_Extreme) {
+    if (GetVerboseLevel() >= TRestStringOutput::REST_Verbose_Level::REST_Extreme) {
         for (int n = 0; n < segment_count; n++) cout << "n : " << n << " elen : " << elen[n] << endl;
         GetChar();
     }
@@ -358,10 +358,10 @@ void TRestTrackPathMinimizationProcess::HeldKarp(TRestVolumeHits* hits, std::vec
     free(elen);
     // free( enBetween );
 
-    if (GetVerboseLevel() >= REST_Extreme) GetChar();
+    if (GetVerboseLevel() >= TRestStringOutput::REST_Verbose_Level::REST_Extreme) GetChar();
 
     if (rval != 0) {
-        if (GetVerboseLevel() >= REST_Warning) {
+        if (GetVerboseLevel() >= TRestStringOutput::REST_Verbose_Level::REST_Warning) {
             cout << "REST WARNING. TRestTrackPathMinimizationProcess. HELDKARP FAILED." << endl;
         }
         fOutputTrackEvent->SetOK(false);

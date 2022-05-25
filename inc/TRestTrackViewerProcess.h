@@ -63,7 +63,7 @@ class TRestTrackViewerProcess : public TRestEventProcess {
     void PrintMetadata() override {
         BeginPrintProcess();
 
-        metadata << "Draw Origin End : " << fDrawOriginEnd << endl;
+        RESTMetadata << "Draw Origin End : " << fDrawOriginEnd << RESTendl;
 
         EndPrintProcess();
     }
