@@ -13,14 +13,8 @@
 #define RestCore_TRestTrackPathMinimizationProcess
 
 #include <TRestTrackEvent.h>
-
 #include "TRestEventProcess.h"
-
-#ifndef __CINT__
-#ifndef WIN32
 #include <trackMinimization.h>
-#endif
-#endif
 
 class TRestTrackPathMinimizationProcess : public TRestEventProcess {
    private:

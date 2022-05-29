@@ -90,7 +90,7 @@ TRestEvent* TRestTrackPathMinimizationProcess::ProcessEvent(TRestEvent* inputEve
 ///
 void TRestTrackPathMinimizationProcess::NearestNeighbour(TRestVolumeHits* hits, std::vector<int>& bestPath) {
     const int nHits = hits->GetNumberOfHits();
-    double dist[nHits][nHits];
+    vector<vector<double>> dist(nHits,vector<double>(nHits));
     RESTDebug << "Nhits " << nHits << RESTendl;
 
     if (nHits < 3) return;
@@ -166,7 +166,7 @@ void TRestTrackPathMinimizationProcess::NearestNeighbour(TRestVolumeHits* hits, 
 ///
 void TRestTrackPathMinimizationProcess::BruteForce(TRestVolumeHits* hits, std::vector<int>& bestPath) {
     const int nHits = hits->GetNumberOfHits();
-    double dist[nHits][nHits];
+    vector<vector<double>> dist(nHits, vector<double>(nHits));
     RESTDebug << "Nhits " << nHits << RESTendl;
 
     if (nHits < 3) return;
@@ -260,7 +260,7 @@ void TRestTrackPathMinimizationProcess::HeldKarp(TRestVolumeHits* hits, std::vec
     */
 
     int k = 0;
-    int bestP[nHits];
+    vector<int> bestP(nHits);
     Int_t rval = 0;
     for (int i = 0; i < nHits; i++) {
         bestP[i] = i;
@@ -330,7 +330,7 @@ void TRestTrackPathMinimizationProcess::HeldKarp(TRestVolumeHits* hits, std::vec
         GetChar();
     }
 
-    rval = TrackMinimization_segment(nHits, elen, bestP);
+    rval = TrackMinimization_segment(nHits, elen, &bestP[0]);
 
     /**** Just Printing
     for( int i = 0; i < hits->GetNumberOfHits()-1; i++ )

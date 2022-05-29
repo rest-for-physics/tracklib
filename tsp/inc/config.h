@@ -150,3 +150,12 @@
 /* Define if unistd.h uses __vfork but does not prototype it */
 /* This happens under Irix 6 */
 /* #undef CC_PROTO___VFORK */
+#ifdef WIN32
+#undef HAVE_UNISTD_H
+#undef HAVE_SYS_RESOURCE_H
+#undef HAVE_SYS_SOCKET_H
+#undef HAVE_NETDB_H
+#undef HAVE_NETINET_IN_H
+#undef HAVE_SYS_TIME_H
+#undef TIME_WITH_SYS_TIME
+#endif  // WIN32
