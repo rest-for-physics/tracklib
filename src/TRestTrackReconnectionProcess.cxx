@@ -215,7 +215,7 @@ void TRestTrackReconnectionProcess::ReconnectTracks(vector<TRestVolumeHits>& hit
 
     Int_t tracks[2][2];
 
-    Int_t nHits[nSubTracks];
+    vector<Int_t> nHits(nSubTracks);
     for (int i = 0; i < nSubTracks; i++) nHits[i] = hitSets[i].GetNumberOfHits();
 
     if (GetVerboseLevel() >= TRestStringOutput::REST_Verbose_Level::REST_Debug) {
