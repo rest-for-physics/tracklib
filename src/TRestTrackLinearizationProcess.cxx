@@ -125,7 +125,8 @@ TRestEvent* TRestTrackLinearizationProcess::ProcessEvent(TRestEvent* inputEvent)
     }
 
     RESTDebug << "NTracks  X " << fOutTrackEvent->GetNumberOfTracks("X") << " Y "
-          << fOutTrackEvent->GetNumberOfTracks("Y") << " " << fOutTrackEvent->GetNumberOfTracks("X") << RESTendl;
+              << fOutTrackEvent->GetNumberOfTracks("Y") << " " << fOutTrackEvent->GetNumberOfTracks("X")
+              << RESTendl;
 
     fOutTrackEvent->SetLevels();
     return fOutTrackEvent;
@@ -146,17 +147,17 @@ void TRestTrackLinearizationProcess::GetHitsProjection(TRestVolumeHits* hits, co
     RESTDebug << "NHits " << nHits << " hits Type " << hType << RESTendl;
 
     if (hType == XZ) {
-        auto cl = GetBestNodes(hits->fX, hits->fZ, hits->fEnergy, nodes);
+        auto cl = GetBestNodes(hits->GetX(), hits->GetZ(), hits->GetEnergyVector(), nodes);
         for (const auto& [xy, z] : cl) {
             vHits.AddHit(xy, hits->GetY(0), z, 0, 0, hType, 0, 0, 0);
         }
     } else if (hType == YZ) {
-        auto cl = GetBestNodes(hits->fY, hits->fZ, hits->fEnergy, nodes);
+        auto cl = GetBestNodes(hits->GetY(), hits->GetZ(), hits->GetEnergyVector(), nodes);
         for (const auto& [xy, z] : cl) {
             vHits.AddHit(hits->GetX(0), xy, z, 0, 0, hType, 0, 0, 0);
         }
     } else if (hType == XY) {
-        auto cl = GetBestNodes(hits->fX, hits->fY, hits->fEnergy, nodes);
+        auto cl = GetBestNodes(hits->GetX(), hits->GetY(), hits->GetEnergyVector(), nodes);
         for (const auto& [xy, z] : cl) {
             vHits.AddHit(xy, z, hits->GetZ(0), 0, 0, hType, 0, 0, 0);
         }
@@ -170,7 +171,7 @@ void TRestTrackLinearizationProcess::GetHitsProjection(TRestVolumeHits* hits, co
     if (GetVerboseLevel() >= TRestStringOutput::REST_Verbose_Level::REST_Debug)
         for (int i = 0; i < vHits.GetNumberOfHits(); i++)
             RESTDebug << i << " " << vHits.GetX(i) << " " << vHits.GetY(i) << " " << vHits.GetZ(i) << " "
-                  << vHits.GetType(i) << RESTendl;
+                      << vHits.GetType(i) << RESTendl;
 }
 
 ///////////////////////////////////////////////
