@@ -8,8 +8,8 @@
 
 #include "TRestTrackEvent.h"
 
-#ifndef RestTask_TrackCentering
-#define RestTask_TrackCentering
+#ifndef RestTask_MaxEnergyTrackCentering
+#define RestTask_MaxEnergyTrackCentering
 
 //*******************************************************************************************************
 //*** Description: This macro takes the maximum energy track and reads the hits that make it inside the
@@ -24,7 +24,7 @@
 //*** The output histograms show the standard shape of the hits event that defines the maximum energy track,
 //*** so its symmetry, gaussianity and others can be estimated.
 //*** --------------
-//*** Usage: restManager TrackCentering /full/path/file.root [histoName] [firstBin] [lastBin]
+//*** Usage: restManager MaxEnergyTrackCentering /full/path/file.root [histoName] [firstBin] [lastBin]
 //*** [#bins] [firstEvent] [lastEvent]
 //*******************************************************************************************************
 
@@ -47,8 +47,6 @@ Int_t REST_Track_MaxEnergyTrackCentering(TString rootFileName, TString histoName
         TRestRun* run = new TRestRun();
 
         run->OpenInputFile(inputFilesNew[n]);
-    std:
-        cout << "Number of events in the run: " << run->GetEntries() << std::endl;
 
         // Reading events
         TRestTrackEvent* ev = new TRestTrackEvent();
