@@ -29,7 +29,7 @@
 //*******************************************************************************************************
 
 Int_t REST_Track_MaxEnergyTrackCentering(TString rootFileName, TString histoName, int startVal = -30,
-                                         int endVal = 30, int bins = 120, int n1 = 0, int n2 = 4000) {
+                                         int endVal = 30, int bins = 120, int n1 = 0, int n2 = 60000) {
     TRestStringOutput RESTLog;
 
     std::vector<string> inputFilesNew = TRestTools::GetFilesMatchingPattern((string)rootFileName);
