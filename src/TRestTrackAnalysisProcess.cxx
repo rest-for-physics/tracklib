@@ -923,8 +923,8 @@ TRestEvent* TRestTrackAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     SetObservableValue((string) "MaxTrack_YZ_GaussSigmaY", tckMaxYZ_gausSigmaY);
     SetObservableValue((string) "MaxTrack_YZ_GaussSigmaZ", tckMaxYZ_gausSigmaZ_YZ);
 
-    SetObservableValue("MaxTrackxySigmaGausBalance", (tckMaxXZ_gausSigmaX * tckMaxXZ_gausSigmaX) +
-                                                         (tckMaxYZ_gausSigmaY * tckMaxYZ_gausSigmaY));
+    SetObservableValue("MaxTrackxySigmaGausBalance", (tckMaxXZ_gausSigmaX - tckMaxXZ_gausSigmaX) /
+                                                         (tckMaxYZ_gausSigmaY + tckMaxYZ_gausSigmaY));
     SetObservableValue("MaxTrackxySigmaBalance",
                        (tckMaxXZ_SigmaX - tckMaxYZ_SigmaY) / (tckMaxXZ_SigmaX + tckMaxYZ_SigmaY));
 
@@ -1043,8 +1043,8 @@ TRestEvent* TRestTrackAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     SetObservableValue((string) "SecondMaxTrack_YZ_GaussSigmaZ", tckSecondMaxYZ_gausSigmaZ_YZ);
 
     SetObservableValue("SecondMaxTrackxySigmaGausBalance",
-                       (tckSecondMaxXZ_gausSigmaX * tckSecondMaxXZ_gausSigmaX) +
-                           (tckSecondMaxYZ_gausSigmaY * tckSecondMaxYZ_gausSigmaY));
+                       (tckSecondMaxXZ_gausSigmaX - tckSecondMaxXZ_gausSigmaX) /
+                           (tckSecondMaxYZ_gausSigmaY + tckSecondMaxYZ_gausSigmaY));
     SetObservableValue("SecondMaxTrackxy2SigmaBalance", (tckSecondMaxXZ_SigmaZ - tckSecondMaxYZ_SigmaZ) /
                                                             (tckSecondMaxXZ_SigmaZ + tckSecondMaxYZ_SigmaZ));
 
