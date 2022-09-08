@@ -38,6 +38,7 @@
 /// * **MaxTrackEnergy_Y**: Energy of the most energetic track in the event with Y, Z coordinates.
 /// * **MaxTrackEnergyRatio**: (totalEnergy - tckMaxEnergy) / totalEnergy
 /// with tckMaxEnergy = tckMaxEnX + tckMaxEnY + tckMaxEnXYZ.
+/// * **MaxTrackEnergyBalanceXY**: (tckMaxEnX - tckMaxEnY) / (tckMaxEnX + tckMaxEnY).
 ///
 /// Maximum Second Track Energy observables:
 ///
@@ -47,6 +48,8 @@
 /// coordinates.
 /// * **SecondMaxTrackEnergy_Y**: Energy of the second most energetic track in the event with Y,Z
 /// coordinates.
+/// * **SecondMaxTrackEnergyBalanceXY**: (tckSecondMaxEnX - tckSecondMaxEnY) / (tckSecondMaxEnX +
+/// tckSecondMaxEnY).
 ///
 /// Track Length observables:
 ///
@@ -1039,6 +1042,8 @@ TRestEvent* TRestTrackAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     SetObservableValue("SecondMaxTrackxySigmaBalanceGaus",
                        (tckSecondMaxXZ_gausSigmaX - tckSecondMaxYZ_gausSigmaY) /
                            (tckSecondMaxXZ_gausSigmaX + tckSecondMaxYZ_gausSigmaY));
+    SetObservableValue("SecondMaxTrackEnergyBalanceXY", (tckSecondMaxEnergy_X - tckSecondMaxEnergy_Y) /
+                                                            (tckSecondMaxEnergy_X + tckSecondMaxEnergy_Y));
     /* }}} */
 
     /* {{{ Track Length observables (MaxTrackLength_XX) */
