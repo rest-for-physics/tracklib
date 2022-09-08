@@ -127,13 +127,13 @@
 /// * **MaxTrackSigmaZ**: The cluster size in Z of the main most energetic track.
 /// * **MaxTrack_XZ_SigmaX**: The cluster size in X of the main most energetic track in XZ projection.
 /// * **MaxTrack_YZ_SigmaY**: The cluster size in Y of the main most energetic track in YZ projection.
-/// * **MaxTrackxySigmaBalanceGaus**: (gausSigma_x-gausSigma_y)/(gausSigma_x+gausSigma_y).
+/// * **MaxTrackZSigmaBalance**: (sigmaZ_XZ - sigmaZ_YZ) /(sigmaZ_XZ + sigmaZ_YZ).
+/// * **MaxTrackxySigmaBalance**: (sigmaX - sigmaY) /(sigmaX + sigmaY).
 /// * **SecondMaxTrackSigmaX**: The cluster size in X of the second most energetic track.
 /// * **SecondMaxTrackSigmaY**: The cluster size in Y of the second most energetic track.
 /// * **SecondMaxTrack_XZ_SigmaX**: The cluster size in X of the second most energetic track in XZ projection.
 /// * **SecondMaxTrack_YZ_SigmaY**: The cluster size in Y of the second most energetic track in YZ projection.
-/// * **SecondMaxTrackxySigmaBalanceGaus**:
-/// (secondGausSigma_x-secondGausSigma_y)/(secondGausSigma_x+secondGausSigma_y).
+
 ///
 /// The gaussian sigma parameter measures the cluster size obtained from the fit to a gaussian of a given
 /// track hits.
@@ -147,12 +147,16 @@
 /// * **MaxTrack_YZ_GaussSigmaZ**: The cluster size in Z of the main most energetic track in YZ projection.
 /// * **MaxTrack_XYZ_GaussSigmaZ**: The cluster size in Z of the main most energetic track in the combined
 /// XZ and YZ projections.
+/// * **MaxTrackxySigmaGausBalance**: (gausSigma_x-gausSigma_y)/(gausSigma_x+gausSigma_y).
+/// * **MaxTrackZSigmaBalanceGaus**: (gausSigmaZ_XZ - gausSigmaZ_YZ) /(gausSigmaZ_XZ + gausSigmaZ_YZ).
 /// * **SecondMaxTrackGaussSigmaX**: The cluster size in X of the second most energetic track.
 /// * **SecondMaxTrackGaussSigmaY**: The cluster size in Y of the second most energetic track.
 /// * **SecondMaxTrack_XZ_GaussSigmaX**: The cluster size in X of the second most energetic track in XZ
 /// projection.
 /// * **SecondMaxTrack_YZ_GaussSigmaY**: The cluster size in Y of the second most energetic track in YZ
 /// projection.
+/// * **SecondMaxTrackxySigmaBalanceGaus**:
+/// (secondGausSigma_x-secondGausSigma_y)/(secondGausSigma_x+secondGausSigma_y).
 ///
 /// Time observables:
 ///
@@ -915,14 +919,14 @@ TRestEvent* TRestTrackAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
 
     SetObservableValue((string) "MaxTrackEnergy_Y", tckMaxEnY);
     SetObservableValue((string) "MaxTrack_YZ_SigmaY", tckMaxYZ_SigmaY);
-    SetObservableValue((string) "MaxTrack_YZ_SigmaZ", tckMaxYZ_SigmaY);
+    SetObservableValue((string) "MaxTrack_YZ_SigmaZ", tckMaxYZ_SigmaZ);
     SetObservableValue((string) "MaxTrack_YZ_GaussSigmaY", tckMaxYZ_gausSigmaY);
     SetObservableValue((string) "MaxTrack_YZ_GaussSigmaZ", tckMaxYZ_gausSigmaZ_YZ);
 
-    SetObservableValue("MaxTrackxy2SigmaGaus", (tckMaxXZ_gausSigmaX * tckMaxXZ_gausSigmaX) +
-                                                   (tckMaxYZ_gausSigmaY * tckMaxYZ_gausSigmaY));
-    SetObservableValue("MaxTrackxySigmaBalanceGaus", (tckMaxXZ_gausSigmaX - tckMaxYZ_gausSigmaY) /
-                                                         (tckMaxXZ_gausSigmaX + tckMaxYZ_gausSigmaY));
+    SetObservableValue("MaxTrackxySigmaGausBalance", (tckMaxXZ_gausSigmaX * tckMaxXZ_gausSigmaX) +
+                                                         (tckMaxYZ_gausSigmaY * tckMaxYZ_gausSigmaY));
+    SetObservableValue("MaxTrackxySigmaBalance",
+                       (tckMaxXZ_SigmaX - tckMaxYZ_SigmaY) / (tckMaxXZ_SigmaX + tckMaxYZ_SigmaY));
 
     Double_t tckMaxEnergy = tckMaxEnX + tckMaxEnY + tckMaxEnXYZ;
 
@@ -1038,12 +1042,18 @@ TRestEvent* TRestTrackAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     SetObservableValue((string) "SecondMaxTrack_YZ_GaussSigmaY", tckSecondMaxYZ_gausSigmaY);
     SetObservableValue((string) "SecondMaxTrack_YZ_GaussSigmaZ", tckSecondMaxYZ_gausSigmaZ_YZ);
 
-    SetObservableValue("SecondMaxTrackxy2SigmaGaus",
+    SetObservableValue("SecondMaxTrackxySigmaGausBalance",
                        (tckSecondMaxXZ_gausSigmaX * tckSecondMaxXZ_gausSigmaX) +
                            (tckSecondMaxYZ_gausSigmaY * tckSecondMaxYZ_gausSigmaY));
-    SetObservableValue("SecondMaxTrackxySigmaBalanceGaus",
-                       (tckSecondMaxXZ_gausSigmaX - tckSecondMaxYZ_gausSigmaY) /
-                           (tckSecondMaxXZ_gausSigmaX + tckSecondMaxYZ_gausSigmaY));
+    SetObservableValue("SecondMaxTrackxy2SigmaBalance", (tckSecondMaxXZ_SigmaZ - tckSecondMaxYZ_SigmaZ) /
+                                                            (tckSecondMaxXZ_SigmaZ + tckSecondMaxYZ_SigmaZ));
+
+    SetObservableValue("SecondMaxTrackZSigmaBalanceGaus",
+                       (tckSecondMaxXZ_gausSigmaZ_XZ - tckSecondMaxYZ_gausSigmaZ_YZ) /
+                           (tckSecondMaxXZ_gausSigmaZ_XZ + tckSecondMaxYZ_gausSigmaZ_YZ));
+
+    SetObservableValue("SecondMaxTrackZSigmaBalance",
+                       (tckMaxXZ_SigmaZ - tckMaxYZ_SigmaZ) / (tckMaxXZ_SigmaZ + tckMaxYZ_SigmaZ));
     /* }}} */
 
     /* {{{ Track Length observables (MaxTrackLength_XX) */
