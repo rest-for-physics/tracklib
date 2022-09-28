@@ -943,6 +943,8 @@ TRestEvent* TRestTrackAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     SetObservableValue("MaxTrackZSigmaBalance",
                        (tckMaxXZ_SigmaZ - tckMaxYZ_SigmaZ) / (tckMaxXZ_SigmaZ + tckMaxYZ_SigmaZ));
 
+    SetObservableValue("MaxTrackEnergyBalanceXY", (tckMaxEnX - tckMaxEnY) / (tckMaxEnX + tckMaxEnY));
+
     TRestHits hits;
     TRestHits* hitsXZ = nullptr;
     TRestHits* hitsYZ = nullptr;
@@ -1052,6 +1054,8 @@ TRestEvent* TRestTrackAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     SetObservableValue("SecondMaxTrackZSigmaGausBalance",
                        (tckSecondMaxXZ_gausSigmaZ_XZ - tckSecondMaxYZ_gausSigmaZ_YZ) /
                            (tckSecondMaxXZ_gausSigmaZ_XZ + tckSecondMaxYZ_gausSigmaZ_YZ));
+    SetObservableValue("SecondMaxTrackEnergyBalanceXY", (tckSecondMaxEnergy_X - tckSecondMaxEnergy_Y) /
+                                                            (tckSecondMaxEnergy_X + tckSecondMaxEnergy_Y));
 
     /* }}} */
 
