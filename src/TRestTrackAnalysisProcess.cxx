@@ -923,8 +923,8 @@ TRestEvent* TRestTrackAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     SetObservableValue((string) "MaxTrack_YZ_GaussSigmaY", tckMaxYZ_gausSigmaY);
     SetObservableValue((string) "MaxTrack_YZ_GaussSigmaZ", tckMaxYZ_gausSigmaZ_YZ);
 
-    SetObservableValue("MaxTrackxySigmaGausBalance", (tckMaxXZ_gausSigmaX - tckMaxXZ_gausSigmaX) /
-                                                         (tckMaxYZ_gausSigmaY + tckMaxYZ_gausSigmaY));
+    SetObservableValue("MaxTrackxySigmaGausBalance", (tckMaxXZ_gausSigmaX - tckMaxYZ_gausSigmaY) /
+                                                         (tckMaxXZ_gausSigmaX + tckMaxYZ_gausSigmaY));
     SetObservableValue("MaxTrackxySigmaBalance",
                        (tckMaxXZ_SigmaX - tckMaxYZ_SigmaY) / (tckMaxXZ_SigmaX + tckMaxYZ_SigmaY));
 
@@ -1043,17 +1043,16 @@ TRestEvent* TRestTrackAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     SetObservableValue((string) "SecondMaxTrack_YZ_GaussSigmaZ", tckSecondMaxYZ_gausSigmaZ_YZ);
 
     SetObservableValue("SecondMaxTrackxySigmaGausBalance",
-                       (tckSecondMaxXZ_gausSigmaX - tckSecondMaxXZ_gausSigmaX) /
-                           (tckSecondMaxYZ_gausSigmaY + tckSecondMaxYZ_gausSigmaY));
-    SetObservableValue("SecondMaxTrackxy2SigmaBalance", (tckSecondMaxXZ_SigmaZ - tckSecondMaxYZ_SigmaZ) /
-                                                            (tckSecondMaxXZ_SigmaZ + tckSecondMaxYZ_SigmaZ));
-
+                       (tckSecondMaxXZ_gausSigmaX - tckSecondMaxYZ_gausSigmaY) /
+                           (tckSecondMaxXZ_gausSigmaX + tckSecondMaxYZ_gausSigmaY));
+    SetObservableValue("SecondMaxTrackxySigmaBalance", (tckSecondMaxXZ_SigmaX - tckSecondMaxYZ_SigmaY) /
+                                                           (tckSecondMaxXZ_SigmaX + tckSecondMaxYZ_SigmaY));
+    SetObservableValue("SecondMaxTrackZSigmaBalance", (tckSecondMaxXZ_SigmaZ - tckSecondMaxYZ_SigmaZ) /
+                                                          (tckSecondMaxXZ_SigmaZ + tckSecondMaxYZ_SigmaZ));
     SetObservableValue("SecondMaxTrackZSigmaGausBalance",
                        (tckSecondMaxXZ_gausSigmaZ_XZ - tckSecondMaxYZ_gausSigmaZ_YZ) /
                            (tckSecondMaxXZ_gausSigmaZ_XZ + tckSecondMaxYZ_gausSigmaZ_YZ));
 
-    SetObservableValue("SecondMaxTrackZSigmaBalance",
-                       (tckMaxXZ_SigmaZ - tckMaxYZ_SigmaZ) / (tckMaxXZ_SigmaZ + tckMaxYZ_SigmaZ));
     /* }}} */
 
     /* {{{ Track Length observables (MaxTrackLength_XX) */
