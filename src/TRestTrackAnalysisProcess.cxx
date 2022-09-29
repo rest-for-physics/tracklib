@@ -39,6 +39,7 @@
 /// * **MaxTrackEnergyBalanceXY**: (tckMaxEnX - tckMaxEnY) / (tckMaxEnX + tckMaxEnY).
 /// * **MaxTrackEnergyRatio**: (totalEnergy - tckMaxEnergy) / totalEnergy
 /// with tckMaxEnergy = tckMaxEnX + tckMaxEnY + tckMaxEnXYZ.
+/// * **MaxTrackEnergyBalanceXY**: (tckMaxEnX - tckMaxEnY) / (tckMaxEnX + tckMaxEnY).
 ///
 /// Maximum Second Track Energy observables:
 ///
@@ -930,8 +931,11 @@ TRestEvent* TRestTrackAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
 
     SetObservableValue("MaxTrackxySigmaGausBalance", (tckMaxXZ_gausSigmaX - tckMaxYZ_gausSigmaY) /
                                                          (tckMaxXZ_gausSigmaX + tckMaxYZ_gausSigmaY));
+
     SetObservableValue("MaxTrackxySigmaBalance",
                        (tckMaxXZ_SigmaX - tckMaxYZ_SigmaY) / (tckMaxXZ_SigmaX + tckMaxYZ_SigmaY));
+
+    SetObservableValue("MaxTrackEnergyBalanceXY", (tckMaxEnX - tckMaxEnY) / (tckMaxEnX + tckMaxEnY));
 
     Double_t tckMaxEnergy = tckMaxEnX + tckMaxEnY + tckMaxEnXYZ;
 
@@ -1052,6 +1056,7 @@ TRestEvent* TRestTrackAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     SetObservableValue("SecondMaxTrackxySigmaGausBalance",
                        (tckSecondMaxXZ_gausSigmaX - tckSecondMaxYZ_gausSigmaY) /
                            (tckSecondMaxXZ_gausSigmaX + tckSecondMaxYZ_gausSigmaY));
+
     SetObservableValue("SecondMaxTrackxySigmaBalance", (tckSecondMaxXZ_SigmaX - tckSecondMaxYZ_SigmaY) /
                                                            (tckSecondMaxXZ_SigmaX + tckSecondMaxYZ_SigmaY));
     SetObservableValue("SecondMaxTrackZSigmaBalance", (tckSecondMaxXZ_SigmaZ - tckSecondMaxYZ_SigmaZ) /
