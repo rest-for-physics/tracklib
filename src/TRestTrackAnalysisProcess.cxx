@@ -31,11 +31,12 @@
 /// * **nTracks_Y**: Number of tracks in the event with hits' coordinates only in Y and Z (not X).
 /// * **nTracks_XYZ**: Number of tracks in the event with hits' coordinates in X, Y and Z.
 ///
-/// Max track energies and track energy ratio:
+/// Max track energies, energy balance and track energy ratio:
 ///
 /// * **MaxTrackEnergy**: Energy of the most energetic track in the event with X, Y, Z coordinates.
 /// * **MaxTrackEnergy_X**: Energy of the most energetic track in the event with X, Z coordinates.
 /// * **MaxTrackEnergy_Y**: Energy of the most energetic track in the event with Y, Z coordinates.
+/// * **MaxTrackEnergyBalanceXY**: (tckMaxEnX - tckMaxEnY) / (tckMaxEnX + tckMaxEnY).
 /// * **MaxTrackEnergyRatio**: (totalEnergy - tckMaxEnergy) / totalEnergy
 /// with tckMaxEnergy = tckMaxEnX + tckMaxEnY + tckMaxEnXYZ.
 ///
@@ -47,6 +48,8 @@
 /// coordinates.
 /// * **SecondMaxTrackEnergy_Y**: Energy of the second most energetic track in the event with Y,Z
 /// coordinates.
+/// * **SecondMaxTrackEnergyBalanceXY**: (SecondTckMaxEnX - SecondTckMaxEnY) / (SecondTckMaxEnX +
+/// SecondTckMaxEnY).
 ///
 /// Track Length observables:
 ///
@@ -127,13 +130,14 @@
 /// * **MaxTrackSigmaZ**: The cluster size in Z of the main most energetic track.
 /// * **MaxTrack_XZ_SigmaX**: The cluster size in X of the main most energetic track in XZ projection.
 /// * **MaxTrack_YZ_SigmaY**: The cluster size in Y of the main most energetic track in YZ projection.
-/// * **MaxTrackZSigmaBalance**: (sigmaZ_XZ - sigmaZ_YZ) /(sigmaZ_XZ + sigmaZ_YZ).
 /// * **MaxTrackxySigmaBalance**: (sigmaX - sigmaY) /(sigmaX + sigmaY).
+/// * **MaxTrackZSigmaBalance**: (sigmaZ_XZ - sigmaZ_YZ) /(sigmaZ_XZ + sigmaZ_YZ).
 /// * **SecondMaxTrackSigmaX**: The cluster size in X of the second most energetic track.
 /// * **SecondMaxTrackSigmaY**: The cluster size in Y of the second most energetic track.
 /// * **SecondMaxTrack_XZ_SigmaX**: The cluster size in X of the second most energetic track in XZ projection.
 /// * **SecondMaxTrack_YZ_SigmaY**: The cluster size in Y of the second most energetic track in YZ projection.
-
+/// * **SecondMaxTrackxySigmaBalance**: (sigmaX - sigmaY) /(sigmaX + sigmaY).
+/// * **SecondMaxTrackZSigmaBalance**: (sigmaZ_XZ - sigmaZ_YZ) /(sigmaZ_XZ + sigmaZ_YZ).
 ///
 /// The gaussian sigma parameter measures the cluster size obtained from the fit to a gaussian of a given
 /// track hits.
@@ -157,6 +161,7 @@
 /// projection.
 /// * **SecondMaxTrackxySigmaGausBalance**:
 /// (secondGausSigma_x-secondGausSigma_y)/(secondGausSigma_x+secondGausSigma_y).
+/// * **SecondMaxTrackZSigmaGausBalance**: (gausSigmaZ_XZ - gausSigmaZ_YZ) /(gausSigmaZ_XZ + gausSigmaZ_YZ).
 ///
 /// Time observables:
 ///
