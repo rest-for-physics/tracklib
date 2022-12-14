@@ -90,7 +90,7 @@ TRestEvent* TRestTrackPathMinimizationProcess::ProcessEvent(TRestEvent* inputEve
 ///
 void TRestTrackPathMinimizationProcess::NearestNeighbour(TRestVolumeHits* hits, std::vector<int>& bestPath) {
     const int nHits = hits->GetNumberOfHits();
-    vector<vector<double>> dist(nHits,vector<double>(nHits));
+    vector<vector<double>> dist(nHits, vector<double>(nHits));
     RESTDebug << "Nhits " << nHits << RESTendl;
 
     if (nHits < 3) return;
@@ -127,7 +127,7 @@ void TRestTrackPathMinimizationProcess::NearestNeighbour(TRestVolumeHits* hits, 
         // compute current path weight
         int k = s;
         while (!vertex.empty()) {
-            int closestN;
+            int closestN = 0;
             int index = 0, bestIndex;
             double minDist = 1E9;
             for (const auto& v : vertex) {
@@ -223,7 +223,7 @@ void TRestTrackPathMinimizationProcess::BruteForce(TRestVolumeHits* hits, std::v
             if (current_pathweight < min_path) {
                 min_path = current_pathweight;
                 bestPath[0] = s;
-                for (int i = 0; i < vertex.size(); i++) bestPath[i + 1] = vertex[i];
+                for (unsigned int i = 0; i < vertex.size(); i++) bestPath[i + 1] = vertex[i];
             }
 
             // Could be optimized using the shortest neighbour after computing Floyd Warshall Algorithm

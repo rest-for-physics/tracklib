@@ -36,7 +36,8 @@ TRestEvent* TRestTrackReductionProcess::ProcessEvent(TRestEvent* inputEvent) {
     for (int tck = 0; tck < fInputTrackEvent->GetNumberOfTracks(); tck++)
         fOutputTrackEvent->AddTrack(fInputTrackEvent->GetTrack(tck));
 
-    if (this->GetVerboseLevel() >= TRestStringOutput::REST_Verbose_Level::REST_Debug) fInputTrackEvent->PrintOnlyTracks();
+    if (this->GetVerboseLevel() >= TRestStringOutput::REST_Verbose_Level::REST_Debug)
+        fInputTrackEvent->PrintOnlyTracks();
 
     // Reducing the hits inside each track
     for (int tck = 0; tck < fInputTrackEvent->GetNumberOfTracks(); tck++) {
@@ -86,8 +87,8 @@ void TRestTrackReductionProcess::getHitsMerged(TRestVolumeHits& hits) {
         Bool_t merged = true;
         while (merged) {
             merged = false;
-            for (int i = 0; i < hits.GetNumberOfHits(); i++) {
-                for (int j = i + 1; j < hits.GetNumberOfHits(); j++) {
+            for (unsigned int i = 0; i < hits.GetNumberOfHits(); i++) {
+                for (unsigned int j = i + 1; j < hits.GetNumberOfHits(); j++) {
                     if (hits.GetDistance2(i, j) < distance * distance) {
                         mergedHits++;
                         hits.MergeHits(i, j);

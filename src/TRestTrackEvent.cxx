@@ -58,26 +58,6 @@ void TRestTrackEvent::Initialize() {
 }
 
 void TRestTrackEvent::AddTrack(TRestTrack* c) {
-    if (c->GetParentID() > 0) {
-        TRestTrack* pTrack = GetTrackById(c->GetParentID());
-
-        // if (pTrack->isXZ()) {
-        //    TRestVolumeHits* vHits = c->GetVolumeHits();
-
-        //    Float_t NaN = std::numeric_limits<Float_t>::quiet_NaN();
-
-        //    vHits->InitializeYArray(NaN);
-        //}
-
-        // if (pTrack->isYZ()) {
-        //    TRestVolumeHits* vHits = c->GetVolumeHits();
-
-        //    Float_t NaN = std::numeric_limits<Float_t>::quiet_NaN();
-
-        //    vHits->InitializeXArray(NaN);
-        //}
-    }
-
     if (c->isXZ()) fNtracksX++;
     if (c->isYZ()) fNtracksY++;
     fNtracks++;
@@ -400,7 +380,7 @@ TPad* TRestTrackEvent::DrawHits() {
         TRestTrack* tck = GetTrack(t);
         if (GetLevel(t) != 1) continue;
         TRestVolumeHits* hits = tck->GetVolumeHits();
-        for (int i = 0; i < hits->GetNumberOfHits(); i++) {
+        for (unsigned int i = 0; i < hits->GetNumberOfHits(); i++) {
             if (hits->GetType(i) % X == 0) fX.emplace_back(hits->GetX(i));
             if (hits->GetType(i) % Y == 0) fY.emplace_back(hits->GetY(i));
             if (hits->GetType(i) % Z == 0) fZ.emplace_back(hits->GetZ(i));
@@ -420,7 +400,7 @@ TPad* TRestTrackEvent::DrawHits() {
         TRestTrack* tck = GetTrack(t);
         if (GetLevel(t) != 1) continue;
         TRestVolumeHits* hits = tck->GetVolumeHits();
-        for (int i = 0; i < hits->GetNumberOfHits(); i++) {
+        for (unsigned int i = 0; i < hits->GetNumberOfHits(); i++) {
             if (hits->GetType(i) == XZ) fXZHits->Fill(hits->GetX(i), hits->GetZ(i), hits->GetEnergy(i));
             if (hits->GetType(i) == YZ) fYZHits->Fill(hits->GetY(i), hits->GetZ(i), hits->GetEnergy(i));
         }
@@ -594,8 +574,8 @@ TPad* TRestTrackEvent::DrawEvent(const TString& option) {
         int tckXY = 0, tckYZ = 0, tckXZ = 0, tckXYZ = 0;
         Double_t radius;
 
-        for (int nhit = 0; nhit < hits->GetNumberOfHits(); nhit++) {
-            if (hits->GetNumberOfHits() > maxTrackHits) maxTrackHits = hits->GetNumberOfHits();
+        for (unsigned int nhit = 0; nhit < hits->GetNumberOfHits(); nhit++) {
+            if (hits->GetNumberOfHits() > (unsigned int)maxTrackHits) maxTrackHits = hits->GetNumberOfHits();
 
             if (hits->isNaN(nhit)) {
                 cout << "REST Warning. TRestTrackEvent::Draw. Hit is not defined!!" << endl;

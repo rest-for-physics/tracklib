@@ -76,7 +76,8 @@ TRestEvent* TRestTrackPointLikeAnalysisProcess::ProcessEvent(TRestEvent* inputEv
     Double_t totSize = 0;
     Double_t maxClusterSize = 0;
 
-    for (int cl = 0; cl < fTrackEvent->GetTrack(maxIndex)->GetVolumeHits()->GetNumberOfHits(); cl++) {
+    for (unsigned int cl = 0; cl < fTrackEvent->GetTrack(maxIndex)->GetVolumeHits()->GetNumberOfHits();
+         cl++) {
         Double_t clusterSize = fTrackEvent->GetTrack(maxIndex)->GetVolumeHits()->GetClusterSize(cl);
         if (clusterSize > maxClusterSize) maxClusterSize = clusterSize;
         totSize += clusterSize;

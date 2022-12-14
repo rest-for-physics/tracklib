@@ -59,7 +59,7 @@ void TRestTrack::RemoveVolumeHits() {
 ///
 void TRestTrack::GetBoundaries(TVector3& orig, TVector3& end) {
     const int nHits = fVolumeHits.GetNumberOfHits();
-    int maxBin;
+    int maxBin = 0;
     double maxEn = 0;
 
     for (int i = 0; i < nHits; i++) {
