@@ -223,7 +223,7 @@ void TRestTrackPathMinimizationProcess::BruteForce(TRestVolumeHits* hits, std::v
             if (current_pathweight < min_path) {
                 min_path = current_pathweight;
                 bestPath[0] = s;
-                for (unsigned int i = 0; i < vertex.size(); i++) bestPath[i + 1] = vertex[i];
+                for (size_t i = 0; i < vertex.size(); i++) bestPath[i + 1] = vertex[i];
             }
 
             // Could be optimized using the shortest neighbour after computing Floyd Warshall Algorithm
