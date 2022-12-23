@@ -62,7 +62,7 @@ class TRestTrackEvent : public TRestEvent {
 
    public:
     TRestTrack* GetTrack(Int_t n) {
-        if (fTrack.size() < n + 1) {
+        if (n >= 0 && fTrack.size() < (unsigned int)n + 1) {
             std::cout << "-- Error : TRestTrackEvent::GetTrack. ERROR!" << std::endl;
             std::cout << "-- Error : GetTrack requested track with index n = " << n << std::endl;
             std::cout << "-- Error : However, only " << fTrack.size() << " where found inside TRestTrackEvent"

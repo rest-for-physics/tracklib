@@ -873,8 +873,8 @@ TRestEvent* TRestTrackAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     Double_t tckMaxYZ_SigmaY = 0;
     Double_t tckMaxYZ_SigmaZ = 0;
     Double_t tckMaxXYZ_gausSigmaX = 0, tckMaxXYZ_gausSigmaY = 0, tckMaxXYZ_gausSigmaZ = 0;
-    Double_t tckMaxXZ_gausSigmaX = 0, tckMaxXZ_gausSigmaZ_XZ = 0, tckMaxXZ_gausSigmaZ = 0;
-    Double_t tckMaxYZ_gausSigmaY = 0, tckMaxYZ_gausSigmaZ_YZ = 0, tckMaxYZ_gausSigmaZ = 0;
+    Double_t tckMaxXZ_gausSigmaX = 0, tckMaxXZ_gausSigmaZ_XZ = 0;
+    Double_t tckMaxYZ_gausSigmaY = 0, tckMaxYZ_gausSigmaZ_YZ = 0;
     Double_t tckMaxTrack_XYZ_GaussSigmaZ = 0;
     Double_t tckMaxTrack_XYZ_skewXY = 0, tckMaxTrack_XYZ_skewZ = 0;
 
@@ -966,7 +966,7 @@ TRestEvent* TRestTrackAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
 
     for (auto arg : hitsBoth) {
         if (arg == nullptr) continue;
-        for (int n = 0; n < arg->GetNumberOfHits(); n++) {
+        for (unsigned int n = 0; n < arg->GetNumberOfHits(); n++) {
             // your code in the existing loop, replacing `hits` by `arg`
             Double_t eDep = arg->GetEnergy(n);
 
@@ -989,22 +989,16 @@ TRestEvent* TRestTrackAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     /* }}} */
 
     /* {{{ Second Maximum Track Energy observable */
-    Double_t tckSecondMaxEnergy = 0;
-    Double_t tckSecondMaxXYZ_SigmaX = 0, tckSecondMaxXYZ_SigmaY = 0, tckSecondMaxXYZ_SigmaZ = 0;
-    Double_t tckSecondMaxXYZ_gausSigmaX = 0, tckSecondMaxXYZ_gausSigmaY = 0, tckSecondMaxXYZ_gausSigmaZ = 0;
-    Double_t tckSecondMaxXZ_gausSigmaX = 0, tckSecondMaxXZ_gausSigmaZ_XZ = 0, tckSecondMaxXZ_gausSigmaZ = 0;
-    Double_t tckSecondMaxYZ_gausSigmaY = 0, tckSecondMaxYZ_gausSigmaZ_YZ = 0, tckSecondMaxYZ_gausSigmaZ = 0;
-    Double_t tckSecondMaxTrack_XYZ_GaussSigmaZ = 0;
-    Double_t tckSecondMaxTrack_XYZ_skewXY = 0, tckSecondMaxTrack_XYZ_skewZ = 0;
+    Double_t tckSecondMaxXYZ_SigmaX = 0, tckSecondMaxXYZ_SigmaY = 0;
+    Double_t tckSecondMaxXYZ_gausSigmaX = 0, tckSecondMaxXYZ_gausSigmaY = 0;
+    Double_t tckSecondMaxXZ_gausSigmaX = 0, tckSecondMaxXZ_gausSigmaZ_XZ = 0;
+    Double_t tckSecondMaxYZ_gausSigmaY = 0, tckSecondMaxYZ_gausSigmaZ_YZ = 0;
 
     if (fInputTrackEvent->GetSecondMaxEnergyTrack() != nullptr) {
         tckSecondMaxXYZ_SigmaX = fInputTrackEvent->GetSecondMaxEnergyTrack()->GetHits()->GetSigmaX();
         tckSecondMaxXYZ_SigmaY = fInputTrackEvent->GetSecondMaxEnergyTrack()->GetHits()->GetSigmaY();
-        tckSecondMaxXYZ_SigmaZ = fInputTrackEvent->GetSecondMaxEnergyTrack()->GetHits()->GetSigmaZ2();
         tckSecondMaxXYZ_gausSigmaX = fInputTrackEvent->GetSecondMaxEnergyTrack()->GetHits()->GetGaussSigmaX();
         tckSecondMaxXYZ_gausSigmaY = fInputTrackEvent->GetSecondMaxEnergyTrack()->GetHits()->GetGaussSigmaY();
-        tckSecondMaxXYZ_gausSigmaZ = fInputTrackEvent->GetMaxEnergyTrack()->GetHits()->GetGaussSigmaZ();
-        tckSecondMaxEnergy = fInputTrackEvent->GetSecondMaxEnergyTrack()->GetEnergy();
     }
 
     Double_t tckSecondMaxEnergy_X = 0;

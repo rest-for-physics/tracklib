@@ -169,7 +169,7 @@ void TRestTrackLinearizationProcess::GetHitsProjection(TRestVolumeHits* hits, co
     TRestVolumeHits::kMeansClustering(hits, vHits, 1);
 
     if (GetVerboseLevel() >= TRestStringOutput::REST_Verbose_Level::REST_Debug)
-        for (int i = 0; i < vHits.GetNumberOfHits(); i++)
+        for (unsigned int i = 0; i < vHits.GetNumberOfHits(); i++)
             RESTDebug << i << " " << vHits.GetX(i) << " " << vHits.GetY(i) << " " << vHits.GetZ(i) << " "
                       << vHits.GetType(i) << RESTendl;
 }

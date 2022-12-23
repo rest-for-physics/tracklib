@@ -108,7 +108,7 @@ TRestEvent* TRestTrackReconnectionProcess::ProcessEvent(TRestEvent* inputEvent) 
         if (tBranches > trackBranches) trackBranches = tBranches;
 
         // A fine tunning applied to consecutive hits
-        for (int n = 0; n < subHitSets[0].GetNumberOfHits(); n++) {
+        for (unsigned int n = 0; n < subHitSets[0].GetNumberOfHits(); n++) {
             if (n > 0 && n < subHitSets[0].GetNumberOfHits() - 1) {
                 Double_t distance = subHitSets[0].GetHitsPathLength(n - 2, n + 2);
 
@@ -170,7 +170,7 @@ void TRestTrackReconnectionProcess::BreakTracks(TRestVolumeHits* hits, vector<TR
     }
 
     TRestVolumeHits subHits;
-    for (int n = 0; n < hits->GetNumberOfHits(); n++) {
+    for (unsigned int n = 0; n < hits->GetNumberOfHits(); n++) {
         Double_t x = hits->GetX(n);
         Double_t y = hits->GetY(n);
         Double_t z = hits->GetZ(n);
@@ -198,7 +198,8 @@ void TRestTrackReconnectionProcess::BreakTracks(TRestVolumeHits* hits, vector<TR
 
     hitSets.push_back(subHits);
 
-    if (GetVerboseLevel() >= TRestStringOutput::REST_Verbose_Level::REST_Debug) cout << "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" << endl;
+    if (GetVerboseLevel() >= TRestStringOutput::REST_Verbose_Level::REST_Debug)
+        cout << "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" << endl;
 }
 
 void TRestTrackReconnectionProcess::ReconnectTracks(vector<TRestVolumeHits>& hitSets) {
@@ -213,7 +214,7 @@ void TRestTrackReconnectionProcess::ReconnectTracks(vector<TRestVolumeHits>& hit
 
     Double_t minDistance = 1.e10;
 
-    Int_t tracks[2][2];
+    Int_t tracks[2][2] = {{0, 0}, {0, 0}};
 
     vector<Int_t> nHits(nSubTracks);
     for (int i = 0; i < nSubTracks; i++) nHits[i] = hitSets[i].GetNumberOfHits();
@@ -363,7 +364,8 @@ void TRestTrackReconnectionProcess::ReconnectTracks(vector<TRestVolumeHits>& hit
 
     if (nSubTracks > 1) ReconnectTracks(hitSets);
 
-    if (GetVerboseLevel() >= TRestStringOutput::REST_Verbose_Level::REST_Debug) cout << "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" << endl;
+    if (GetVerboseLevel() >= TRestStringOutput::REST_Verbose_Level::REST_Debug)
+        cout << "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" << endl;
 }
 
 Int_t TRestTrackReconnectionProcess::GetTrackBranches(TRestHits& h, Double_t nSigma) {
