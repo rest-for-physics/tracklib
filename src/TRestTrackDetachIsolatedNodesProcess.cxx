@@ -55,7 +55,8 @@ TRestEvent* TRestTrackDetachIsolatedNodesProcess::ProcessEvent(TRestEvent* input
         cout << "TRestTrackDetachIsolatedNodesProcess. Number of tracks : "
              << fInputTrackEvent->GetNumberOfTracks() << endl;
 
-    if (GetVerboseLevel() >= TRestStringOutput::REST_Verbose_Level::REST_Debug) fInputTrackEvent->PrintEvent();
+    if (GetVerboseLevel() >= TRestStringOutput::REST_Verbose_Level::REST_Debug)
+        fInputTrackEvent->PrintEvent();
 
     // Copying the input tracks to the output track
     for (int tck = 0; tck < fInputTrackEvent->GetNumberOfTracks(); tck++)
