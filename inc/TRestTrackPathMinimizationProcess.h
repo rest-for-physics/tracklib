@@ -13,8 +13,9 @@
 #define RestCore_TRestTrackPathMinimizationProcess
 
 #include <TRestTrackEvent.h>
-#include "TRestEventProcess.h"
 #include <trackMinimization.h>
+
+#include "TRestEventProcess.h"
 
 class TRestTrackPathMinimizationProcess : public TRestEventProcess {
    private:

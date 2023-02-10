@@ -76,127 +76,111 @@
 #include "machdefs.h"
 #include "util.h"
 
-void CCelist_init (CCelist *elist)
-{
+void CCelist_init(CCelist* elist) {
     elist->ecount = 0;
-    elist->ends = (int *) NULL;
+    elist->ends = (int*)NULL;
 }
 
-void CCelistl_init (CCelistl *elist)
-{
+void CCelistl_init(CCelistl* elist) {
     elist->ecount = 0;
-    elist->ends = (int *) NULL;
-    elist->len = (int *) NULL;
+    elist->ends = (int*)NULL;
+    elist->len = (int*)NULL;
 }
 
-void CCelistw_init (CCelistw *elist)
-{
+void CCelistw_init(CCelistw* elist) {
     elist->ecount = 0;
-    elist->ends = (int *) NULL;
-    elist->weight = (double *) NULL;
+    elist->ends = (int*)NULL;
+    elist->weight = (double*)NULL;
 }
 
-void CCelistlw_init (CCelistlw *elist)
-{
+void CCelistlw_init(CCelistlw* elist) {
     elist->ecount = 0;
-    elist->ends = (int *) NULL;
-    elist->len = (int *) NULL;
-    elist->weight = (double *) NULL;
+    elist->ends = (int*)NULL;
+    elist->len = (int*)NULL;
+    elist->weight = (double*)NULL;
 }
 
-void CCelist_free (CCelist *elist)
-{
+void CCelist_free(CCelist* elist) {
     elist->ecount = 0;
-    CC_IFFREE (elist->ends, int);
+    CC_IFFREE(elist->ends, int);
 }
 
-void CCelistl_free (CCelistl *elist)
-{
+void CCelistl_free(CCelistl* elist) {
     elist->ecount = 0;
-    CC_IFFREE (elist->ends, int);
-    CC_IFFREE (elist->len, int);
+    CC_IFFREE(elist->ends, int);
+    CC_IFFREE(elist->len, int);
 }
 
-void CCelistw_free (CCelistw *elist)
-{
+void CCelistw_free(CCelistw* elist) {
     elist->ecount = 0;
-    CC_IFFREE (elist->ends, int);
-    CC_IFFREE (elist->weight, double);
+    CC_IFFREE(elist->ends, int);
+    CC_IFFREE(elist->weight, double);
 }
 
-void CCelistlw_free (CCelistlw *elist)
-{
+void CCelistlw_free(CCelistlw* elist) {
     elist->ecount = 0;
-    CC_IFFREE (elist->ends, int);
-    CC_IFFREE (elist->len, int);
-    CC_IFFREE (elist->weight, double);
+    CC_IFFREE(elist->ends, int);
+    CC_IFFREE(elist->len, int);
+    CC_IFFREE(elist->weight, double);
 }
 
-int CCelist_alloc (CCelist *elist, int ecount)
-{
-    elist->ends = CC_SAFE_MALLOC (ecount*2, int);
-    if (elist->ends == (int *) NULL) {
-        CCelist_free (elist);
+int CCelist_alloc(CCelist* elist, int ecount) {
+    elist->ends = CC_SAFE_MALLOC(ecount * 2, int);
+    if (elist->ends == (int*)NULL) {
+        CCelist_free(elist);
         return 1;
     }
     elist->ecount = ecount;
     return 0;
 }
 
-int CCelistl_alloc (CCelistl *elist, int ecount)
-{
-    elist->ends = CC_SAFE_MALLOC (ecount*2, int);
-    elist->len = CC_SAFE_MALLOC (ecount, int);
-    if (elist->ends == (int *) NULL ||
-        elist->len == (int *) NULL) {
-        CCelistl_free (elist);
+int CCelistl_alloc(CCelistl* elist, int ecount) {
+    elist->ends = CC_SAFE_MALLOC(ecount * 2, int);
+    elist->len = CC_SAFE_MALLOC(ecount, int);
+    if (elist->ends == (int*)NULL || elist->len == (int*)NULL) {
+        CCelistl_free(elist);
         return 1;
     }
     elist->ecount = ecount;
     return 0;
 }
 
-int CCelistw_alloc (CCelistw *elist, int ecount)
-{
-    elist->ends = CC_SAFE_MALLOC (ecount*2, int);
-    elist->weight = CC_SAFE_MALLOC (ecount, double);
-    if (elist->ends == (int *) NULL ||
-        elist->weight == (double *) NULL) {
-        CCelistw_free (elist);
+int CCelistw_alloc(CCelistw* elist, int ecount) {
+    elist->ends = CC_SAFE_MALLOC(ecount * 2, int);
+    elist->weight = CC_SAFE_MALLOC(ecount, double);
+    if (elist->ends == (int*)NULL || elist->weight == (double*)NULL) {
+        CCelistw_free(elist);
         return 1;
     }
     elist->ecount = ecount;
     return 0;
 }
 
-int CCelistlw_alloc (CCelistlw *elist, int ecount)
-{
-    elist->ends = CC_SAFE_MALLOC (ecount*2, int);
-    elist->len = CC_SAFE_MALLOC (ecount, int);
-    elist->weight = CC_SAFE_MALLOC (ecount, double);
-    if (elist->ends == (int *) NULL ||
-        elist->len == (int *) NULL ||
-        elist->weight == (double *) NULL) {
-        CCelistlw_free (elist);
+int CCelistlw_alloc(CCelistlw* elist, int ecount) {
+    elist->ends = CC_SAFE_MALLOC(ecount * 2, int);
+    elist->len = CC_SAFE_MALLOC(ecount, int);
+    elist->weight = CC_SAFE_MALLOC(ecount, double);
+    if (elist->ends == (int*)NULL || elist->len == (int*)NULL || elist->weight == (double*)NULL) {
+        CCelistlw_free(elist);
         return 1;
     }
     elist->ecount = ecount;
     return 0;
 }
 
-int CCutil_edge_to_cycle (int ncount, int *elist, int *yesno, int *cyc)
-{
+int CCutil_edge_to_cycle(int ncount, int* elist, int* yesno, int* cyc) {
     int *Lside, *Rside;
     int i, k, end1, end2, prev, this, next, start, okfirst, first = 0;
     int rval = 0;
 
     *yesno = 0;
 
-    Lside = CC_SAFE_MALLOC (ncount, int);
-    Rside = CC_SAFE_MALLOC (ncount, int);
+    Lside = CC_SAFE_MALLOC(ncount, int);
+    Rside = CC_SAFE_MALLOC(ncount, int);
     if (!Lside || !Rside) {
-        fprintf (stderr, "out of memory in CCutil_edge_to_cycle\n");
-        rval = 1; goto CLEANUP;
+        fprintf(stderr, "out of memory in CCutil_edge_to_cycle\n");
+        rval = 1;
+        goto CLEANUP;
     }
 
     for (i = 0; i < ncount; i++) {
@@ -219,9 +203,9 @@ int CCutil_edge_to_cycle (int ncount, int *elist, int *yesno, int *cyc)
     for (i = 0, k = 0; i < ncount; i++) {
         end1 = elist[k++];
         end2 = elist[k++];
-        if (Lside[end1] == -1 || Rside[end1] == -1 ||
-            Lside[end2] == -1 || Rside[end2] == -1) {
-            *yesno = 0;  goto CLEANUP;
+        if (Lside[end1] == -1 || Rside[end1] == -1 || Lside[end2] == -1 || Rside[end2] == -1) {
+            *yesno = 0;
+            goto CLEANUP;
         }
     }
     start = elist[0];
@@ -230,8 +214,7 @@ int CCutil_edge_to_cycle (int ncount, int *elist, int *yesno, int *cyc)
     k = 0;
     okfirst = 0;
     do {
-        if (this == first)
-           okfirst = 1;
+        if (this == first) okfirst = 1;
         if (Lside[this] != prev)
             next = Lside[this];
         else
@@ -242,7 +225,8 @@ int CCutil_edge_to_cycle (int ncount, int *elist, int *yesno, int *cyc)
     } while (next != start && k < ncount);
 
     if (k != ncount || !okfirst) {
-        *yesno = 0;  goto CLEANUP;
+        *yesno = 0;
+        goto CLEANUP;
     }
 
     *yesno = 1;
@@ -263,11 +247,10 @@ int CCutil_edge_to_cycle (int ncount, int *elist, int *yesno, int *cyc)
         } while (next != start && k < ncount);
     }
 
-
 CLEANUP:
 
-    CC_IFFREE (Lside, int);
-    CC_IFFREE (Rside, int);
+    CC_IFFREE(Lside, int);
+    CC_IFFREE(Rside, int);
 
     return rval;
 }
