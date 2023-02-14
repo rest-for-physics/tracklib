@@ -29,13 +29,29 @@ jobs:
           path: ${{ env.TRACK_LIB_PATH }}
       - run: python3 ${{ env.TRACK_LIB_PATH }}/pipeline/validateLibrary.py .
 
+  precommit-config:
+    name: Validate pre-commit config
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/lobis/root-geant4-garfield:rest-for-physics
+    steps:
+      - name: Checkout tracklib
+        uses: rest-for-physics/framework/.github/actions/checkout@submodule-validation
+        with:
+          branch: ${{ env.BRANCH_NAME }}
+          repository: rest-for-physics/tracklib
+          path: ${{ env.TRACK_LIB_PATH }}
+      - name: Verify pre-commit config files match
+        run: |
+          cd ${{ env.TRACK_LIB_PATH }}
+          curl https://raw.githubusercontent.com/rest-for-physics/framework/master/scripts/validatePreCommitConfig.py | python
+
   build-tracklib:
     name: Build only tracklib
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/lobis/root-geant4-garfield:rest-for-physics
     steps:
-      - uses: actions/checkout@v3
       - name: Build and install
         uses: rest-for-physics/framework/.github/actions/build@master
         with:
