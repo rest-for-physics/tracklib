@@ -160,8 +160,8 @@ TRestEvent* TRestTrackLineAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) 
         trackEnergyX = tckX->GetEnergy();
         trackEnergyY = tckY->GetEnergy();
 
-        if (trackEnergyX > 0) trackBalanceX = fTrackEvent->GetEnergy("X") / trackEnergyX;
-        if (trackEnergyY > 0) trackBalanceY = fTrackEvent->GetEnergy("Y") / trackEnergyY;
+        if (trackEnergyX > 0) trackBalanceX = trackEnergyX / fTrackEvent->GetEnergy("X");
+        if (trackEnergyY > 0) trackBalanceY = trackEnergyY / fTrackEvent->GetEnergy("Y");
     }
 
     Double_t trackEnergy = trackEnergyX + trackEnergyY;
