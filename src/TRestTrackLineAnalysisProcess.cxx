@@ -39,6 +39,7 @@
 /// ### Observables
 /// * **trackBalanceXZ**: Track balance between the most energetic track and all tracks in the XZ projection
 /// * **trackBalanceYZ**: Track balance between the most energetic track and all tracks in the YZ projection
+/// * **trackBalance**: Total track balance between the most energetic tracks (XZ + YZ) and all tracks
 /// * **originX**: Track origin in the X cordinate
 /// * **originY**: Track origin in the Y cordinate
 /// * **originZ**: Track origin in the Z cordinate
@@ -56,6 +57,7 @@
 ///            verboseLevel="silent" >
 ///                   <observable name="trackBalanceXZ" value="ON" />
 ///                   <observable name="trackBalanceYZ" value="ON" />
+///                   <observable name="trackBalance" value="ON" />
 ///                   <observable name="originX" value="ON" />
 ///                   <observable name="originY" value="ON" />
 ///                   <observable name="originZ" value="ON" />
@@ -138,7 +140,7 @@ TRestEvent* TRestTrackLineAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) 
     Double_t angle = -10;
     bool downwards = true;
     Double_t trackEnergyX = 0, trackEnergyY = 0;
-    Double_t trackBalanceX = 0, trackBalanceY = 0;
+    Double_t trackBalanceX = 0, trackBalanceY = 0, trackBalance = 0;
 
     if (tckX && tckY) {
         // Retreive origin and end of the track for the XZ projection
@@ -162,6 +164,9 @@ TRestEvent* TRestTrackLineAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) 
 
         if (trackEnergyX > 0) trackBalanceX = trackEnergyX / fTrackEvent->GetEnergy("X");
         if (trackEnergyY > 0) trackBalanceY = trackEnergyY / fTrackEvent->GetEnergy("Y");
+        if (trackEnergyX > 0 && trackEnergyY > 0)
+            trackBalance =
+                (trackEnergyX + trackEnergyY) / (fTrackEvent->GetEnergy("X") + fTrackEvent->GetEnergy("Y"));
     }
 
     Double_t trackEnergy = trackEnergyX + trackEnergyY;
@@ -169,6 +174,7 @@ TRestEvent* TRestTrackLineAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) 
     // A new value for each observable is added
     SetObservableValue("trackBalanceX", trackBalanceX);
     SetObservableValue("trackBalanceY", trackBalanceY);
+    SetObservableValue("trackBalance", trackBalance);
     SetObservableValue("originX", orig.X());
     SetObservableValue("originY", orig.Y());
     SetObservableValue("originZ", orig.Z());
