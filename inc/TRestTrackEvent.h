@@ -108,6 +108,7 @@ class TRestTrackEvent : public TRestEvent {
 
     Int_t GetOriginTrackID(Int_t tck);
 
+    Double_t GetMaxTrackRelativeZ();
     void GetMaxTrackBoundaries(TVector3& orig, TVector3& end);
     void GetOriginEnd(std::vector<TGraph*>& originGr, std::vector<TGraph*>& endGr,
                       std::vector<TLegend*>& leg);

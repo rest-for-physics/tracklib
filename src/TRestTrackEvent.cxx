@@ -337,6 +337,49 @@ void TRestTrackEvent::GetMaxTrackBoundaries(TVector3& orig, TVector3& end) {
     end = TVector3(endX.X(), endY.Y(), endZ);
 }
 
+///////////////////////////////////////////////
+/// \brief Function calculate the relative Z of the maximum
+/// track to cross check if the track is upwards or downwards
+///
+Double_t TRestTrackEvent::GetMaxTrackRelativeZ() {
+    TRestTrack* tckX = GetMaxEnergyTrackInX();
+    TRestTrack* tckY = GetMaxEnergyTrackInY();
+
+    std::vector<std::pair<double, double> > zEn;
+    double totEn = 0;
+
+    for (size_t i = 0; i < tckX->GetVolumeHits()->GetNumberOfHits(); i++) {
+        double en = tckX->GetVolumeHits()->GetEnergy(i);
+        double z = tckX->GetVolumeHits()->GetZ(i);
+        zEn.push_back(std::make_pair(z, en));
+        totEn += en;
+    }
+
+    for (size_t i = 0; i < tckY->GetVolumeHits()->GetNumberOfHits(); i++) {
+        double en = tckY->GetVolumeHits()->GetEnergy(i);
+        double z = tckY->GetVolumeHits()->GetZ(i);
+        zEn.push_back(std::make_pair(z, en));
+        totEn += en;
+    }
+
+    std::sort(zEn.begin(), zEn.end());
+
+    double integ = 0;
+    size_t pos = 0;
+    for (pos = 0; pos < zEn.size(); pos++) {
+        integ += zEn[pos].second;
+        if (integ >= totEn / 2.) break;
+    }
+
+    double length = zEn.front().first - zEn.back().first;
+    double diff = zEn.front().first - zEn[pos].first;
+
+    if (length == 0)
+        return 0;
+    else
+        return diff / length;
+}
+
 void TRestTrackEvent::PrintOnlyTracks() {
     cout << "TrackEvent " << GetID() << endl;
     cout << "-----------------------" << endl;
