@@ -315,6 +315,74 @@ void TRestTrackEvent::SetLevels() {
 
 ///////////////////////////////////////////////
 /// \brief This function retreive the origin and the end of the track
+/// based after the reconstruction of a 3D track. It requires the track to have
+/// the same number of hits in X and Y. Two different directions are scanned and
+/// the one which maximize the track length is retreived. Afterwards the position
+/// of the closer hit to the half integral of the track is obtained. Then, the origin
+/// of the track is defined as the further edge to the half integral, while the track
+/// end is defined as the closest edge.
+///
+TRestVolumeHits TRestTrackEvent::GetMaxTrackBoundaries3D(TVector3& orig, TVector3& end) {
+    TRestVolumeHits hitsX = (TRestVolumeHits) * (GetMaxEnergyTrackInX()->GetVolumeHits());
+    TRestVolumeHits hitsY = (TRestVolumeHits) * (GetMaxEnergyTrackInY()->GetVolumeHits());
+
+    double totEn = 0;
+
+    const int nHits = std::min(hitsX.GetNumberOfHits(), hitsY.GetNumberOfHits());
+    TRestVolumeHits best3DHits, hits3D;
+
+    for (int i = 0; i < nHits; i++) {
+        double enX = hitsX.GetEnergy(i);
+        double enY = hitsY.GetEnergy(i);
+        double posXZ = hitsX.GetZ(i);
+        double posYZ = hitsY.GetZ(i);
+        double avgZ = (enX * posXZ + enY * posYZ) / (enX + enY);
+        best3DHits.AddHit(hitsX.GetX(i), hitsY.GetY(i), avgZ, enX + enY, 0, XYZ, 0, 0, 0);
+        const int j = nHits - i - 1;
+        enY = hitsY.GetEnergy(j);
+        posYZ = hitsY.GetZ(j);
+        avgZ = (enX * posXZ + enY * posYZ) / (enX + enY);
+        hits3D.AddHit(hitsX.GetX(i), hitsY.GetY(j), avgZ, enX + enY, 0, XYZ, 0, 0, 0);
+        totEn += enX + enY;
+    }
+
+    double length = (best3DHits.GetPosition(0) - best3DHits.GetPosition(nHits - 1)).Mag();
+
+    if ((hits3D.GetPosition(0) - hits3D.GetPosition(nHits - 1)).Mag() > length) {
+        best3DHits = hits3D;
+    }
+
+    const TVector3 pos0 = best3DHits.GetPosition(0);
+    const TVector3 posE = best3DHits.GetPosition(best3DHits.GetNumberOfHits() - 1);
+
+    double integ = 0;
+    unsigned int pos = 0;
+    for (pos = 0; pos < best3DHits.GetNumberOfHits(); pos++) {
+        integ += best3DHits.GetEnergy(pos);
+        if (integ > totEn / 2.) break;
+    }
+
+    auto intPos = best3DHits.GetPosition(pos);
+    const double intToFirst = (pos0 - intPos).Mag();
+    const double intToLast = (posE - intPos).Mag();
+
+    RESTDebug << "Integ pos " << pos << " Pos to first " << intToFirst << " last " << intToLast << RESTendl;
+    if (intToFirst < intToLast) {
+        end = pos0;
+        orig = posE;
+    } else {
+        orig = pos0;
+        end = posE;
+    }
+
+    RESTDebug << "Origin " << orig.X() << " " << orig.Y() << " " << orig.Z() << RESTendl;
+    RESTDebug << "End    " << end.X() << " " << end.Y() << " " << end.Z() << RESTendl;
+
+    return best3DHits;
+}
+
+///////////////////////////////////////////////
+/// \brief This function retreive the origin and the end of the track
 /// based on the most energetic hit. The origin is defined as the further
 /// hit deposition edge to the most energetic hit, while the track end is
 /// defined as the closest edge to the most energetic hit.

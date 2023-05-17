@@ -34,7 +34,8 @@
 /// length, energy and downwards (bool).
 ///
 /// ### Parameters
-/// None
+/// * **lineAnaMethod**: Method to evaluate the origin and end of the track, currently
+/// 3D method and default are implemented
 ///
 /// ### Observables
 /// * **trackBalanceXZ**: Track balance between the most energetic track and all tracks in the XZ projection
@@ -146,7 +147,17 @@ TRestEvent* TRestTrackLineAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) 
 
     if (tckX && tckY) {
         // Retreive origin and end of the track for the XZ projection
-        fTrackEvent->GetMaxTrackBoundaries(orig, end);
+        if (fLineAnaMethod == "3D") {
+            fTrackEvent->GetMaxTrackBoundaries3D(orig, end);
+        } else {
+            if (fLineAnaMethod != "default") {
+                RESTWarning
+                    << "Line analysis method " << fLineAnaMethod
+                    << " is not implemented, supported methods are: default and 3D. Falling back to default."
+                    << RESTendl;
+            }
+            fTrackEvent->GetMaxTrackBoundaries(orig, end);
+        }
 
         RESTDebug << "Origin: " << orig.X() << " y: " << orig.Y() << " z: " << orig.Z() << RESTendl;
         RESTDebug << "End : " << end.X() << " y: " << end.Y() << " z: " << end.Z() << RESTendl;

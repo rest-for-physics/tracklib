@@ -112,6 +112,7 @@ class TRestTrackEvent : public TRestEvent {
     void GetMaxTrackBoundaries(TVector3& orig, TVector3& end);
     void GetOriginEnd(std::vector<TGraph*>& originGr, std::vector<TGraph*>& endGr,
                       std::vector<TLegend*>& leg);
+    TRestVolumeHits GetMaxTrackBoundaries3D(TVector3& orig, TVector3& end);
     void DrawOriginEnd(TPad* pad, std::vector<TGraph*>& originGr, std::vector<TGraph*>& endGr,
                        std::vector<TLegend*>& leg);
 
