@@ -323,10 +323,17 @@ void TRestTrackEvent::SetLevels() {
 /// end is defined as the closest edge.
 ///
 TRestVolumeHits TRestTrackEvent::GetMaxTrackBoundaries3D(TVector3& orig, TVector3& end) {
-    TRestVolumeHits hitsX = (TRestVolumeHits) * (GetMaxEnergyTrackInX()->GetVolumeHits());
-    TRestVolumeHits hitsY = (TRestVolumeHits) * (GetMaxEnergyTrackInY()->GetVolumeHits());
 
-    double totEn = 0;
+    TRestTrack* tckX = GetMaxEnergyTrackInX();
+    TRestTrack* tckY = GetMaxEnergyTrackInY();
+
+    if(tckX == nullptr || tckY == nullptr){
+      RESTWarning << "Track is empty, skipping"<<RESTendl;
+      return {};
+    }
+
+    TRestVolumeHits hitsX = (TRestVolumeHits) * (tckX->GetVolumeHits());
+    TRestVolumeHits hitsY = (TRestVolumeHits) * (tckY->GetVolumeHits());
 
     const int nHits = std::min(hitsX.GetNumberOfHits(), hitsY.GetNumberOfHits());
     TRestVolumeHits best3DHits, hits3D;
@@ -343,13 +350,17 @@ TRestVolumeHits TRestTrackEvent::GetMaxTrackBoundaries3D(TVector3& orig, TVector
         posYZ = hitsY.GetZ(j);
         avgZ = (enX * posXZ + enY * posYZ) / (enX + enY);
         hits3D.AddHit(hitsX.GetX(i), hitsY.GetY(j), avgZ, enX + enY, 0, XYZ, 0, 0, 0);
-        totEn += enX + enY;
     }
 
     double length = (best3DHits.GetPosition(0) - best3DHits.GetPosition(nHits - 1)).Mag();
 
     if ((hits3D.GetPosition(0) - hits3D.GetPosition(nHits - 1)).Mag() > length) {
         best3DHits = hits3D;
+    }
+
+    double totEn =0;
+    for (unsigned int i = 0; i < best3DHits.GetNumberOfHits(); i++) {
+        totEn += best3DHits.GetEnergy(i);
     }
 
     const TVector3 pos0 = best3DHits.GetPosition(0);
@@ -391,6 +402,11 @@ void TRestTrackEvent::GetMaxTrackBoundaries(TVector3& orig, TVector3& end) {
     TRestTrack* tckX = GetMaxEnergyTrackInX();
     TRestTrack* tckY = GetMaxEnergyTrackInY();
 
+    if(tckX == nullptr || tckY == nullptr){
+      RESTWarning << "Track is empty, skipping"<<RESTendl;
+      return;
+    }
+
     TVector3 origX, endX;
     // Retreive origin and end of the track for the XZ projection
     tckX->GetBoundaries(origX, endX);
@@ -412,6 +428,11 @@ void TRestTrackEvent::GetMaxTrackBoundaries(TVector3& orig, TVector3& end) {
 Double_t TRestTrackEvent::GetMaxTrackRelativeZ() {
     TRestTrack* tckX = GetMaxEnergyTrackInX();
     TRestTrack* tckY = GetMaxEnergyTrackInY();
+
+    if(tckX == nullptr || tckY == nullptr){
+      RESTWarning << "Track is empty, skipping"<<RESTendl;
+      return -1;
+    }
 
     std::vector<std::pair<double, double> > zEn;
     double totEn = 0;
