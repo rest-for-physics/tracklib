@@ -314,7 +314,7 @@ void TRestTrackEvent::SetLevels() {
 }
 
 ///////////////////////////////////////////////
-/// \brief This function retreive the origin and the end of the track
+/// \brief This function retrieves the origin and the end track positions
 /// based after the reconstruction of a 3D track. It requires the track to have
 /// the same number of hits in X and Y. Two different directions are scanned and
 /// the one which maximize the track length is retreived. Afterwards the position
