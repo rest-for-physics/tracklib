@@ -317,7 +317,7 @@ void TRestTrackEvent::SetLevels() {
 /// \brief This function retrieves the origin and the end track positions
 /// based after the reconstruction of a 3D track. It requires the track to have
 /// the same number of hits in X and Y. Two different directions are scanned and
-/// the one which maximize the track length is retreived. Afterwards the position
+/// the one which maximizes the track length is retrieved. Afterwards the position
 /// of the closer hit to the half integral of the track is obtained. Then, the origin
 /// of the track is defined as the further edge to the half integral, while the track
 /// end is defined as the closest edge.
