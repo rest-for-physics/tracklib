@@ -406,7 +406,7 @@ void TRestTrackEvent::GetMaxTrackBoundaries(TVector3& orig, TVector3& end) {
 }
 
 ///////////////////////////////////////////////
-/// \brief Function calculate the relative Z of the maximum
+/// \brief Function to calculate the relative Z of the most energetic
 /// track to cross check if the track is upwards or downwards
 ///
 Double_t TRestTrackEvent::GetMaxTrackRelativeZ() {
