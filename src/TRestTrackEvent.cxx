@@ -323,13 +323,12 @@ void TRestTrackEvent::SetLevels() {
 /// end is defined as the closest edge.
 ///
 TRestVolumeHits TRestTrackEvent::GetMaxTrackBoundaries3D(TVector3& orig, TVector3& end) {
-
     TRestTrack* tckX = GetMaxEnergyTrackInX();
     TRestTrack* tckY = GetMaxEnergyTrackInY();
 
-    if(tckX == nullptr || tckY == nullptr){
-      RESTWarning << "Track is empty, skipping"<<RESTendl;
-      return {};
+    if (tckX == nullptr || tckY == nullptr) {
+        RESTWarning << "Track is empty, skipping" << RESTendl;
+        return {};
     }
 
     TRestVolumeHits hitsX = (TRestVolumeHits) * (tckX->GetVolumeHits());
@@ -358,7 +357,7 @@ TRestVolumeHits TRestTrackEvent::GetMaxTrackBoundaries3D(TVector3& orig, TVector
         best3DHits = hits3D;
     }
 
-    double totEn =0;
+    double totEn = 0;
     for (unsigned int i = 0; i < best3DHits.GetNumberOfHits(); i++) {
         totEn += best3DHits.GetEnergy(i);
     }
@@ -402,9 +401,9 @@ void TRestTrackEvent::GetMaxTrackBoundaries(TVector3& orig, TVector3& end) {
     TRestTrack* tckX = GetMaxEnergyTrackInX();
     TRestTrack* tckY = GetMaxEnergyTrackInY();
 
-    if(tckX == nullptr || tckY == nullptr){
-      RESTWarning << "Track is empty, skipping"<<RESTendl;
-      return;
+    if (tckX == nullptr || tckY == nullptr) {
+        RESTWarning << "Track is empty, skipping" << RESTendl;
+        return;
     }
 
     TVector3 origX, endX;
@@ -429,9 +428,9 @@ Double_t TRestTrackEvent::GetMaxTrackRelativeZ() {
     TRestTrack* tckX = GetMaxEnergyTrackInX();
     TRestTrack* tckY = GetMaxEnergyTrackInY();
 
-    if(tckX == nullptr || tckY == nullptr){
-      RESTWarning << "Track is empty, skipping"<<RESTendl;
-      return -1;
+    if (tckX == nullptr || tckY == nullptr) {
+        RESTWarning << "Track is empty, skipping" << RESTendl;
+        return -1;
     }
 
     std::vector<std::pair<double, double> > zEn;
