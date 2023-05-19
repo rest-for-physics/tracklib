@@ -34,7 +34,8 @@
 /// length, energy and downwards (bool).
 ///
 /// ### Parameters
-/// None
+/// * **lineAnaMethod**: Method to evaluate the origin and end of the track, currently
+/// 3D method and default are implemented
 ///
 /// ### Observables
 /// * **trackBalanceXZ**: Track balance between the most energetic track and all tracks in the XZ projection
@@ -50,6 +51,8 @@
 /// * **angle**: Track polar angle in radians
 /// * **downwards**: (bool) true if the track direction is downwards, false otherwise
 /// * **totalEnergy**: Energy of the track
+/// * **relativeZ**: Relative Z position in which the half of the integral is reached,
+/// when this value is below 0.5 it means that the track is downwards and upwards otherwise
 ///
 /// ### Examples
 /// \code
@@ -140,11 +143,21 @@ TRestEvent* TRestTrackLineAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) 
     Double_t angle = -10;
     bool downwards = true;
     Double_t trackEnergyX = 0, trackEnergyY = 0;
-    Double_t trackBalanceX = 0, trackBalanceY = 0, trackBalance = 0;
+    Double_t trackBalanceX = 0, trackBalanceY = 0, trackBalance = 0, relZ = 0;
 
     if (tckX && tckY) {
         // Retreive origin and end of the track for the XZ projection
-        fTrackEvent->GetMaxTrackBoundaries(orig, end);
+        if (fLineAnaMethod == "3D") {
+            fTrackEvent->GetMaxTrackBoundaries3D(orig, end);
+        } else {
+            if (fLineAnaMethod != "default") {
+                RESTWarning
+                    << "Line analysis method " << fLineAnaMethod
+                    << " is not implemented, supported methods are: default and 3D. Falling back to default."
+                    << RESTendl;
+            }
+            fTrackEvent->GetMaxTrackBoundaries(orig, end);
+        }
 
         RESTDebug << "Origin: " << orig.X() << " y: " << orig.Y() << " z: " << orig.Z() << RESTendl;
         RESTDebug << "End : " << end.X() << " y: " << end.Y() << " z: " << end.Z() << RESTendl;
@@ -167,6 +180,7 @@ TRestEvent* TRestTrackLineAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) 
         if (trackEnergyX > 0 && trackEnergyY > 0)
             trackBalance =
                 (trackEnergyX + trackEnergyY) / (fTrackEvent->GetEnergy("X") + fTrackEvent->GetEnergy("Y"));
+        relZ = fTrackEvent->GetMaxTrackRelativeZ();
     }
 
     Double_t trackEnergy = trackEnergyX + trackEnergyY;
@@ -185,6 +199,7 @@ TRestEvent* TRestTrackLineAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) 
     SetObservableValue("angle", angle);
     SetObservableValue("downwards", downwards);
     SetObservableValue("totalEnergy", trackEnergy);
+    SetObservableValue("relativeZ", relZ);
 
     if (!tckX || !tckY) return nullptr;
 

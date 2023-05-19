@@ -314,6 +314,84 @@ void TRestTrackEvent::SetLevels() {
 }
 
 ///////////////////////////////////////////////
+/// \brief This function retrieves the origin and the end track positions
+/// based after the reconstruction of a 3D track. It requires the track to have
+/// the same number of hits in X and Y. Two different directions are scanned and
+/// the one which maximizes the track length is retrieved. Afterwards the position
+/// of the closer hit to the half integral of the track is obtained. Then, the origin
+/// of the track is defined as the further edge to the half integral, while the track
+/// end is defined as the closest edge.
+///
+TRestVolumeHits TRestTrackEvent::GetMaxTrackBoundaries3D(TVector3& orig, TVector3& end) {
+    TRestTrack* tckX = GetMaxEnergyTrackInX();
+    TRestTrack* tckY = GetMaxEnergyTrackInY();
+
+    if (tckX == nullptr || tckY == nullptr) {
+        RESTWarning << "Track is empty, skipping" << RESTendl;
+        return {};
+    }
+
+    TRestVolumeHits hitsX = (TRestVolumeHits) * (tckX->GetVolumeHits());
+    TRestVolumeHits hitsY = (TRestVolumeHits) * (tckY->GetVolumeHits());
+
+    const int nHits = std::min(hitsX.GetNumberOfHits(), hitsY.GetNumberOfHits());
+    TRestVolumeHits best3DHits, hits3D;
+
+    for (int i = 0; i < nHits; i++) {
+        double enX = hitsX.GetEnergy(i);
+        double enY = hitsY.GetEnergy(i);
+        double posXZ = hitsX.GetZ(i);
+        double posYZ = hitsY.GetZ(i);
+        double avgZ = (enX * posXZ + enY * posYZ) / (enX + enY);
+        best3DHits.AddHit(hitsX.GetX(i), hitsY.GetY(i), avgZ, enX + enY, 0, XYZ, 0, 0, 0);
+        const int j = nHits - i - 1;
+        enY = hitsY.GetEnergy(j);
+        posYZ = hitsY.GetZ(j);
+        avgZ = (enX * posXZ + enY * posYZ) / (enX + enY);
+        hits3D.AddHit(hitsX.GetX(i), hitsY.GetY(j), avgZ, enX + enY, 0, XYZ, 0, 0, 0);
+    }
+
+    double length = (best3DHits.GetPosition(0) - best3DHits.GetPosition(nHits - 1)).Mag();
+
+    if ((hits3D.GetPosition(0) - hits3D.GetPosition(nHits - 1)).Mag() > length) {
+        best3DHits = hits3D;
+    }
+
+    double totEn = 0;
+    for (unsigned int i = 0; i < best3DHits.GetNumberOfHits(); i++) {
+        totEn += best3DHits.GetEnergy(i);
+    }
+
+    const TVector3 pos0 = best3DHits.GetPosition(0);
+    const TVector3 posE = best3DHits.GetPosition(best3DHits.GetNumberOfHits() - 1);
+
+    double integ = 0;
+    unsigned int pos = 0;
+    for (pos = 0; pos < best3DHits.GetNumberOfHits(); pos++) {
+        integ += best3DHits.GetEnergy(pos);
+        if (integ > totEn / 2.) break;
+    }
+
+    auto intPos = best3DHits.GetPosition(pos);
+    const double intToFirst = (pos0 - intPos).Mag();
+    const double intToLast = (posE - intPos).Mag();
+
+    RESTDebug << "Integ pos " << pos << " Pos to first " << intToFirst << " last " << intToLast << RESTendl;
+    if (intToFirst < intToLast) {
+        end = pos0;
+        orig = posE;
+    } else {
+        orig = pos0;
+        end = posE;
+    }
+
+    RESTDebug << "Origin " << orig.X() << " " << orig.Y() << " " << orig.Z() << RESTendl;
+    RESTDebug << "End    " << end.X() << " " << end.Y() << " " << end.Z() << RESTendl;
+
+    return best3DHits;
+}
+
+///////////////////////////////////////////////
 /// \brief This function retreive the origin and the end of the track
 /// based on the most energetic hit. The origin is defined as the further
 /// hit deposition edge to the most energetic hit, while the track end is
@@ -322,6 +400,11 @@ void TRestTrackEvent::SetLevels() {
 void TRestTrackEvent::GetMaxTrackBoundaries(TVector3& orig, TVector3& end) {
     TRestTrack* tckX = GetMaxEnergyTrackInX();
     TRestTrack* tckY = GetMaxEnergyTrackInY();
+
+    if (tckX == nullptr || tckY == nullptr) {
+        RESTWarning << "Track is empty, skipping" << RESTendl;
+        return;
+    }
 
     TVector3 origX, endX;
     // Retreive origin and end of the track for the XZ projection
@@ -335,6 +418,54 @@ void TRestTrackEvent::GetMaxTrackBoundaries(TVector3& orig, TVector3& end) {
 
     orig = TVector3(origX.X(), origY.Y(), originZ);
     end = TVector3(endX.X(), endY.Y(), endZ);
+}
+
+///////////////////////////////////////////////
+/// \brief Function to calculate the relative Z of the most energetic
+/// track to crosscheck if the track is upwards or downwards
+///
+Double_t TRestTrackEvent::GetMaxTrackRelativeZ() {
+    TRestTrack* tckX = GetMaxEnergyTrackInX();
+    TRestTrack* tckY = GetMaxEnergyTrackInY();
+
+    if (tckX == nullptr || tckY == nullptr) {
+        RESTWarning << "Track is empty, skipping" << RESTendl;
+        return -1;
+    }
+
+    std::vector<std::pair<double, double> > zEn;
+    double totEn = 0;
+
+    for (size_t i = 0; i < tckX->GetVolumeHits()->GetNumberOfHits(); i++) {
+        double en = tckX->GetVolumeHits()->GetEnergy(i);
+        double z = tckX->GetVolumeHits()->GetZ(i);
+        zEn.push_back(std::make_pair(z, en));
+        totEn += en;
+    }
+
+    for (size_t i = 0; i < tckY->GetVolumeHits()->GetNumberOfHits(); i++) {
+        double en = tckY->GetVolumeHits()->GetEnergy(i);
+        double z = tckY->GetVolumeHits()->GetZ(i);
+        zEn.push_back(std::make_pair(z, en));
+        totEn += en;
+    }
+
+    std::sort(zEn.begin(), zEn.end());
+
+    double integ = 0;
+    size_t pos = 0;
+    for (pos = 0; pos < zEn.size(); pos++) {
+        integ += zEn[pos].second;
+        if (integ >= totEn / 2.) break;
+    }
+
+    double length = zEn.front().first - zEn.back().first;
+    double diff = zEn.front().first - zEn[pos].first;
+
+    if (length == 0)
+        return 0;
+    else
+        return diff / length;
 }
 
 void TRestTrackEvent::PrintOnlyTracks() {

@@ -31,10 +31,12 @@
 class TRestTrackLineAnalysisProcess : public TRestEventProcess {
    private:
     /// A pointer to the input event Track Event
-    TRestTrackEvent* fTrackEvent;
+    TRestTrackEvent* fTrackEvent;  //!
 
     /// A pointer to the output event Track event
-    TRestTrackEvent* fOutTrackEvent;
+    TRestTrackEvent* fOutTrackEvent;  //!
+
+    std::string fLineAnaMethod = "default";  //<
 
     void Initialize() override;
 
@@ -49,6 +51,7 @@ class TRestTrackLineAnalysisProcess : public TRestEventProcess {
 
     void PrintMetadata() override {
         BeginPrintProcess();
+        RESTMetadata << "Track Analysis method " << fLineAnaMethod << RESTendl;
         EndPrintProcess();
     }
 
@@ -59,6 +62,6 @@ class TRestTrackLineAnalysisProcess : public TRestEventProcess {
     // Destructor
     ~TRestTrackLineAnalysisProcess();
 
-    ClassDefOverride(TRestTrackLineAnalysisProcess, 1);
+    ClassDefOverride(TRestTrackLineAnalysisProcess, 2);
 };
 #endif
