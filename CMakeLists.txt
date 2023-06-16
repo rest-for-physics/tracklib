@@ -1,4 +1,12 @@
-set(LibraryVersion "1.5")
+# Perhaps this could be a common cmake macro inside framework
+execute_process(
+    COMMAND git describe --abbrev=0 --tags
+    WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+    OUTPUT_VARIABLE LibraryVersion
+    ERROR_VARIABLE gitstatuserr)
+
+string(REPLACE "\n" "" LibraryVersion ${LibraryVersion})
+message("Track library version: ${LibraryVersion}")
 add_definitions(-DLIBRARY_VERSION="${LibraryVersion}")
 
 file(
