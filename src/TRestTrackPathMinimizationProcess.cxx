@@ -128,7 +128,7 @@ void TRestTrackPathMinimizationProcess::NearestNeighbour(TRestVolumeHits* hits, 
         int k = s;
         while (!vertex.empty()) {
             int closestN = 0;
-            int index = 0, bestIndex;
+            int index = 0, bestIndex = 0;
             double minDist = 1E9;
             for (const auto& v : vertex) {
                 const double d = dist[k][v];
