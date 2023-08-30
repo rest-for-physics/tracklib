@@ -40,7 +40,7 @@ void TRestTrack::Initialize() {
 
 void TRestTrack::SetVolumeHits(TRestVolumeHits hits) {
     fVolumeHits = hits;
-    fTrackEnergy = hits.GetEnergyIntegral();
+    fTrackEnergy = hits.GetTotalEnergy();
     fTrackLength = hits.GetTotalDistance();
 }
 
