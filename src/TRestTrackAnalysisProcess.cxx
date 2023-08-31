@@ -984,7 +984,7 @@ TRestEvent* TRestTrackAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
             auto time = arg->GetTime(n);
             auto type = arg->GetType(n);
 
-            hits.AddHit(x, y, z, eDep, time, type);
+            hits.AddHit({x, y, z}, eDep, time, type);
         }
     }
     tckMaxTrack_XYZ_GaussSigmaZ = hits.GetGaussSigmaZ();
