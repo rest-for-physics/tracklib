@@ -40,8 +40,8 @@ class TRestTrackLinearizationProcess : public TRestEventProcess {
     Int_t fMaxNodes = 6;
 
    public:
-    any GetInputEvent() const override { return fTrackEvent; }
-    any GetOutputEvent() const override { return fOutTrackEvent; }
+    RESTValue GetInputEvent() const override { return fTrackEvent; }
+    RESTValue GetOutputEvent() const override { return fOutTrackEvent; }
 
     void InitProcess() override;
     TRestEvent* ProcessEvent(TRestEvent* inputEvent) override;
