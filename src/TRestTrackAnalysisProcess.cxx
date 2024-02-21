@@ -1037,6 +1037,9 @@ TRestEvent* TRestTrackAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     }
 
     Double_t trackSecondMaxEnergy = tckSecondMaxEnergy_X + tckSecondMaxEnergy_Y;
+    if (fInputTrackEvent->GetSecondMaxEnergyTrack("XYZ") != nullptr) {
+        trackSecondMaxEnergy = fInputTrackEvent->GetSecondMaxEnergyTrack("XYZ")->GetEnergy();
+    }
 
     SetObservableValue((string) "SecondMaxTrackEnergy", trackSecondMaxEnergy);
     SetObservableValue((string) "SecondMaxTrackSigmaX", tckSecondMaxXYZ_SigmaX);

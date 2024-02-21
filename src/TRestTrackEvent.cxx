@@ -183,12 +183,12 @@ TRestTrack* TRestTrackEvent::GetSecondMaxEnergyTrack(TString option) {
 
         Double_t en = t->GetEnergy();
 
-        if (option == "X" && t->isXZ()) {
+        if (option == "X" && (t->isXZ() || t->isXYZ())) {
             if (en > maxEnergy) {
                 maxEnergy = t->GetEnergy();
                 track = tck;
             }
-        } else if (option == "Y" && t->isYZ()) {
+        } else if (option == "Y" && (t->isYZ() || t->isXYZ())) {
             if (t->GetEnergy() > maxEnergy) {
                 maxEnergy = t->GetEnergy();
                 track = tck;
@@ -226,10 +226,10 @@ Double_t TRestTrackEvent::GetEnergy(TString option) {
         if (option == "")
             en += t->GetEnergy();
 
-        else if (option == "X" && t->isXZ())
+        else if (option == "X" && (t->isXZ() || t->isXYZ()))
             en += t->GetEnergy();
 
-        else if (option == "Y" && t->isYZ())
+        else if (option == "Y" && (t->isYZ() || t->isXYZ()))
             en += t->GetEnergy();
 
         else if (option == "XYZ" && t->isXYZ())
