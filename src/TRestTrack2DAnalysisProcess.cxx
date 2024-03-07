@@ -22,6 +22,9 @@
 
 /////////////////////////////////////////////////////////////////////////////
 ///
+/// Analysis process for 2D tracks, XZ-YZ.
+/// For other types of tracks all observables are 0.
+///
 /// ### Observables
 /// SetObservableValue("NTracksX", NTracksX);
 /// SetObservableValue("NTracksY", NTracksY);
@@ -89,7 +92,7 @@ TRestTrack2DAnalysisProcess::TRestTrack2DAnalysisProcess(const char* configFilen
     if (LoadConfigFromFile(configFilename)) LoadDefaultConfig();
 }
 
-TRestTrack2DAnalysisProcess::~TRestTrack2DAnalysisProcess() { delete fOutputTrackEvent; }
+TRestTrack2DAnalysisProcess::~TRestTrack2DAnalysisProcess() { delete fTrackEvent; }
 
 void TRestTrack2DAnalysisProcess::LoadDefaultConfig() { SetTitle("Default config"); }
 
@@ -97,8 +100,7 @@ void TRestTrack2DAnalysisProcess::Initialize() {
     SetSectionName(this->ClassName());
     SetLibraryVersion(LIBRARY_VERSION);
 
-    fInputTrackEvent = nullptr;
-    fOutputTrackEvent = new TRestTrackEvent();
+    fTrackEvent = new TRestTrackEvent();
 }
 
 void TRestTrack2DAnalysisProcess::LoadConfig(const string& configFilename, const string& name) {
@@ -180,78 +182,78 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
 
         TRestTrack* t = fTrackEvent->GetTrack(tck);
 
-        if (t->isXZ) {
-            XZ_NHitsX[t->GetTrackID] = t->GetNumberOfHits();
-            XZ_EnergyX[t->GetTrackID] = t->GetTrackEnergy();
-            XZ_SigmaX[t->GetTrackID] = t->GetHits()->GetSigmaX();
-            XZ_SigmaZ[t->GetTrackID] = t->GetHits()->GetSigmaZ2();
-            XZ_GaussSigmaX[t->GetTrackID] = t->GetHits()->GetGaussSigmaX();
-            XZ_GaussSigmaZ[t->GetTrackID] = t->GetHits()->GetGaussSigmaZ();
-            XZ_LengthX[t->GetTrackID] = t->GetLength();
-            XZ_VolumeX[t->GetTrackID] = t->GetVolume();
-            XZ_MeanX[t->GetTrackID] = t->GetMeanPosition()->X();
-            XZ_MeanZ[t->GetTrackID] = t->GetMeanPosition()->Z();
-            XZ_SkewZ[t->GetTrackID] = t->GetHits()->GetSkewZ();
+        if (t->isXZ()) {
+            XZ_NHitsX[t->GetTrackID()] = t->GetNumberOfHits();
+            XZ_EnergyX[t->GetTrackID()] = t->GetTrackEnergy();
+            XZ_SigmaX[t->GetTrackID()] = t->GetHits()->GetSigmaX();
+            XZ_SigmaZ[t->GetTrackID()] = t->GetHits()->GetSigmaZ2();
+            XZ_GaussSigmaX[t->GetTrackID()] = t->GetHits()->GetGaussSigmaX();
+            XZ_GaussSigmaZ[t->GetTrackID()] = t->GetHits()->GetGaussSigmaZ();
+            XZ_LengthX[t->GetTrackID()] = t->GetLength();
+            XZ_VolumeX[t->GetTrackID()] = t->GetVolume();
+            XZ_MeanX[t->GetTrackID()] = t->GetMeanPosition()->X();
+            XZ_MeanZ[t->GetTrackID()] = t->GetMeanPosition()->Z();
+            XZ_SkewZ[t->GetTrackID()] = t->GetHits()->GetSkewZ();
 
-            YZ_NHitsY[t->GetTrackID] = 0;
-            YZ_EnergyY[t->GetTrackID] = 0;
-            YZ_SigmaY[t->GetTrackID] = 0;
-            YZ_SigmaZ[t->GetTrackID] = 0;
-            YZ_GaussSigmaY[t->GetTrackID] = 0;
-            YZ_GaussSigmaZ[t->GetTrackID] = 0;
-            YZ_LengthY[t->GetTrackID] = 0;
-            YZ_VolumeY[t->GetTrackID] = 0;
-            YZ_MeanY[t->GetTrackID] = 0;
-            YZ_MeanZ[t->GetTrackID] = 0;
-            YZ_SkewZ[t->GetTrackID] = 0;
+            YZ_NHitsY[t->GetTrackID()] = 0;
+            YZ_EnergyY[t->GetTrackID()] = 0;
+            YZ_SigmaY[t->GetTrackID()] = 0;
+            YZ_SigmaZ[t->GetTrackID()] = 0;
+            YZ_GaussSigmaY[t->GetTrackID()] = 0;
+            YZ_GaussSigmaZ[t->GetTrackID()] = 0;
+            YZ_LengthY[t->GetTrackID()] = 0;
+            YZ_VolumeY[t->GetTrackID()] = 0;
+            YZ_MeanY[t->GetTrackID()] = 0;
+            YZ_MeanZ[t->GetTrackID()] = 0;
+            YZ_SkewZ[t->GetTrackID()] = 0;
         }
 
-        if (t->isYZ) {
-            XZ_NHitsX[t->GetTrackID] = 0;
-            XZ_EnergyX[t->GetTrackID] = 0;
-            XZ_SigmaX[t->GetTrackID] = 0;
-            XZ_SigmaZ[t->GetTrackID] = 0;
-            XZ_GaussSigmaX[t->GetTrackID] = 0;
-            XZ_GaussSigmaZ[t->GetTrackID] = 0;
-            XZ_LengthX[t->GetTrackID] = 0;
-            XZ_VolumeX[t->GetTrackID] = 0;
-            XZ_MeanX[t->GetTrackID] = 0;
-            XZ_MeanZ[t->GetTrackID] = 0;
-            XZ_SkewZ[t->GetTrackID] = 0;
+        if (t->isYZ()) {
+            XZ_NHitsX[t->GetTrackID()] = 0;
+            XZ_EnergyX[t->GetTrackID()] = 0;
+            XZ_SigmaX[t->GetTrackID()] = 0;
+            XZ_SigmaZ[t->GetTrackID()] = 0;
+            XZ_GaussSigmaX[t->GetTrackID()] = 0;
+            XZ_GaussSigmaZ[t->GetTrackID()] = 0;
+            XZ_LengthX[t->GetTrackID()] = 0;
+            XZ_VolumeX[t->GetTrackID()] = 0;
+            XZ_MeanX[t->GetTrackID()] = 0;
+            XZ_MeanZ[t->GetTrackID()] = 0;
+            XZ_SkewZ[t->GetTrackID()] = 0;
 
-            YZ_NHitsY[t->GetTrackID] = t->GetNumberOfHits();
-            YZ_EnergyY[t->GetTrackID] = t->GetTrackEnergy();
-            YZ_SigmaY[t->GetTrackID] = t->GetHits()->GetSigmaY();
-            YZ_SigmaZ[t->GetTrackID] = t->GetHits()->GetSigmaZ2();
-            YZ_GaussSigmaY[t->GetTrackID] = t->GetHits()->GetGaussSigmaY();
-            YZ_GaussSigmaZ[t->GetTrackID] = t->GetHits()->GetGaussSigmaZ();
-            YZ_LengthY[t->GetTrackID] = t->GetLength();
-            YZ_VolumeY[t->GetTrackID] = t->GetVolume();
-            YZ_MeanY[t->GetTrackID] = t->GetMeanPosition()->Y();
-            YZ_MeanZ[t->GetTrackID] = t->GetMeanPosition()->Z();
-            YZ_SkewZ[t->GetTrackID] = t->GetHits()->GetSkewZ();
+            YZ_NHitsY[t->GetTrackID()] = t->GetNumberOfHits();
+            YZ_EnergyY[t->GetTrackID()] = t->GetTrackEnergy();
+            YZ_SigmaY[t->GetTrackID()] = t->GetHits()->GetSigmaY();
+            YZ_SigmaZ[t->GetTrackID()] = t->GetHits()->GetSigmaZ2();
+            YZ_GaussSigmaY[t->GetTrackID()] = t->GetHits()->GetGaussSigmaY();
+            YZ_GaussSigmaZ[t->GetTrackID()] = t->GetHits()->GetGaussSigmaZ();
+            YZ_LengthY[t->GetTrackID()] = t->GetLength();
+            YZ_VolumeY[t->GetTrackID()] = t->GetVolume();
+            YZ_MeanY[t->GetTrackID()] = t->GetMeanPosition()->Y();
+            YZ_MeanZ[t->GetTrackID()] = t->GetMeanPosition()->Z();
+            YZ_SkewZ[t->GetTrackID()] = t->GetHits()->GetSkewZ();
         } else {
-            XZ_EnergyX[t->GetTrackID] = 0;
-            XZ_SigmaX[t->GetTrackID] = 0;
-            XZ_SigmaZ[t->GetTrackID] = 0;
-            XZ_GaussSigmaX[t->GetTrackID] = 0;
-            XZ_GaussSigmaZ[t->GetTrackID] = 0;
-            XZ_LengthX[t->GetTrackID] = 0;
-            XZ_VolumeX[t->GetTrackID] = 0;
-            XZ_MeanX[t->GetTrackID] = 0;
-            XZ_MeanZ[t->GetTrackID] = 0;
-            XZ_SkewZ[t->GetTrackID] = 0;
+            XZ_EnergyX[t->GetTrackID()] = 0;
+            XZ_SigmaX[t->GetTrackID()] = 0;
+            XZ_SigmaZ[t->GetTrackID()] = 0;
+            XZ_GaussSigmaX[t->GetTrackID()] = 0;
+            XZ_GaussSigmaZ[t->GetTrackID()] = 0;
+            XZ_LengthX[t->GetTrackID()] = 0;
+            XZ_VolumeX[t->GetTrackID()] = 0;
+            XZ_MeanX[t->GetTrackID()] = 0;
+            XZ_MeanZ[t->GetTrackID()] = 0;
+            XZ_SkewZ[t->GetTrackID()] = 0;
 
-            YZ_EnergyY[t->GetTrackID] = 0;
-            YZ_SigmaY[t->GetTrackID] = 0;
-            YZ_SigmaZ[t->GetTrackID] = 0;
-            YZ_GaussSigmaY[t->GetTrackID] = 0;
-            YZ_GaussSigmaZ[t->GetTrackID] = 0;
-            YZ_LengthY[t->GetTrackID] = 0;
-            YZ_VolumeY[t->GetTrackID] = 0;
-            YZ_MeanY[t->GetTrackID] = 0;
-            YZ_MeanZ[t->GetTrackID] = 0;
-            YZ_SkewZ[t->GetTrackID] = 0;
+            YZ_EnergyY[t->GetTrackID()] = 0;
+            YZ_SigmaY[t->GetTrackID()] = 0;
+            YZ_SigmaZ[t->GetTrackID()] = 0;
+            YZ_GaussSigmaY[t->GetTrackID()] = 0;
+            YZ_GaussSigmaZ[t->GetTrackID()] = 0;
+            YZ_LengthY[t->GetTrackID()] = 0;
+            YZ_VolumeY[t->GetTrackID()] = 0;
+            YZ_MeanY[t->GetTrackID()] = 0;
+            YZ_MeanZ[t->GetTrackID()] = 0;
+            YZ_SkewZ[t->GetTrackID()] = 0;
         }
     }
 
@@ -274,17 +276,16 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
 
     /// Observables "balance", between max track in X and max track in Y
     for (int i = 0; i < min(NTracksX, NTracksY); i++) {
-        XZ_YZ_SigmaXYBalance[i] =
-            (XZ_SigmaX[energiesX[i].first()] - YZ_SigmaY[energiesY[i].first()]) /
-            (XZ_SigmaX[energiesX[i].first()] + YZ_SigmaY[energiesY[i].first()]) XZ_YZ_SigmaZBalance[i] =
-                (XZ_SigmaZ[energiesX[i].first()] - YZ_SigmaZ[energiesY[i].first()]) /
-                (XZ_SigmaZ[energiesX[i].first()] + YZ_SigmaZ[energiesY[i].first()])
-                    XZ_YZ_GaussSigmaXYBalance[i] =
-                    (XZ_GaussSigmaX[energiesX[i].first()] - YZ_GaussSigmaY[energiesY[i].first()]) /
-                    (XZ_GaussSigmaX[energiesX[i].first()] + YZ_GaussSigmaY[energiesY[i].first()])
-                        XZ_YZ_GaussSigmaZBalance[i] =
-                        (XZ_GaussSigmaZ[energiesX[i].first()] - YZ_GaussSigmaZ[energiesY[i].first()]) /
-                        (XZ_GaussSigmaZ[energiesX[i].first()] + YZ_GaussSigmaZ[energiesY[i].first()])
+        XZ_YZ_SigmaXYBalance[i] = (XZ_SigmaX[energiesX[i].first()] - YZ_SigmaY[energiesY[i].first()]) /
+                                  (XZ_SigmaX[energiesX[i].first()] + YZ_SigmaY[energiesY[i].first()]);
+        XZ_YZ_SigmaZBalance[i] = (XZ_SigmaZ[energiesX[i].first()] - YZ_SigmaZ[energiesY[i].first()]) /
+                                 (XZ_SigmaZ[energiesX[i].first()] + YZ_SigmaZ[energiesY[i].first()]);
+        XZ_YZ_GaussSigmaXYBalance[i] =
+            (XZ_GaussSigmaX[energiesX[i].first()] - YZ_GaussSigmaY[energiesY[i].first()]) /
+            (XZ_GaussSigmaX[energiesX[i].first()] + YZ_GaussSigmaY[energiesY[i].first()]);
+        XZ_YZ_GaussSigmaZBalance[i] =
+            (XZ_GaussSigmaZ[energiesX[i].first()] - YZ_GaussSigmaZ[energiesY[i].first()]) /
+            (XZ_GaussSigmaZ[energiesX[i].first()] + YZ_GaussSigmaZ[energiesY[i].first()]);
     }
 
     /// ------------------------------------------------------------- ///
