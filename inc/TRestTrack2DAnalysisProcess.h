@@ -41,6 +41,7 @@ class TRestTrack2DAnalysisProcess : public TRestEventProcess {
    protected:
    public:
     RESTValue GetInputEvent() const override { return fTrackEvent; }
+    RESTValue GetOutputEvent() const override { return fTrackEvent; }
 
     void InitProcess() override;
     TRestEvent* ProcessEvent(TRestEvent* inputEvent) override;
