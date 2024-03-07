@@ -156,7 +156,6 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     map<int, Double_t> XZ_SigmaZ;
     map<int, Double_t> YZ_SigmaY;
     map<int, Double_t> YZ_SigmaZ;
-    map<int, Double_t> XZ_YZ_SigmaZ;
 
     map<int, Double_t> XZ_YZ_SigmaXYBalance;
     map<int, Double_t> XZ_YZ_SigmaZBalance;
@@ -169,7 +168,6 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     map<int, Double_t> XZ_GaussSigmaZ;
     map<int, Double_t> YZ_GaussSigmaY;
     map<int, Double_t> YZ_GaussSigmaZ;
-    map<int, Double_t> XZ_YZ_GaussSigmaZ;
 
     map<int, Double_t> XZ_YZ_GaussSigmaXYBalance;
     map<int, Double_t> XZ_YZ_GaussSigmaZBalance;
@@ -189,7 +187,12 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     /// Distances between biggest two tracks in energy
     Double_t XZ_FirstSecondTracksDistanceXZ;
     Double_t YZ_FirstSecondTracksDistanceYZ;
-    // Double_t XZ_YZ_FirstSecondTracksDistanceSum;
+
+    /// Skew combining XZ and YZ max tracks
+    Double_t XZ_YZ_MaxTrackSigmaZ;
+    Double_t XZ_YZ_MaxTrackGaussSigmaZ;
+    Double_t XZ_YZ_MaxTrackSkewXY;
+    Double_t XZ_YZ_MaxTrackSkewZ;
 
     /// ---------------------------------------------------------- ///
     /// ------------------ COMPUTE OBSERVABLES ------------------- ///
@@ -310,6 +313,7 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
             (XZ_GaussSigmaZ[energiesX[i].first] + YZ_GaussSigmaZ[energiesY[i].first]);
     }
 
+    /// Distance between first two tracks
     Double_t dXz = 0, dxZ = 0, dYz = 0, dyZ = 0;
 
     dXz = abs(XZ_MeanX[energiesX[0].first] - XZ_MeanX[energiesX[1].first]);
@@ -321,7 +325,7 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     XZ_FirstSecondTracksDistanceXZ = TMath::Sqrt(dXz * dXz + dxZ * dxZ);
     YZ_FirstSecondTracksDistanceYZ = TMath::Sqrt(dYz * dYz + dyZ * dyZ);
 
-    // --- Energy observables --- //
+    /// Energy observables
     XZ_TotalEnergyX = 0;
     YZ_TotalEnergyY = 0;
 
@@ -331,6 +335,35 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     for (auto pair : energiesY) {
         YZ_TotalEnergyY += pair.second;
     }
+
+    /// Skew and sigm Z observables combining max traks in XZ and YZ
+    TRestHits hits;
+    TRestHits* hitsXZ = nullptr;
+    TRestHits* hitsYZ = nullptr;
+    if (fTrackEvent->GetMaxEnergyTrack("X")) hitsXZ = fTrackEvent->GetMaxEnergyTrack("X")->GetHits();
+    if (fTrackEvent->GetMaxEnergyTrack("Y")) hitsYZ = fTrackEvent->GetMaxEnergyTrack("Y")->GetHits();
+
+    auto hitsBoth = {hitsXZ, hitsYZ};
+
+    for (auto arg : hitsBoth) {
+        if (arg == nullptr) continue;
+        for (unsigned int n = 0; n < arg->GetNumberOfHits(); n++) {
+            // your code in the existing loop, replacing `hits` by `arg`
+            Double_t eDep = arg->GetEnergy(n);
+            Double_t x = arg->GetX(n);
+            Double_t y = arg->GetY(n);
+            Double_t z = arg->GetZ(n);
+            auto time = arg->GetTime(n);
+            auto type = arg->GetType(n);
+
+            hits.AddHit({x, y, z}, eDep, time, type);
+        }
+    }
+
+    XZ_YZ_MaxTrackSigmaZ = hits.GetSigmaZ2();
+    XZ_YZ_MaxTrackGaussSigmaZ = hits.GetGaussSigmaZ();
+    XZ_YZ_MaxTrackSkewXY = hits.GetSkewXY();
+    XZ_YZ_MaxTrackSkewZ = hits.GetSkewZ();
 
     /// ------------------------------------------------------------- ///
     /// ------------------ SET OBSERVABLES VALUES ------------------- ///
@@ -449,6 +482,12 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     SetObservableValue("XZ_YZ_FirstSecondTracksDistanceSum",
                        TMath::Sqrt(XZ_FirstSecondTracksDistanceXZ * XZ_FirstSecondTracksDistanceXZ +
                                    YZ_FirstSecondTracksDistanceYZ * YZ_FirstSecondTracksDistanceYZ));
+
+    // --- Observables merging max tracks XZ and YZ --- //
+    SetObservableValue("XZ_YZ_MaxTrackSigmaZ", XZ_YZ_MaxTrackSigmaZ);
+    SetObservableValue("XZ_YZ_MaxTrackGaussSigmaZ", XZ_YZ_MaxTrackGaussSigmaZ);
+    SetObservableValue("XZ_YZ_MaxTrackSkewXY", XZ_YZ_MaxTrackSkewXY);
+    SetObservableValue("XZ_YZ_MaxTrackSkewZ", XZ_YZ_MaxTrackSkewZ);
 
     return fTrackEvent;
 }
