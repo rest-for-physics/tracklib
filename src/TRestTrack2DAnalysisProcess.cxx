@@ -24,12 +24,29 @@
 ///
 /// Analysis process for 2D tracks, XZ-YZ.
 /// For other types of tracks all observables are 0.
+/// XZ_YZ means values from both types of tracks are involved.
 ///
 /// ### Observables
-/// SetObservableValue("NTracksX", NTracksX);
-/// SetObservableValue("NTracksY", NTracksY);
+/// "NTracks", fTrackEvent->GetNumberOfTracks());
+/// "NTracksX", Number of XZ tracks
+/// "NTracksY", Number of YZ tracks
+/// "TotalEnergy", fTrackEvent->GetEnergy());
+/// "XZ_TotalEnergyX", Energy in all XZ tracks
+/// "YZ_TotalEnergyY", Energy in all YZ tracks
+/// "XZ_YZ_MaxTrackEnergy", energiesX[0].second + energiesY[0].second (first traks in XZ and YZ are added)
+/// "XZ_YZ_MaxTrackEnergyPercentage", Percentage of first track (XZ YZ added) energy from total energy
+/// "XZ_YZ_MaxTrackEnergyBalanceXY", Energy balance between X and Y in first track
+/// "XZ_YZ_SecondMaxTrackEnergy", energiesX[0].second + energiesY[0].second (first traks in XZ and YZ are
+/// added) "XZ_YZ_SecondMaxTrackEnergyPercentage", Percentage of first track (XZ YZ added) energy from total
+/// energy "XZ_YZ_SecondMaxTrackEnergyBalanceXY", Energy balance between X and Y in first track
+///
+/// "XZ_FirstSecondTracksDistanceXZ", Distance in XZ plane of mean positions of first two XZ tracks
+/// "YZ_FirstSecondTracksDistanceYZ", Distance in YZ plane of mean positions of first two YZ tracks
+/// "XZ_YZ_FirstSecondTracksDistanceSum", Root of squared sum of previous two
 ///
 /// Map observables, there are the same observables for first and second tracks.
+/// Map observables have values for each track of each observable.
+/// If XZ observable in a YZ track -> = 0 and viceversa.
 ///
 /// SetObservableValue("Map_XZ_EnergyX", XZ_EnergyX);
 /// SetObservableValue("Map_XZ_SigmaX", XZ_SigmaX);
@@ -58,9 +75,6 @@
 /// SetObservableValue("Map_XZ_YZ_GaussSigmaXYBalance", XZ_YZ_GaussSigmaXYBalance);
 /// SetObservableValue("Map_XZ_YZ_GaussSigmaZBalance", XZ_YZ_GaussSigmaZBalance);
 ///
-/// SetObservableValue("XZ_FirstSecondTracksDistanceXZ", XZ_FirstSecondTracksDistanceXZ);
-/// SetObservableValue("YZ_FirstSecondTracksDistanceYZ", YZ_FirstSecondTracksDistanceYZ);
-/// SetObservableValue("XZ_YZ_FirstSecondTracksDistanceSum", "root of squared sum of previous two")
 ///
 ///______________________________________________________________________________
 ///
@@ -119,6 +133,10 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     /// -------------------------------------------------- ///
     /// ------------------ OBSERVABLES ------------------- ///
     /// -------------------------------------------------- ///
+
+    /// Energy by X and Y
+    Double_t XZ_TotalEnergyX;
+    Double_t YZ_TotalEnergyY;
 
     /// Number of traks per type
     int NTracksX;
@@ -303,12 +321,28 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     XZ_FirstSecondTracksDistanceXZ = TMath::Sqrt(dXz * dXz + dxZ * dxZ);
     YZ_FirstSecondTracksDistanceYZ = TMath::Sqrt(dYz * dYz + dyZ * dyZ);
 
+    // --- Energy observables --- //
+    XZ_TotalEnergyX = 0;
+    YZ_TotalEnergyY = 0;
+
+    for (auto pair : energiesX) {
+        XZ_TotalEnergyX += pair.second;
+    }
+    for (auto pair : energiesY) {
+        YZ_TotalEnergyY += pair.second;
+    }
+
     /// ------------------------------------------------------------- ///
     /// ------------------ SET OBSERVABLES VALUES ------------------- ///
     /// ------------------------------------------------------------- ///
 
+    // --- Number of tracks and energy --- //
+    SetObservableValue("NTracks", fTrackEvent->GetNumberOfTracks());
     SetObservableValue("NTracksX", NTracksX);
     SetObservableValue("NTracksY", NTracksY);
+    SetObservableValue("TotalEnergy", fTrackEvent->GetEnergy());
+    SetObservableValue("XZ_TotalEnergyX", XZ_TotalEnergyX);
+    SetObservableValue("YZ_TotalEnergyY", YZ_TotalEnergyY);
 
     // --- Map observables --- //
     SetObservableValue("Map_XZ_EnergyX", XZ_EnergyX);
@@ -366,6 +400,12 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     SetObservableValue("MaxTrack_XZ_YZ_GaussSigmaXYBalance", XZ_YZ_GaussSigmaXYBalance[energiesY[0].first]);
     SetObservableValue("MaxTrack_XZ_YZ_GaussSigmaZBalance", XZ_YZ_GaussSigmaZBalance[energiesY[0].first]);
 
+    SetObservableValue("XZ_YZ_MaxTrackEnergy", energiesX[0].second + energiesY[0].second);
+    SetObservableValue("XZ_YZ_MaxTrackEnergyPercentage",
+                       (energiesX[0].second + energiesY[0].second) / fTrackEvent->GetEnergy());
+    SetObservableValue("XZ_YZ_MaxTrackEnergyBalanceXY", (energiesX[0].second - energiesY[0].second) /
+                                                            (energiesX[0].second + energiesY[0].second));
+
     // --- Second max track observables --- //
     SetObservableValue("SecondMaxTrack_XZ_EnergyX", XZ_EnergyX[energiesX[1].first]);
     SetObservableValue("SecondMaxTrack_XZ_SigmaX", XZ_SigmaX[energiesX[1].first]);
@@ -395,6 +435,13 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
                        XZ_YZ_GaussSigmaXYBalance[energiesY[1].first]);
     SetObservableValue("SecondMaxTrack_XZ_YZ_GaussSigmaZBalance",
                        XZ_YZ_GaussSigmaZBalance[energiesY[1].first]);
+
+    SetObservableValue("XZ_YZ_SecondMaxTrackEnergy", energiesX[1].second + energiesY[1].second);
+    SetObservableValue("XZ_YZ_SecondMaxTrackEnergyPercentage",
+                       (energiesX[1].second + energiesY[1].second) / fTrackEvent->GetEnergy());
+    SetObservableValue(
+        "XZ_YZ_SecondMaxTrackEnergyBalanceXY",
+        (energiesX[1].second - energiesY[1].second) / (energiesX[1].second + energiesY[1].second));
 
     // --- Distance obsevables between first two tracks --- //
     SetObservableValue("XZ_FirstSecondTracksDistanceXZ", XZ_FirstSecondTracksDistanceXZ);
