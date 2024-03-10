@@ -316,16 +316,21 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     }
 
     /// Distance between first two tracks
-    Double_t dXz = 0, dxZ = 0, dYz = 0, dyZ = 0;
+    if (fTrackEvent->GetNumberOfTracks() > 1) {
+        Double_t dXz = 0, dxZ = 0, dYz = 0, dyZ = 0;
 
-    dXz = abs(XZ_MeanX[energiesX[0].first] - XZ_MeanX[energiesX[1].first]);
-    dxZ = abs(XZ_MeanZ[energiesX[0].first] - XZ_MeanZ[energiesX[1].first]);
+        dXz = abs(XZ_MeanX[energiesX[0].first] - XZ_MeanX[energiesX[1].first]);
+        dxZ = abs(XZ_MeanZ[energiesX[0].first] - XZ_MeanZ[energiesX[1].first]);
 
-    dYz = abs(YZ_MeanY[energiesY[0].first] - YZ_MeanY[energiesY[1].first]);
-    dyZ = abs(YZ_MeanZ[energiesY[0].first] - YZ_MeanZ[energiesY[1].first]);
+        dYz = abs(YZ_MeanY[energiesY[0].first] - YZ_MeanY[energiesY[1].first]);
+        dyZ = abs(YZ_MeanZ[energiesY[0].first] - YZ_MeanZ[energiesY[1].first]);
 
-    XZ_FirstSecondTracksDistanceXZ = TMath::Sqrt(dXz * dXz + dxZ * dxZ);
-    YZ_FirstSecondTracksDistanceYZ = TMath::Sqrt(dYz * dYz + dyZ * dyZ);
+        XZ_FirstSecondTracksDistanceXZ = TMath::Sqrt(dXz * dXz + dxZ * dxZ);
+        YZ_FirstSecondTracksDistanceYZ = TMath::Sqrt(dYz * dYz + dyZ * dyZ);
+    } else {
+        XZ_FirstSecondTracksDistanceXZ = 0;
+        YZ_FirstSecondTracksDistanceYZ = 0;
+    }
 
     /// Energy observables
     XZ_TotalEnergyX = 0;
@@ -477,12 +482,18 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     SetObservableValue("SecondMaxTrack_XZ_YZ_GaussSigmaZBalance",
                        XZ_YZ_GaussSigmaZBalance[energiesY[1].first]);
 
-    SetObservableValue("SecondMaxTrack_XZ_YZ_Energy", energiesX[1].second + energiesY[1].second);
-    SetObservableValue("SecondMaxTrack_XZ_YZ_EnergyPercentage",
-                       (energiesX[1].second + energiesY[1].second) / fTrackEvent->GetEnergy());
-    SetObservableValue(
-        "SecondMaxTrack_XZ_YZ_EnergyBalanceXY",
-        (energiesX[1].second - energiesY[1].second) / (energiesX[1].second + energiesY[1].second));
+    if (fTrackEvent->GetNumberOfTracks() > 1) {
+        SetObservableValue("SecondMaxTrack_XZ_YZ_Energy", energiesX[1].second + energiesY[1].second);
+        SetObservableValue("SecondMaxTrack_XZ_YZ_EnergyPercentage",
+                           (energiesX[1].second + energiesY[1].second) / fTrackEvent->GetEnergy());
+        SetObservableValue(
+            "SecondMaxTrack_XZ_YZ_EnergyBalanceXY",
+            (energiesX[1].second - energiesY[1].second) / (energiesX[1].second + energiesY[1].second));
+    } else {
+        SetObservableValue("SecondMaxTrack_XZ_YZ_Energy", 0);
+        SetObservableValue("SecondMaxTrack_XZ_YZ_EnergyPercentage", 0);
+        SetObservableValue("SecondMaxTrack_XZ_YZ_EnergyBalanceXY", 0);
+    }
 
     // --- Distance obsevables between first two tracks --- //
     SetObservableValue("XZ_FirstSecondTracksDistanceXZ", XZ_FirstSecondTracksDistanceXZ);

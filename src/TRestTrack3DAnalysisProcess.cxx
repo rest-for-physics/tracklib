@@ -76,7 +76,7 @@
 using namespace std;
 
 // Comparator function for sorting in descending order
-bool sortByValueDescending(const std::pair<int, Double_t>& a, const std::pair<int, Double_t>& b) {
+bool sortByValueDescending3D(const std::pair<int, Double_t>& a, const std::pair<int, Double_t>& b) {
     return a.second > b.second;  // Change to < for ascending order
 }
 
@@ -201,16 +201,20 @@ TRestEvent* TRestTrack3DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     }
 
     /// Sort the vector by decreasing order of its pair's second value
-    sort(energies.begin(), energies.end(), sortByValueDescending);
+    sort(energies.begin(), energies.end(), sortByValueDescending3D);
 
     /// Distance between first two tracks
-    Double_t dX = 0, dY = 0, dZ = 0;
+    if (fTrackEvent->GetNumberOfTracks() > 1) {
+        Double_t dX = 0, dY = 0, dZ = 0;
 
-    dX = abs(XYZ_MeanX[energies[0].first] - XYZ_MeanX[energiesX[1].first]);
-    dY = abs(XYZ_MeanY[energies[0].first] - XYZ_MeanY[energiesX[1].first]);
-    dZ = abs(XYZ_MeanZ[energies[0].first] - XYZ_MeanZ[energiesX[1].first]);
+        dX = abs(XYZ_MeanX[energies[0].first] - XYZ_MeanX[energies[1].first]);
+        dY = abs(XYZ_MeanY[energies[0].first] - XYZ_MeanY[energies[1].first]);
+        dZ = abs(XYZ_MeanZ[energies[0].first] - XYZ_MeanZ[energies[1].first]);
 
-    XYZ_FirstSecondTracksDistance = TMath::Sqrt(dX * dX + dY * dY + dZ * dZ);
+        XYZ_FirstSecondTracksDistance = TMath::Sqrt(dX * dX + dY * dY + dZ * dZ);
+    } else {
+        XYZ_FirstSecondTracksDistance = 0;
+    }
 
     /// ------------------------------------------------------------- ///
     /// ------------------ SET OBSERVABLES VALUES ------------------- ///
@@ -239,7 +243,7 @@ TRestEvent* TRestTrack3DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
 
     // --- Max track observables --- //
     SetObservableValue("MaxTrack_XYZ_NHits", XYZ_NHits[energies[0].first]);
-    SetObservableValue("MaxTrack_XYZ_Energy", XYZ_EnergyX[energies[0].first]);
+    SetObservableValue("MaxTrack_XYZ_Energy", XYZ_Energy[energies[0].first]);
     SetObservableValue("MaxTrack_XYZ_SigmaX", XYZ_SigmaX[energies[0].first]);
     SetObservableValue("MaxTrack_XYZ_SigmaY", XYZ_SigmaY[energies[0].first]);
     SetObservableValue("MaxTrack_XYZ_SigmaZ", XYZ_SigmaZ[energies[0].first]);
@@ -254,12 +258,12 @@ TRestEvent* TRestTrack3DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     SetObservableValue("MaxTrack_XYZ_SkewZ", XYZ_SkewXY[energies[0].first]);
     SetObservableValue("MaxTrack_XYZ_SkewZ", XYZ_SkewZ[energies[0].first]);
 
-    SetObservableValue("MaxTrack_XZ_YZ_MaxTrackEnergyPercentage",
+    SetObservableValue("MaxTrack_XYZ_MaxTrackEnergyPercentage",
                        (energies[0].second) / fTrackEvent->GetEnergy());
 
     // --- Second max track observables --- //
     SetObservableValue("SecondMaxTrack_XYZ_NHits", XYZ_NHits[energies[1].first]);
-    SetObservableValue("SecondMaxTrack_XYZ_Energy", XYZ_EnergyX[energies[1].first]);
+    SetObservableValue("SecondMaxTrack_XYZ_Energy", XYZ_Energy[energies[1].first]);
     SetObservableValue("SecondMaxTrack_XYZ_SigmaX", XYZ_SigmaX[energies[1].first]);
     SetObservableValue("SecondMaxTrack_XYZ_SigmaY", XYZ_SigmaY[energies[1].first]);
     SetObservableValue("SecondMaxTrack_XYZ_SigmaZ", XYZ_SigmaZ[energies[1].first]);
@@ -274,8 +278,12 @@ TRestEvent* TRestTrack3DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     SetObservableValue("SecondMaxTrack_XYZ_SkewZ", XYZ_SkewXY[energies[1].first]);
     SetObservableValue("SecondMaxTrack_XYZ_SkewZ", XYZ_SkewZ[energies[1].first]);
 
-    SetObservableValue("SecondMaxTrack_XZ_YZ_MaxTrackEnergyPercentage",
-                       (energies[1].second) / fTrackEvent->GetEnergy());
+    if (fTrackEvent->GetNumberOfTracks() > 1) {
+        SetObservableValue("SecondMaxTrack_XYZ_MaxTrackEnergyPercentage",
+                           (energies[1].second) / fTrackEvent->GetEnergy());
+    } else {
+        SetObservableValue("SecondMaxTrack_XYZ_MaxTrackEnergyPercentage", 0);
+    }
 
     // --- Distance obsevables between first two tracks --- //
     SetObservableValue("XYZ_FirstSecondTracksDistance", XYZ_FirstSecondTracksDistance);
