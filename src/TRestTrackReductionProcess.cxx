@@ -77,8 +77,8 @@ void TRestTrackReductionProcess::getHitsMerged(TRestVolumeHits& hits) {
     Double_t distance = fStartingDistance;
     while (distance < fMinimumDistance || hits.GetNumberOfHits() > fMaxNodes) {
         if (this->GetVerboseLevel() >= TRestStringOutput::REST_Verbose_Level::REST_Debug) {
-            cout << "TRestTrackReductionProcess. Merging track hits within a "
-                 << "distance : " << distance << " mm" << endl;
+            cout << "TRestTrackReductionProcess. Merging track hits within a " << "distance : " << distance
+                 << " mm" << endl;
             cout << "TRestTrackReductionProcess. Hits now : " << hits.GetNumberOfHits() << endl;
         }
 
