@@ -439,10 +439,10 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     SetObservableValue("MaxTrack_YZ_MeanZ", YZ_MeanZ[energiesY[0].first]);
     SetObservableValue("MaxTrack_YZ_SkewZ", YZ_SkewZ[energiesY[0].first]);
 
-    SetObservableValue("MaxTrack_XZ_YZ_SigmaXYBalance", XZ_YZ_SigmaXYBalance[energiesY[0].first]);
-    SetObservableValue("MaxTrack_XZ_YZ_SigmaZBalance", XZ_YZ_SigmaZBalance[energiesY[0].first]);
-    SetObservableValue("MaxTrack_XZ_YZ_GaussSigmaXYBalance", XZ_YZ_GaussSigmaXYBalance[energiesY[0].first]);
-    SetObservableValue("MaxTrack_XZ_YZ_GaussSigmaZBalance", XZ_YZ_GaussSigmaZBalance[energiesY[0].first]);
+    SetObservableValue("MaxTrack_XZ_YZ_SigmaXYBalance", XZ_YZ_SigmaXYBalance[0]);
+    SetObservableValue("MaxTrack_XZ_YZ_SigmaZBalance", XZ_YZ_SigmaZBalance[0]);
+    SetObservableValue("MaxTrack_XZ_YZ_GaussSigmaXYBalance", XZ_YZ_GaussSigmaXYBalance[0]);
+    SetObservableValue("MaxTrack_XZ_YZ_GaussSigmaZBalance", XZ_YZ_GaussSigmaZBalance[0]);
 
     SetObservableValue("MaxTrack_XZ_YZ_Energy", energiesX[0].second + energiesY[0].second);
     SetObservableValue("MaxTrack_XZ_YZ_MaxTrackEnergyPercentage",
@@ -475,12 +475,12 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     SetObservableValue("SecondMaxTrack_YZ_MeanZ", YZ_MeanZ[energiesY[1].first]);
     SetObservableValue("SecondMaxTrack_YZ_SkewZ", YZ_SkewZ[energiesY[1].first]);
 
-    SetObservableValue("SecondMaxTrack_XZ_YZ_SigmaXYBalance", XZ_YZ_SigmaXYBalance[energiesY[1].first]);
-    SetObservableValue("SecondMaxTrack_XZ_YZ_SigmaZBalance", XZ_YZ_SigmaZBalance[energiesY[1].first]);
+    SetObservableValue("SecondMaxTrack_XZ_YZ_SigmaXYBalance", XZ_YZ_SigmaXYBalance[1]);
+    SetObservableValue("SecondMaxTrack_XZ_YZ_SigmaZBalance", XZ_YZ_SigmaZBalance[1]);
     SetObservableValue("SecondMaxTrack_XZ_YZ_GaussSigmaXYBalance",
-                       XZ_YZ_GaussSigmaXYBalance[energiesY[1].first]);
+                       XZ_YZ_GaussSigmaXYBalance[1]);
     SetObservableValue("SecondMaxTrack_XZ_YZ_GaussSigmaZBalance",
-                       XZ_YZ_GaussSigmaZBalance[energiesY[1].first]);
+                       XZ_YZ_GaussSigmaZBalance[1]);
 
     if (fTrackEvent->GetNumberOfTracks() > 1) {
         SetObservableValue("SecondMaxTrack_XZ_YZ_Energy", energiesX[1].second + energiesY[1].second);
