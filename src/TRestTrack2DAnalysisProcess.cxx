@@ -477,10 +477,8 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
 
     SetObservableValue("SecondMaxTrack_XZ_YZ_SigmaXYBalance", XZ_YZ_SigmaXYBalance[1]);
     SetObservableValue("SecondMaxTrack_XZ_YZ_SigmaZBalance", XZ_YZ_SigmaZBalance[1]);
-    SetObservableValue("SecondMaxTrack_XZ_YZ_GaussSigmaXYBalance",
-                       XZ_YZ_GaussSigmaXYBalance[1]);
-    SetObservableValue("SecondMaxTrack_XZ_YZ_GaussSigmaZBalance",
-                       XZ_YZ_GaussSigmaZBalance[1]);
+    SetObservableValue("SecondMaxTrack_XZ_YZ_GaussSigmaXYBalance", XZ_YZ_GaussSigmaXYBalance[1]);
+    SetObservableValue("SecondMaxTrack_XZ_YZ_GaussSigmaZBalance", XZ_YZ_GaussSigmaZBalance[1]);
 
     if (fTrackEvent->GetNumberOfTracks() > 1) {
         SetObservableValue("SecondMaxTrack_XZ_YZ_Energy", energiesX[1].second + energiesY[1].second);
