@@ -415,6 +415,7 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     SetObservableValue("Map_XZ_YZ_GaussSigmaZBalance", XZ_YZ_GaussSigmaZBalance);
 
     // --- Max track observables --- //
+/*
     SetObservableValue("MaxTrack_XZ_NHitsX", XZ_NHitsX[energiesX[0].first]);
     SetObservableValue("MaxTrack_XZ_EnergyX", XZ_EnergyX[energiesX[0].first]);
     SetObservableValue("MaxTrack_XZ_SigmaX", XZ_SigmaX[energiesX[0].first]);
@@ -505,7 +506,7 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     SetObservableValue("MaxTrack_XZ_YZ_GaussSigmaZ", MaxTrack_XZ_YZ_GaussSigmaZ);
     SetObservableValue("MaxTrack_XZ_YZ_SkewXY", MaxTrack_XZ_YZ_SkewXY);
     SetObservableValue("MaxTrack_XZ_YZ_SkewZ", MaxTrack_XZ_YZ_SkewZ);
-
+*/
     return fTrackEvent;
 }
 
