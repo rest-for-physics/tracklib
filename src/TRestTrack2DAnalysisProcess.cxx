@@ -415,98 +415,98 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     SetObservableValue("Map_XZ_YZ_GaussSigmaZBalance", XZ_YZ_GaussSigmaZBalance);
 
     // --- Max track observables --- //
-/*
-    SetObservableValue("MaxTrack_XZ_NHitsX", XZ_NHitsX[energiesX[0].first]);
-    SetObservableValue("MaxTrack_XZ_EnergyX", XZ_EnergyX[energiesX[0].first]);
-    SetObservableValue("MaxTrack_XZ_SigmaX", XZ_SigmaX[energiesX[0].first]);
-    SetObservableValue("MaxTrack_XZ_SigmaZ", XZ_SigmaZ[energiesX[0].first]);
-    SetObservableValue("MaxTrack_XZ_GaussSigmaX", XZ_GaussSigmaX[energiesX[0].first]);
-    SetObservableValue("MaxTrack_XZ_GaussSigmaZ", XZ_GaussSigmaZ[energiesX[0].first]);
-    SetObservableValue("MaxTrack_XZ_LengthX", XZ_LengthX[energiesX[0].first]);
-    SetObservableValue("MaxTrack_XZ_VolumeX", XZ_VolumeX[energiesX[0].first]);
-    SetObservableValue("MaxTrack_XZ_MeanX", XZ_MeanX[energiesX[0].first]);
-    SetObservableValue("MaxTrack_XZ_MeanZ", XZ_MeanZ[energiesX[0].first]);
-    SetObservableValue("MaxTrack_XZ_SkewZ", XZ_SkewZ[energiesX[0].first]);
+    /*
+        SetObservableValue("MaxTrack_XZ_NHitsX", XZ_NHitsX[energiesX[0].first]);
+        SetObservableValue("MaxTrack_XZ_EnergyX", XZ_EnergyX[energiesX[0].first]);
+        SetObservableValue("MaxTrack_XZ_SigmaX", XZ_SigmaX[energiesX[0].first]);
+        SetObservableValue("MaxTrack_XZ_SigmaZ", XZ_SigmaZ[energiesX[0].first]);
+        SetObservableValue("MaxTrack_XZ_GaussSigmaX", XZ_GaussSigmaX[energiesX[0].first]);
+        SetObservableValue("MaxTrack_XZ_GaussSigmaZ", XZ_GaussSigmaZ[energiesX[0].first]);
+        SetObservableValue("MaxTrack_XZ_LengthX", XZ_LengthX[energiesX[0].first]);
+        SetObservableValue("MaxTrack_XZ_VolumeX", XZ_VolumeX[energiesX[0].first]);
+        SetObservableValue("MaxTrack_XZ_MeanX", XZ_MeanX[energiesX[0].first]);
+        SetObservableValue("MaxTrack_XZ_MeanZ", XZ_MeanZ[energiesX[0].first]);
+        SetObservableValue("MaxTrack_XZ_SkewZ", XZ_SkewZ[energiesX[0].first]);
 
-    SetObservableValue("MaxTrack_YZ_NHitsY", YZ_NHitsY[energiesY[0].first]);
-    SetObservableValue("MaxTrack_YZ_EnergyY", YZ_EnergyY[energiesY[0].first]);
-    SetObservableValue("MaxTrack_YZ_SigmaY", YZ_SigmaY[energiesY[0].first]);
-    SetObservableValue("MaxTrack_YZ_SigmaZ", YZ_SigmaZ[energiesY[0].first]);
-    SetObservableValue("MaxTrack_YZ_GaussSigmaY", YZ_GaussSigmaY[energiesY[0].first]);
-    SetObservableValue("MaxTrack_YZ_GaussSigmaZ", YZ_GaussSigmaZ[energiesY[0].first]);
-    SetObservableValue("MaxTrack_YZ_LengthY", YZ_LengthY[energiesY[0].first]);
-    SetObservableValue("MaxTrack_YZ_VolumeY", YZ_VolumeY[energiesY[0].first]);
-    SetObservableValue("MaxTrack_YZ_MeanY", YZ_MeanY[energiesY[0].first]);
-    SetObservableValue("MaxTrack_YZ_MeanZ", YZ_MeanZ[energiesY[0].first]);
-    SetObservableValue("MaxTrack_YZ_SkewZ", YZ_SkewZ[energiesY[0].first]);
+        SetObservableValue("MaxTrack_YZ_NHitsY", YZ_NHitsY[energiesY[0].first]);
+        SetObservableValue("MaxTrack_YZ_EnergyY", YZ_EnergyY[energiesY[0].first]);
+        SetObservableValue("MaxTrack_YZ_SigmaY", YZ_SigmaY[energiesY[0].first]);
+        SetObservableValue("MaxTrack_YZ_SigmaZ", YZ_SigmaZ[energiesY[0].first]);
+        SetObservableValue("MaxTrack_YZ_GaussSigmaY", YZ_GaussSigmaY[energiesY[0].first]);
+        SetObservableValue("MaxTrack_YZ_GaussSigmaZ", YZ_GaussSigmaZ[energiesY[0].first]);
+        SetObservableValue("MaxTrack_YZ_LengthY", YZ_LengthY[energiesY[0].first]);
+        SetObservableValue("MaxTrack_YZ_VolumeY", YZ_VolumeY[energiesY[0].first]);
+        SetObservableValue("MaxTrack_YZ_MeanY", YZ_MeanY[energiesY[0].first]);
+        SetObservableValue("MaxTrack_YZ_MeanZ", YZ_MeanZ[energiesY[0].first]);
+        SetObservableValue("MaxTrack_YZ_SkewZ", YZ_SkewZ[energiesY[0].first]);
 
-    SetObservableValue("MaxTrack_XZ_YZ_SigmaXYBalance", XZ_YZ_SigmaXYBalance[0]);
-    SetObservableValue("MaxTrack_XZ_YZ_SigmaZBalance", XZ_YZ_SigmaZBalance[0]);
-    SetObservableValue("MaxTrack_XZ_YZ_GaussSigmaXYBalance", XZ_YZ_GaussSigmaXYBalance[0]);
-    SetObservableValue("MaxTrack_XZ_YZ_GaussSigmaZBalance", XZ_YZ_GaussSigmaZBalance[0]);
+        SetObservableValue("MaxTrack_XZ_YZ_SigmaXYBalance", XZ_YZ_SigmaXYBalance[0]);
+        SetObservableValue("MaxTrack_XZ_YZ_SigmaZBalance", XZ_YZ_SigmaZBalance[0]);
+        SetObservableValue("MaxTrack_XZ_YZ_GaussSigmaXYBalance", XZ_YZ_GaussSigmaXYBalance[0]);
+        SetObservableValue("MaxTrack_XZ_YZ_GaussSigmaZBalance", XZ_YZ_GaussSigmaZBalance[0]);
 
-    SetObservableValue("MaxTrack_XZ_YZ_Energy", energiesX[0].second + energiesY[0].second);
-    SetObservableValue("MaxTrack_XZ_YZ_MaxTrackEnergyPercentage",
-                       (energiesX[0].second + energiesY[0].second) / fTrackEvent->GetEnergy());
-    SetObservableValue("MaxTrack_XZ_YZ_EnergyBalanceXY", (energiesX[0].second - energiesY[0].second) /
-                                                             (energiesX[0].second + energiesY[0].second));
+        SetObservableValue("MaxTrack_XZ_YZ_Energy", energiesX[0].second + energiesY[0].second);
+        SetObservableValue("MaxTrack_XZ_YZ_MaxTrackEnergyPercentage",
+                           (energiesX[0].second + energiesY[0].second) / fTrackEvent->GetEnergy());
+        SetObservableValue("MaxTrack_XZ_YZ_EnergyBalanceXY", (energiesX[0].second - energiesY[0].second) /
+                                                                 (energiesX[0].second + energiesY[0].second));
 
-    // --- Second max track observables --- //
-    SetObservableValue("SecondMaxTrack_XZ_NHitsX", XZ_NHitsX[energiesX[1].first]);
-    SetObservableValue("SecondMaxTrack_XZ_EnergyX", XZ_EnergyX[energiesX[1].first]);
-    SetObservableValue("SecondMaxTrack_XZ_SigmaX", XZ_SigmaX[energiesX[1].first]);
-    SetObservableValue("SecondMaxTrack_XZ_SigmaZ", XZ_SigmaZ[energiesX[1].first]);
-    SetObservableValue("SecondMaxTrack_XZ_GaussSigmaX", XZ_GaussSigmaX[energiesX[1].first]);
-    SetObservableValue("SecondMaxTrack_XZ_GaussSigmaZ", XZ_GaussSigmaZ[energiesX[1].first]);
-    SetObservableValue("SecondMaxTrack_XZ_LengthX", XZ_LengthX[energiesX[1].first]);
-    SetObservableValue("SecondMaxTrack_XZ_VolumeX", XZ_VolumeX[energiesX[1].first]);
-    SetObservableValue("SecondMaxTrack_XZ_MeanX", XZ_MeanX[energiesX[1].first]);
-    SetObservableValue("SecondMaxTrack_XZ_MeanZ", XZ_MeanZ[energiesX[1].first]);
-    SetObservableValue("SecondMaxTrack_XZ_SkewZ", XZ_SkewZ[energiesX[1].first]);
+        // --- Second max track observables --- //
+        SetObservableValue("SecondMaxTrack_XZ_NHitsX", XZ_NHitsX[energiesX[1].first]);
+        SetObservableValue("SecondMaxTrack_XZ_EnergyX", XZ_EnergyX[energiesX[1].first]);
+        SetObservableValue("SecondMaxTrack_XZ_SigmaX", XZ_SigmaX[energiesX[1].first]);
+        SetObservableValue("SecondMaxTrack_XZ_SigmaZ", XZ_SigmaZ[energiesX[1].first]);
+        SetObservableValue("SecondMaxTrack_XZ_GaussSigmaX", XZ_GaussSigmaX[energiesX[1].first]);
+        SetObservableValue("SecondMaxTrack_XZ_GaussSigmaZ", XZ_GaussSigmaZ[energiesX[1].first]);
+        SetObservableValue("SecondMaxTrack_XZ_LengthX", XZ_LengthX[energiesX[1].first]);
+        SetObservableValue("SecondMaxTrack_XZ_VolumeX", XZ_VolumeX[energiesX[1].first]);
+        SetObservableValue("SecondMaxTrack_XZ_MeanX", XZ_MeanX[energiesX[1].first]);
+        SetObservableValue("SecondMaxTrack_XZ_MeanZ", XZ_MeanZ[energiesX[1].first]);
+        SetObservableValue("SecondMaxTrack_XZ_SkewZ", XZ_SkewZ[energiesX[1].first]);
 
-    SetObservableValue("SecondMaxTrack_YZ_NHitsY", YZ_NHitsY[energiesY[1].first]);
-    SetObservableValue("SecondMaxTrack_YZ_EnergyY", YZ_EnergyY[energiesY[1].first]);
-    SetObservableValue("SecondMaxTrack_YZ_SigmaY", YZ_SigmaY[energiesY[1].first]);
-    SetObservableValue("SecondMaxTrack_YZ_SigmaZ", YZ_SigmaZ[energiesY[1].first]);
-    SetObservableValue("SecondMaxTrack_YZ_GaussSigmaY", YZ_GaussSigmaY[energiesY[1].first]);
-    SetObservableValue("SecondMaxTrack_YZ_GaussSigmaZ", YZ_GaussSigmaZ[energiesY[1].first]);
-    SetObservableValue("SecondMaxTrack_YZ_LengthY", YZ_LengthY[energiesY[1].first]);
-    SetObservableValue("SecondMaxTrack_YZ_VolumeY", YZ_VolumeY[energiesY[1].first]);
-    SetObservableValue("SecondMaxTrack_YZ_MeanY", YZ_MeanY[energiesY[1].first]);
-    SetObservableValue("SecondMaxTrack_YZ_MeanZ", YZ_MeanZ[energiesY[1].first]);
-    SetObservableValue("SecondMaxTrack_YZ_SkewZ", YZ_SkewZ[energiesY[1].first]);
+        SetObservableValue("SecondMaxTrack_YZ_NHitsY", YZ_NHitsY[energiesY[1].first]);
+        SetObservableValue("SecondMaxTrack_YZ_EnergyY", YZ_EnergyY[energiesY[1].first]);
+        SetObservableValue("SecondMaxTrack_YZ_SigmaY", YZ_SigmaY[energiesY[1].first]);
+        SetObservableValue("SecondMaxTrack_YZ_SigmaZ", YZ_SigmaZ[energiesY[1].first]);
+        SetObservableValue("SecondMaxTrack_YZ_GaussSigmaY", YZ_GaussSigmaY[energiesY[1].first]);
+        SetObservableValue("SecondMaxTrack_YZ_GaussSigmaZ", YZ_GaussSigmaZ[energiesY[1].first]);
+        SetObservableValue("SecondMaxTrack_YZ_LengthY", YZ_LengthY[energiesY[1].first]);
+        SetObservableValue("SecondMaxTrack_YZ_VolumeY", YZ_VolumeY[energiesY[1].first]);
+        SetObservableValue("SecondMaxTrack_YZ_MeanY", YZ_MeanY[energiesY[1].first]);
+        SetObservableValue("SecondMaxTrack_YZ_MeanZ", YZ_MeanZ[energiesY[1].first]);
+        SetObservableValue("SecondMaxTrack_YZ_SkewZ", YZ_SkewZ[energiesY[1].first]);
 
-    SetObservableValue("SecondMaxTrack_XZ_YZ_SigmaXYBalance", XZ_YZ_SigmaXYBalance[1]);
-    SetObservableValue("SecondMaxTrack_XZ_YZ_SigmaZBalance", XZ_YZ_SigmaZBalance[1]);
-    SetObservableValue("SecondMaxTrack_XZ_YZ_GaussSigmaXYBalance", XZ_YZ_GaussSigmaXYBalance[1]);
-    SetObservableValue("SecondMaxTrack_XZ_YZ_GaussSigmaZBalance", XZ_YZ_GaussSigmaZBalance[1]);
+        SetObservableValue("SecondMaxTrack_XZ_YZ_SigmaXYBalance", XZ_YZ_SigmaXYBalance[1]);
+        SetObservableValue("SecondMaxTrack_XZ_YZ_SigmaZBalance", XZ_YZ_SigmaZBalance[1]);
+        SetObservableValue("SecondMaxTrack_XZ_YZ_GaussSigmaXYBalance", XZ_YZ_GaussSigmaXYBalance[1]);
+        SetObservableValue("SecondMaxTrack_XZ_YZ_GaussSigmaZBalance", XZ_YZ_GaussSigmaZBalance[1]);
 
-    if (fTrackEvent->GetNumberOfTracks() > 1) {
-        SetObservableValue("SecondMaxTrack_XZ_YZ_Energy", energiesX[1].second + energiesY[1].second);
-        SetObservableValue("SecondMaxTrack_XZ_YZ_EnergyPercentage",
-                           (energiesX[1].second + energiesY[1].second) / fTrackEvent->GetEnergy());
-        SetObservableValue(
-            "SecondMaxTrack_XZ_YZ_EnergyBalanceXY",
-            (energiesX[1].second - energiesY[1].second) / (energiesX[1].second + energiesY[1].second));
-    } else {
-        SetObservableValue("SecondMaxTrack_XZ_YZ_Energy", 0);
-        SetObservableValue("SecondMaxTrack_XZ_YZ_EnergyPercentage", 0);
-        SetObservableValue("SecondMaxTrack_XZ_YZ_EnergyBalanceXY", 0);
-    }
+        if (fTrackEvent->GetNumberOfTracks() > 1) {
+            SetObservableValue("SecondMaxTrack_XZ_YZ_Energy", energiesX[1].second + energiesY[1].second);
+            SetObservableValue("SecondMaxTrack_XZ_YZ_EnergyPercentage",
+                               (energiesX[1].second + energiesY[1].second) / fTrackEvent->GetEnergy());
+            SetObservableValue(
+                "SecondMaxTrack_XZ_YZ_EnergyBalanceXY",
+                (energiesX[1].second - energiesY[1].second) / (energiesX[1].second + energiesY[1].second));
+        } else {
+            SetObservableValue("SecondMaxTrack_XZ_YZ_Energy", 0);
+            SetObservableValue("SecondMaxTrack_XZ_YZ_EnergyPercentage", 0);
+            SetObservableValue("SecondMaxTrack_XZ_YZ_EnergyBalanceXY", 0);
+        }
 
-    // --- Distance obsevables between first two tracks --- //
-    SetObservableValue("XZ_FirstSecondTracksDistanceXZ", XZ_FirstSecondTracksDistanceXZ);
-    SetObservableValue("YZ_FirstSecondTracksDistanceYZ", YZ_FirstSecondTracksDistanceYZ);
-    SetObservableValue("XZ_YZ_FirstSecondTracksDistanceSum",
-                       TMath::Sqrt(XZ_FirstSecondTracksDistanceXZ * XZ_FirstSecondTracksDistanceXZ +
-                                   YZ_FirstSecondTracksDistanceYZ * YZ_FirstSecondTracksDistanceYZ));
+        // --- Distance obsevables between first two tracks --- //
+        SetObservableValue("XZ_FirstSecondTracksDistanceXZ", XZ_FirstSecondTracksDistanceXZ);
+        SetObservableValue("YZ_FirstSecondTracksDistanceYZ", YZ_FirstSecondTracksDistanceYZ);
+        SetObservableValue("XZ_YZ_FirstSecondTracksDistanceSum",
+                           TMath::Sqrt(XZ_FirstSecondTracksDistanceXZ * XZ_FirstSecondTracksDistanceXZ +
+                                       YZ_FirstSecondTracksDistanceYZ * YZ_FirstSecondTracksDistanceYZ));
 
-    // --- Observables merging max tracks XZ and YZ --- //
-    SetObservableValue("MaxTrack_XZ_YZ_SigmaZ", MaxTrack_XZ_YZ_SigmaZ);
-    SetObservableValue("MaxTrack_XZ_YZ_GaussSigmaZ", MaxTrack_XZ_YZ_GaussSigmaZ);
-    SetObservableValue("MaxTrack_XZ_YZ_SkewXY", MaxTrack_XZ_YZ_SkewXY);
-    SetObservableValue("MaxTrack_XZ_YZ_SkewZ", MaxTrack_XZ_YZ_SkewZ);
-*/
+        // --- Observables merging max tracks XZ and YZ --- //
+        SetObservableValue("MaxTrack_XZ_YZ_SigmaZ", MaxTrack_XZ_YZ_SigmaZ);
+        SetObservableValue("MaxTrack_XZ_YZ_GaussSigmaZ", MaxTrack_XZ_YZ_GaussSigmaZ);
+        SetObservableValue("MaxTrack_XZ_YZ_SkewXY", MaxTrack_XZ_YZ_SkewXY);
+        SetObservableValue("MaxTrack_XZ_YZ_SkewZ", MaxTrack_XZ_YZ_SkewZ);
+    */
     return fTrackEvent;
 }
 
