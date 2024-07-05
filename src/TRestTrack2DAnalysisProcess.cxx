@@ -414,9 +414,9 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     SetObservableValue("Map_XZ_YZ_GaussSigmaXYBalance", XZ_YZ_GaussSigmaXYBalance);
     SetObservableValue("Map_XZ_YZ_GaussSigmaZBalance", XZ_YZ_GaussSigmaZBalance);
 
+
     // --- Max track observables --- //
-    int energiesX0FirstKey =
-        -1;  // Declare Keys outside to avoid error when accessing "energiesX[0].first"...
+    int energiesX0FirstKey = -1; // Declare Keys outside to avoid error when accessing "energiesX[0].first"...
     int energiesX0SecondKey = -1;
     int energiesY0FirstKey = -1;
     int energiesY0SecondKey = -1;
@@ -464,9 +464,9 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
 
         SetObservableValue("MaxTrack_XZ_YZ_Energy", energiesX[0].second + energiesY[0].second);
         SetObservableValue("MaxTrack_XZ_YZ_MaxTrackEnergyPercentage",
-                           (energiesX[0].second + energiesY[0].second) / fTrackEvent->GetEnergy());
+                        (energiesX[0].second + energiesY[0].second) / fTrackEvent->GetEnergy());
         SetObservableValue("MaxTrack_XZ_YZ_EnergyBalanceXY", (energiesX[0].second - energiesY[0].second) /
-                                                                 (energiesX[0].second + energiesY[0].second));
+                                                                (energiesX[0].second + energiesY[0].second));
 
     } else {
         std::cerr << "Error: energiesX or energiesY is empty. Some observables will not be set." << std::endl;
@@ -478,8 +478,7 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     SetObservableValue("MaxTrack_XZ_YZ_GaussSigmaZBalance", XZ_YZ_GaussSigmaZBalance[0]);
 
     // --- Second max track observables --- //
-    int energiesX1FirstKey =
-        -1;  // Declare Keys outside to avoid error when accessing "energiesX[1].first"...
+    int energiesX1FirstKey = -1; // Declare Keys outside to avoid error when accessing "energiesX[1].first"...
     int energiesX1SecondKey = -1;
     int energiesY1FirstKey = -1;
     int energiesY1SecondKey = -1;
@@ -520,38 +519,38 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     } else {
         std::cerr << "Error: energiesY is empty. Some observables will not be set." << std::endl;
     }
-    /*
-        SetObservableValue("SecondMaxTrack_XZ_YZ_SigmaXYBalance", XZ_YZ_SigmaXYBalance[1]);
-        SetObservableValue("SecondMaxTrack_XZ_YZ_SigmaZBalance", XZ_YZ_SigmaZBalance[1]);
-        SetObservableValue("SecondMaxTrack_XZ_YZ_GaussSigmaXYBalance", XZ_YZ_GaussSigmaXYBalance[1]);
-        SetObservableValue("SecondMaxTrack_XZ_YZ_GaussSigmaZBalance", XZ_YZ_GaussSigmaZBalance[1]);
 
-        if (fTrackEvent->GetNumberOfTracks() > 1) {
-            SetObservableValue("SecondMaxTrack_XZ_YZ_Energy", energiesX[1].second + energiesY[1].second);
-            SetObservableValue("SecondMaxTrack_XZ_YZ_EnergyPercentage",
-                               (energiesX[1].second + energiesY[1].second) / fTrackEvent->GetEnergy());
-            SetObservableValue(
-                "SecondMaxTrack_XZ_YZ_EnergyBalanceXY",
-                (energiesX[1].second - energiesY[1].second) / (energiesX[1].second + energiesY[1].second));
-        } else {
-            SetObservableValue("SecondMaxTrack_XZ_YZ_Energy", 0);
-            SetObservableValue("SecondMaxTrack_XZ_YZ_EnergyPercentage", 0);
-            SetObservableValue("SecondMaxTrack_XZ_YZ_EnergyBalanceXY", 0);
-        }
+    SetObservableValue("SecondMaxTrack_XZ_YZ_SigmaXYBalance", XZ_YZ_SigmaXYBalance[1]);
+    SetObservableValue("SecondMaxTrack_XZ_YZ_SigmaZBalance", XZ_YZ_SigmaZBalance[1]);
+    SetObservableValue("SecondMaxTrack_XZ_YZ_GaussSigmaXYBalance", XZ_YZ_GaussSigmaXYBalance[1]);
+    SetObservableValue("SecondMaxTrack_XZ_YZ_GaussSigmaZBalance", XZ_YZ_GaussSigmaZBalance[1]);
+/*
+    if (fTrackEvent->GetNumberOfTracks() > 1) {
+        SetObservableValue("SecondMaxTrack_XZ_YZ_Energy", energiesX[1].second + energiesY[1].second);
+        SetObservableValue("SecondMaxTrack_XZ_YZ_EnergyPercentage",
+                           (energiesX[1].second + energiesY[1].second) / fTrackEvent->GetEnergy());
+        SetObservableValue(
+            "SecondMaxTrack_XZ_YZ_EnergyBalanceXY",
+            (energiesX[1].second - energiesY[1].second) / (energiesX[1].second + energiesY[1].second));
+    } else {
+        SetObservableValue("SecondMaxTrack_XZ_YZ_Energy", 0);
+        SetObservableValue("SecondMaxTrack_XZ_YZ_EnergyPercentage", 0);
+        SetObservableValue("SecondMaxTrack_XZ_YZ_EnergyBalanceXY", 0);
+    }
 
-        // --- Distance obsevables between first two tracks --- //
-        SetObservableValue("XZ_FirstSecondTracksDistanceXZ", XZ_FirstSecondTracksDistanceXZ);
-        SetObservableValue("YZ_FirstSecondTracksDistanceYZ", YZ_FirstSecondTracksDistanceYZ);
-        SetObservableValue("XZ_YZ_FirstSecondTracksDistanceSum",
-                           TMath::Sqrt(XZ_FirstSecondTracksDistanceXZ * XZ_FirstSecondTracksDistanceXZ +
-                                       YZ_FirstSecondTracksDistanceYZ * YZ_FirstSecondTracksDistanceYZ));
+    // --- Distance obsevables between first two tracks --- //
+    SetObservableValue("XZ_FirstSecondTracksDistanceXZ", XZ_FirstSecondTracksDistanceXZ);
+    SetObservableValue("YZ_FirstSecondTracksDistanceYZ", YZ_FirstSecondTracksDistanceYZ);
+    SetObservableValue("XZ_YZ_FirstSecondTracksDistanceSum",
+                       TMath::Sqrt(XZ_FirstSecondTracksDistanceXZ * XZ_FirstSecondTracksDistanceXZ +
+                                   YZ_FirstSecondTracksDistanceYZ * YZ_FirstSecondTracksDistanceYZ));
 
-        // --- Observables merging max tracks XZ and YZ --- //
-        SetObservableValue("MaxTrack_XZ_YZ_SigmaZ", MaxTrack_XZ_YZ_SigmaZ);
-        SetObservableValue("MaxTrack_XZ_YZ_GaussSigmaZ", MaxTrack_XZ_YZ_GaussSigmaZ);
-        SetObservableValue("MaxTrack_XZ_YZ_SkewXY", MaxTrack_XZ_YZ_SkewXY);
-        SetObservableValue("MaxTrack_XZ_YZ_SkewZ", MaxTrack_XZ_YZ_SkewZ);
-    */
+    // --- Observables merging max tracks XZ and YZ --- //
+    SetObservableValue("MaxTrack_XZ_YZ_SigmaZ", MaxTrack_XZ_YZ_SigmaZ);
+    SetObservableValue("MaxTrack_XZ_YZ_GaussSigmaZ", MaxTrack_XZ_YZ_GaussSigmaZ);
+    SetObservableValue("MaxTrack_XZ_YZ_SkewXY", MaxTrack_XZ_YZ_SkewXY);
+    SetObservableValue("MaxTrack_XZ_YZ_SkewZ", MaxTrack_XZ_YZ_SkewZ);
+*/
     return fTrackEvent;
 }
 
