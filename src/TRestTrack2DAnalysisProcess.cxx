@@ -418,7 +418,8 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
 
     // Copy the MaxTrack keys immediately after checking the vector
     if (!energiesX.empty()) {
-        int energiesX0FirstKey = energiesX[0].first;    // Declare Keys outside to avoid error when accessing "energiesX[0].first"...
+        int energiesX0FirstKey =
+            energiesX[0].first;  // Declare Keys outside to avoid error when accessing "energiesX[0].first"...
 
         SetObservableValue("MaxTrack_XZ_NHitsX", XZ_NHitsX[energiesX0FirstKey]);
         SetObservableValue("MaxTrack_XZ_EnergyX", XZ_EnergyX[energiesX0FirstKey]);
@@ -476,7 +477,8 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
 
     // Copy the SecondTrack keys immediately after checking the vector
     if (!energiesX.empty()) {
-        int energiesX1FirstKey = energiesX[1].first;    // Declare Keys outside to avoid error when accessing "energiesX[1].first"...
+        int energiesX1FirstKey =
+            energiesX[1].first;  // Declare Keys outside to avoid error when accessing "energiesX[1].first"...
 
         SetObservableValue("SecondMaxTrack_XZ_NHitsX", XZ_NHitsX[energiesX1FirstKey]);
         SetObservableValue("SecondMaxTrack_XZ_EnergyX", XZ_EnergyX[energiesX1FirstKey]);

@@ -243,9 +243,9 @@ TRestEvent* TRestTrack3DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
 
     // Copy the MaxTrack keys immediately after checking the vector
     if (!energies.empty()) {
-
         // --- Max track observables --- //
-        int energies0FirstKey = energies[0].first;  // Declare Keys outside to avoid error when accessing "energies[0].first"...
+        int energies0FirstKey =
+            energies[0].first;  // Declare Keys outside to avoid error when accessing "energies[0].first"...
         Double_t energies0SecondKey = energies[0].second;
 
         SetObservableValue("MaxTrack_XYZ_NHits", XYZ_NHits[energies0FirstKey]);
@@ -265,7 +265,7 @@ TRestEvent* TRestTrack3DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
         SetObservableValue("MaxTrack_XYZ_SkewZ", XYZ_SkewZ[energies0FirstKey]);
 
         SetObservableValue("MaxTrack_XYZ_MaxTrackEnergyPercentage",
-                       (energies0SecondKey) / fTrackEvent->GetEnergy());
+                           (energies0SecondKey) / fTrackEvent->GetEnergy());
 
         // --- Second max track observables --- //
         int energies1FirstKey = energies[1].first;
@@ -290,7 +290,7 @@ TRestEvent* TRestTrack3DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
 
         if (fTrackEvent->GetNumberOfTracks() > 2) {
             SetObservableValue("SecondMaxTrack_XYZ_MaxTrackEnergyPercentage",
-                            (energies1SecondKey) / fTrackEvent->GetEnergy());
+                               (energies1SecondKey) / fTrackEvent->GetEnergy());
         } else {
             SetObservableValue("SecondMaxTrack_XYZ_MaxTrackEnergyPercentage", 0.0);
         }
