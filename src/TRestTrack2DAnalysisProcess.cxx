@@ -414,9 +414,9 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     SetObservableValue("Map_XZ_YZ_GaussSigmaXYBalance", XZ_YZ_GaussSigmaXYBalance);
     SetObservableValue("Map_XZ_YZ_GaussSigmaZBalance", XZ_YZ_GaussSigmaZBalance);
 
-
     // --- Max track observables --- //
-    int energiesX0FirstKey = -1; // Declare Keys outside to avoid error when accessing "energiesX[0].first"...
+    int energiesX0FirstKey =
+        -1;  // Declare Keys outside to avoid error when accessing "energiesX[0].first"...
     Double_t energiesX0SecondKey = -1.0;
     int energiesY0FirstKey = -1;
     Double_t energiesY0SecondKey = -1.0;
@@ -464,9 +464,9 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
 
         SetObservableValue("MaxTrack_XZ_YZ_Energy", energiesX[0].second + energiesY[0].second);
         SetObservableValue("MaxTrack_XZ_YZ_MaxTrackEnergyPercentage",
-                        (energiesX[0].second + energiesY[0].second) / fTrackEvent->GetEnergy());
+                           (energiesX[0].second + energiesY[0].second) / fTrackEvent->GetEnergy());
         SetObservableValue("MaxTrack_XZ_YZ_EnergyBalanceXY", (energiesX[0].second - energiesY[0].second) /
-                                                                (energiesX[0].second + energiesY[0].second));
+                                                                 (energiesX[0].second + energiesY[0].second));
 
     } else {
         std::cerr << "Error: energiesX or energiesY is empty. Some observables will not be set." << std::endl;
@@ -478,7 +478,8 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     SetObservableValue("MaxTrack_XZ_YZ_GaussSigmaZBalance", XZ_YZ_GaussSigmaZBalance[0]);
 
     // --- Second max track observables --- //
-    int energiesX1FirstKey = -1; // Declare Keys outside to avoid error when accessing "energiesX[1].first"...
+    int energiesX1FirstKey =
+        -1;  // Declare Keys outside to avoid error when accessing "energiesX[1].first"...
     Double_t energiesX1SecondKey = -1.0;
     int energiesY1FirstKey = -1;
     Double_t energiesY1SecondKey = -1.0;
@@ -532,9 +533,10 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
         if (fTrackEvent->GetNumberOfTracks() > 2) {
             SetObservableValue("SecondMaxTrack_XZ_YZ_Energy", energiesX1SecondKey + energiesY1SecondKey);
             SetObservableValue("SecondMaxTrack_XZ_YZ_EnergyPercentage",
-                            (energiesX1SecondKey + energiesY1SecondKey) / fTrackEvent->GetEnergy());
-            SetObservableValue("SecondMaxTrack_XZ_YZ_EnergyBalanceXY",
-                            (energiesX1SecondKey - energiesY1SecondKey) / (energiesX1SecondKey + energiesY1SecondKey));
+                               (energiesX1SecondKey + energiesY1SecondKey) / fTrackEvent->GetEnergy());
+            SetObservableValue(
+                "SecondMaxTrack_XZ_YZ_EnergyBalanceXY",
+                (energiesX1SecondKey - energiesY1SecondKey) / (energiesX1SecondKey + energiesY1SecondKey));
         } else {
             SetObservableValue("SecondMaxTrack_XZ_YZ_Energy", 0.0);
             SetObservableValue("SecondMaxTrack_XZ_YZ_EnergyPercentage", 0.0);
