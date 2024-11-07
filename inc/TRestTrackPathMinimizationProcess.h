@@ -12,10 +12,10 @@
 #ifndef RestCore_TRestTrackPathMinimizationProcess
 #define RestCore_TRestTrackPathMinimizationProcess
 
+#include <TRestEventProcess.h>
+
 #include "TRestTrackEvent.h"
 #include "trackMinimization.h"
-
-#include <TRestEventProcess.h>
 
 class TRestTrackPathMinimizationProcess : public TRestEventProcess {
    private:

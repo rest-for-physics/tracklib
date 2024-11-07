@@ -63,11 +63,13 @@ void TRestTrackBlobAnalysisProcess::InitProcess() {
         if (fObservables[i].find("Qlow_R") != string::npos) fQlow_Observables.emplace_back(fObservables[i]);
         if (fObservables[i].find("Qbalance_R") != string::npos)
             fQbalance_Observables.emplace_back(fObservables[i]);
-        if (fObservables[i].find("Qratio_R") != string::npos) fQratio_Observables.emplace_back(fObservables[i]);
+        if (fObservables[i].find("Qratio_R") != string::npos)
+            fQratio_Observables.emplace_back(fObservables[i]);
 
         if (fObservables[i].find("Qhigh_X_R") != string::npos)
             fQhigh_X_Observables.emplace_back(fObservables[i]);
-        if (fObservables[i].find("Qlow_X_R") != string::npos) fQlow_X_Observables.emplace_back(fObservables[i]);
+        if (fObservables[i].find("Qlow_X_R") != string::npos)
+            fQlow_X_Observables.emplace_back(fObservables[i]);
         if (fObservables[i].find("Qbalance_X_R") != string::npos)
             fQbalance_X_Observables.emplace_back(fObservables[i]);
         if (fObservables[i].find("Qratio_X_R") != string::npos)
@@ -75,7 +77,8 @@ void TRestTrackBlobAnalysisProcess::InitProcess() {
 
         if (fObservables[i].find("Qhigh_Y_R") != string::npos)
             fQhigh_Y_Observables.emplace_back(fObservables[i]);
-        if (fObservables[i].find("Qlow_Y_R") != string::npos) fQlow_Y_Observables.emplace_back(fObservables[i]);
+        if (fObservables[i].find("Qlow_Y_R") != string::npos)
+            fQlow_Y_Observables.emplace_back(fObservables[i]);
         if (fObservables[i].find("Qbalance_Y_R") != string::npos)
             fQbalance_Y_Observables.emplace_back(fObservables[i]);
         if (fObservables[i].find("Qratio_Y_R") != string::npos)
