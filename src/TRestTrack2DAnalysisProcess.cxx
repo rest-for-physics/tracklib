@@ -356,8 +356,10 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     auto hitsBoth = {hitsXZ, hitsYZ};
 
     for (auto arg : hitsBoth) {
-        if (arg == nullptr) continue;
-        for (unsigned int n = 0; n < arg->GetNumberOfHits(); n++) {
+        if (arg == nullptr) {
+            continue;
+        }
+        for (int n = 0; n < int(arg->GetNumberOfHits()); n++) {
             // your code in the existing loop, replacing `hits` by `arg`
             Double_t eDep = arg->GetEnergy(n);
             Double_t x = arg->GetX(n);
@@ -420,6 +422,9 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     // --- Max track observables --- //
 
     // Copy the MaxTrack keys immediately after checking the vector
+
+    SetObservableValue("MaxTrack_XZ_OK", !energiesX.empty());
+
     if (!energiesX.empty()) {
         int energiesX0FirstKey =
             energiesX[0].first;  // Declare Keys outside to avoid error when accessing "energiesX[0].first"...
@@ -436,8 +441,20 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
         SetObservableValue("MaxTrack_XZ_MeanZ", XZ_MeanZ[energiesX0FirstKey]);
         SetObservableValue("MaxTrack_XZ_SkewZ", XZ_SkewZ[energiesX0FirstKey]);
     } else {
-        std::cerr << "Error: energiesX is empty. The observables are set to 0." << std::endl;
+        SetObservableValue("MaxTrack_XZ_NHitsX", 0);
+        SetObservableValue("MaxTrack_XZ_EnergyX", 0);
+        SetObservableValue("MaxTrack_XZ_SigmaX", 0);
+        SetObservableValue("MaxTrack_XZ_SigmaZ", 0);
+        SetObservableValue("MaxTrack_XZ_GaussSigmaX", 0);
+        SetObservableValue("MaxTrack_XZ_GaussSigmaZ", 0);
+        SetObservableValue("MaxTrack_XZ_LengthX", 0);
+        SetObservableValue("MaxTrack_XZ_VolumeX", 0);
+        SetObservableValue("MaxTrack_XZ_MeanX", 0);
+        SetObservableValue("MaxTrack_XZ_MeanZ", 0);
+        SetObservableValue("MaxTrack_XZ_SkewZ", 0);
     }
+
+    SetObservableValue("MaxTrack_YZ_OK", !energiesY.empty());
 
     if (!energiesY.empty()) {
         int energiesY0FirstKey = energiesY[0].first;
@@ -454,8 +471,20 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
         SetObservableValue("MaxTrack_YZ_MeanZ", YZ_MeanZ[energiesY0FirstKey]);
         SetObservableValue("MaxTrack_YZ_SkewZ", YZ_SkewZ[energiesY0FirstKey]);
     } else {
-        std::cerr << "Error: energiesY is empty. The observables are set to 0." << std::endl;
+        SetObservableValue("MaxTrack_YZ_NHitsY", 0);
+        SetObservableValue("MaxTrack_YZ_EnergyY", 0);
+        SetObservableValue("MaxTrack_YZ_SigmaY", 0);
+        SetObservableValue("MaxTrack_YZ_SigmaZ", 0);
+        SetObservableValue("MaxTrack_YZ_GaussSigmaY", 0);
+        SetObservableValue("MaxTrack_YZ_GaussSigmaZ", 0);
+        SetObservableValue("MaxTrack_YZ_LengthY", 0);
+        SetObservableValue("MaxTrack_YZ_VolumeY", 0);
+        SetObservableValue("MaxTrack_YZ_MeanY", 0);
+        SetObservableValue("MaxTrack_YZ_MeanZ", 0);
+        SetObservableValue("MaxTrack_YZ_SkewZ", 0);
     }
+
+    SetObservableValue("MaxTrack_XZ_YZ_OK", !energiesY.empty() && !energiesX.empty());
 
     if (!energiesX.empty() && !energiesY.empty()) {
         Double_t energiesX0SecondKey = energiesX[0].second;
@@ -468,7 +497,9 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
                                                                  (energiesX0SecondKey + energiesY0SecondKey));
 
     } else {
-        std::cerr << "Error: energiesX or energiesY is empty. The observables are set to 0." << std::endl;
+        SetObservableValue("MaxTrack_XZ_YZ_Energy", 0);
+        SetObservableValue("MaxTrack_XZ_YZ_MaxTrackEnergyPercentage", 0);
+        SetObservableValue("MaxTrack_XZ_YZ_EnergyBalanceXY", 0);
     }
 
     SetObservableValue("MaxTrack_XZ_YZ_SigmaXYBalance", XZ_YZ_SigmaXYBalance[0]);
@@ -477,9 +508,10 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     SetObservableValue("MaxTrack_XZ_YZ_GaussSigmaZBalance", XZ_YZ_GaussSigmaZBalance[0]);
 
     // --- Second max track observables --- //
+    SetObservableValue("SecondMaxTrack_XZ_OK", energiesX.size() > 1);
 
     // Copy the SecondTrack keys immediately after checking the vector
-    if (!energiesX.empty()) {
+    if (energiesX.size() > 1) {
         int energiesX1FirstKey =
             energiesX[1].first;  // Declare Keys outside to avoid error when accessing "energiesX[1].first"...
 
@@ -495,8 +527,20 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
         SetObservableValue("SecondMaxTrack_XZ_MeanZ", XZ_MeanZ[energiesX1FirstKey]);
         SetObservableValue("SecondMaxTrack_XZ_SkewZ", XZ_SkewZ[energiesX1FirstKey]);
     } else {
-        std::cerr << "Error: energiesX is empty. The observables are set to 0." << std::endl;
+        SetObservableValue("SecondMaxTrack_XZ_NHitsX", 0);
+        SetObservableValue("SecondMaxTrack_XZ_EnergyX", 0);
+        SetObservableValue("SecondMaxTrack_XZ_SigmaX", 0);
+        SetObservableValue("SecondMaxTrack_XZ_SigmaZ", 0);
+        SetObservableValue("SecondMaxTrack_XZ_GaussSigmaX", 0);
+        SetObservableValue("SecondMaxTrack_XZ_GaussSigmaZ", 0);
+        SetObservableValue("SecondMaxTrack_XZ_LengthX", 0);
+        SetObservableValue("SecondMaxTrack_XZ_VolumeX", 0);
+        SetObservableValue("SecondMaxTrack_XZ_MeanX", 0);
+        SetObservableValue("SecondMaxTrack_XZ_MeanZ", 0);
+        SetObservableValue("SecondMaxTrack_XZ_SkewZ", 0);
     }
+
+    SetObservableValue("SecondMaxTrack_YZ_OK", energiesY.size() > 1);
 
     if (!energiesY.empty()) {
         int energiesY1FirstKey = energiesY[1].first;
@@ -513,7 +557,17 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
         SetObservableValue("SecondMaxTrack_YZ_MeanZ", YZ_MeanZ[energiesY1FirstKey]);
         SetObservableValue("SecondMaxTrack_YZ_SkewZ", YZ_SkewZ[energiesY1FirstKey]);
     } else {
-        std::cerr << "Error: energiesY is empty. The observables are set to 0." << std::endl;
+        SetObservableValue("SecondMaxTrack_YZ_NHitsY", 0);
+        SetObservableValue("SecondMaxTrack_YZ_EnergyY", 0);
+        SetObservableValue("SecondMaxTrack_YZ_SigmaY", 0);
+        SetObservableValue("SecondMaxTrack_YZ_SigmaZ", 0);
+        SetObservableValue("SecondMaxTrack_YZ_GaussSigmaY", 0);
+        SetObservableValue("SecondMaxTrack_YZ_GaussSigmaZ", 0);
+        SetObservableValue("SecondMaxTrack_YZ_LengthY", 0);
+        SetObservableValue("SecondMaxTrack_YZ_VolumeY", 0);
+        SetObservableValue("SecondMaxTrack_YZ_MeanY", 0);
+        SetObservableValue("SecondMaxTrack_YZ_MeanZ", 0);
+        SetObservableValue("SecondMaxTrack_YZ_SkewZ", 0);
     }
 
     SetObservableValue("SecondMaxTrack_XZ_YZ_SigmaXYBalance", XZ_YZ_SigmaXYBalance[1]);
@@ -521,7 +575,9 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     SetObservableValue("SecondMaxTrack_XZ_YZ_GaussSigmaXYBalance", XZ_YZ_GaussSigmaXYBalance[1]);
     SetObservableValue("SecondMaxTrack_XZ_YZ_GaussSigmaZBalance", XZ_YZ_GaussSigmaZBalance[1]);
 
-    if (!energiesX.empty() && !energiesY.empty()) {
+    SetObservableValue("SecondMaxTrack_XZ_YZ_OK", energiesY.size() > 1 && energiesX.size() > 1);
+
+    if (energiesY.size() > 1 && energiesX.size() > 1) {
         Double_t energiesX1SecondKey = energiesX[1].second;
         Double_t energiesY1SecondKey = energiesY[1].second;
 
@@ -538,7 +594,9 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
             SetObservableValue("SecondMaxTrack_XZ_YZ_EnergyBalanceXY", 0.0);
         }
     } else {
-        std::cerr << "Error: energiesX or energiesY is empty. The observables are set to 0." << std::endl;
+        SetObservableValue("SecondMaxTrack_XZ_YZ_Energy", 0.0);
+        SetObservableValue("SecondMaxTrack_XZ_YZ_EnergyPercentage", 0.0);
+        SetObservableValue("SecondMaxTrack_XZ_YZ_EnergyBalanceXY", 0.0);
     }
 
     // --- Distance observables between first two tracks --- //
