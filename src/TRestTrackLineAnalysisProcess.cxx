@@ -41,12 +41,12 @@
 /// * **trackBalanceXZ**: Track balance between the most energetic track and all tracks in the XZ projection
 /// * **trackBalanceYZ**: Track balance between the most energetic track and all tracks in the YZ projection
 /// * **trackBalance**: Total track balance between the most energetic tracks (XZ + YZ) and all tracks
-/// * **originX**: Track origin in the X cordinate
-/// * **originY**: Track origin in the Y cordinate
-/// * **originZ**: Track origin in the Z cordinate
-/// * **endX**: Track end in the X cordinate
-/// * **endY**: Track end in the Y cordinate
-/// * **endZ**: Track end in the Z cordinate
+/// * **originX**: Track origin in the X coordinate
+/// * **originY**: Track origin in the Y coordinate
+/// * **originZ**: Track origin in the Z coordinate
+/// * **endX**: Track end in the X coordinate
+/// * **endY**: Track end in the Y coordinate
+/// * **endZ**: Track end in the Z coordinate
 /// * **length**: Track length in mm
 /// * **angle**: Track polar angle in radians
 /// * **downwards**: (bool) true if the track direction is downwards, false otherwise

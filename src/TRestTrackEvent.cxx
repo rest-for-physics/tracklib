@@ -62,7 +62,7 @@ void TRestTrackEvent::AddTrack(TRestTrack* c) {
     if (c->isYZ()) fNtracksY++;
     fNtracks++;
 
-    fTrack.push_back(*c);
+    fTrack.emplace_back(*c);
 
     SetLevels();
 }
@@ -439,14 +439,14 @@ Double_t TRestTrackEvent::GetMaxTrackRelativeZ() {
     for (size_t i = 0; i < tckX->GetVolumeHits()->GetNumberOfHits(); i++) {
         double en = tckX->GetVolumeHits()->GetEnergy(i);
         double z = tckX->GetVolumeHits()->GetZ(i);
-        zEn.push_back(std::make_pair(z, en));
+        zEn.emplace_back(std::make_pair(z, en));
         totEn += en;
     }
 
     for (size_t i = 0; i < tckY->GetVolumeHits()->GetNumberOfHits(); i++) {
         double en = tckY->GetVolumeHits()->GetEnergy(i);
         double z = tckY->GetVolumeHits()->GetZ(i);
-        zEn.push_back(std::make_pair(z, en));
+        zEn.emplace_back(std::make_pair(z, en));
         totEn += en;
     }
 

@@ -150,7 +150,7 @@ TRestEvent* TRestTrack3DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     /// ------------------ COMPUTE OBSERVABLES ------------------- ///
     /// ---------------------------------------------------------- ///
 
-    /// Map oservables
+    /// Map observables
     for (int tck = 0; tck < fTrackEvent->GetNumberOfTracks(); tck++) {
         if (!fTrackEvent->isTopLevel(tck)) continue;
 
@@ -197,7 +197,7 @@ TRestEvent* TRestTrack3DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     /// From map to vector
     map<int, Double_t>::iterator it;
     for (it = XYZ_Energy.begin(); it != XYZ_Energy.end(); it++) {
-        energies.push_back(make_pair(it->first, it->second));
+        energies.emplace_back(make_pair(it->first, it->second));
     }
 
     /// Sort the vector by decreasing order of its pair's second value
@@ -298,19 +298,12 @@ TRestEvent* TRestTrack3DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
         std::cerr << "Error: energies is empty. Some observables will not be set." << std::endl;
     }
 
-    // --- Distance obsevables between first two tracks --- //
+    // --- Distance observables between first two tracks --- //
     SetObservableValue("XYZ_FirstSecondTracksDistance", XYZ_FirstSecondTracksDistance);
 
     return fTrackEvent;
 }
 
-void TRestTrack3DAnalysisProcess::EndProcess() {
-    // Function to be executed once at the end of the process
-    // (after all events have been processed)
-
-    // Start by calling the EndProcess function of the abstract class.
-    // Comment this if you don't want it.
-    // TRestEventProcess::EndProcess();
-}
+void TRestTrack3DAnalysisProcess::EndProcess() {}
 
 void TRestTrack3DAnalysisProcess::InitFromConfigFile() {}

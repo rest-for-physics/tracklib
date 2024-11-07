@@ -23,9 +23,9 @@
 #ifndef RestCore_TRestTrackAnalysisProcess
 #define RestCore_TRestTrackAnalysisProcess
 
-#include <TRestTrackEvent.h>
+#include <TRestEventProcess.h>
 
-#include "TRestEventProcess.h"
+#include "TRestTrackEvent.h"
 
 //! An analysis REST process to extract valuable information from Track type of data.
 class TRestTrackAnalysisProcess : public TRestEventProcess {

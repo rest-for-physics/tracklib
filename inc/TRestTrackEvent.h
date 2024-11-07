@@ -136,4 +136,5 @@ class TRestTrackEvent : public TRestEvent {
 
     ClassDef(TRestTrackEvent, 1);  // REST event superclass
 };
+
 #endif

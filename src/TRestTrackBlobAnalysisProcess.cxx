@@ -50,131 +50,134 @@ void TRestTrackBlobAnalysisProcess::InitProcess() {
     fObservables = TRestEventProcess::ReadObservables();
 
     for (unsigned int i = 0; i < fObservables.size(); i++) {
-        if (fObservables[i].find("Q1_R") != string::npos) fQ1_Observables.push_back(fObservables[i]);
-        if (fObservables[i].find("Q2_R") != string::npos) fQ2_Observables.push_back(fObservables[i]);
+        if (fObservables[i].find("Q1_R") != string::npos) fQ1_Observables.emplace_back(fObservables[i]);
+        if (fObservables[i].find("Q2_R") != string::npos) fQ2_Observables.emplace_back(fObservables[i]);
 
-        if (fObservables[i].find("Q1_X_R") != string::npos) fQ1_X_Observables.push_back(fObservables[i]);
-        if (fObservables[i].find("Q2_X_R") != string::npos) fQ2_X_Observables.push_back(fObservables[i]);
+        if (fObservables[i].find("Q1_X_R") != string::npos) fQ1_X_Observables.emplace_back(fObservables[i]);
+        if (fObservables[i].find("Q2_X_R") != string::npos) fQ2_X_Observables.emplace_back(fObservables[i]);
 
-        if (fObservables[i].find("Q1_Y_R") != string::npos) fQ1_Y_Observables.push_back(fObservables[i]);
-        if (fObservables[i].find("Q2_Y_R") != string::npos) fQ2_Y_Observables.push_back(fObservables[i]);
+        if (fObservables[i].find("Q1_Y_R") != string::npos) fQ1_Y_Observables.emplace_back(fObservables[i]);
+        if (fObservables[i].find("Q2_Y_R") != string::npos) fQ2_Y_Observables.emplace_back(fObservables[i]);
 
-        if (fObservables[i].find("Qhigh_R") != string::npos) fQhigh_Observables.push_back(fObservables[i]);
-        if (fObservables[i].find("Qlow_R") != string::npos) fQlow_Observables.push_back(fObservables[i]);
+        if (fObservables[i].find("Qhigh_R") != string::npos) fQhigh_Observables.emplace_back(fObservables[i]);
+        if (fObservables[i].find("Qlow_R") != string::npos) fQlow_Observables.emplace_back(fObservables[i]);
         if (fObservables[i].find("Qbalance_R") != string::npos)
-            fQbalance_Observables.push_back(fObservables[i]);
-        if (fObservables[i].find("Qratio_R") != string::npos) fQratio_Observables.push_back(fObservables[i]);
+            fQbalance_Observables.emplace_back(fObservables[i]);
+        if (fObservables[i].find("Qratio_R") != string::npos)
+            fQratio_Observables.emplace_back(fObservables[i]);
 
         if (fObservables[i].find("Qhigh_X_R") != string::npos)
-            fQhigh_X_Observables.push_back(fObservables[i]);
-        if (fObservables[i].find("Qlow_X_R") != string::npos) fQlow_X_Observables.push_back(fObservables[i]);
+            fQhigh_X_Observables.emplace_back(fObservables[i]);
+        if (fObservables[i].find("Qlow_X_R") != string::npos)
+            fQlow_X_Observables.emplace_back(fObservables[i]);
         if (fObservables[i].find("Qbalance_X_R") != string::npos)
-            fQbalance_X_Observables.push_back(fObservables[i]);
+            fQbalance_X_Observables.emplace_back(fObservables[i]);
         if (fObservables[i].find("Qratio_X_R") != string::npos)
-            fQratio_X_Observables.push_back(fObservables[i]);
+            fQratio_X_Observables.emplace_back(fObservables[i]);
 
         if (fObservables[i].find("Qhigh_Y_R") != string::npos)
-            fQhigh_Y_Observables.push_back(fObservables[i]);
-        if (fObservables[i].find("Qlow_Y_R") != string::npos) fQlow_Y_Observables.push_back(fObservables[i]);
+            fQhigh_Y_Observables.emplace_back(fObservables[i]);
+        if (fObservables[i].find("Qlow_Y_R") != string::npos)
+            fQlow_Y_Observables.emplace_back(fObservables[i]);
         if (fObservables[i].find("Qbalance_Y_R") != string::npos)
-            fQbalance_Y_Observables.push_back(fObservables[i]);
+            fQbalance_Y_Observables.emplace_back(fObservables[i]);
         if (fObservables[i].find("Qratio_Y_R") != string::npos)
-            fQratio_Y_Observables.push_back(fObservables[i]);
+            fQratio_Y_Observables.emplace_back(fObservables[i]);
     }
 
     for (unsigned int i = 0; i < fQ1_Observables.size(); i++) {
         Double_t r1 = atof(fQ1_Observables[i].substr(4, fQ1_Observables[i].length() - 4).c_str());
-        fQ1_Radius.push_back(r1);
+        fQ1_Radius.emplace_back(r1);
     }
 
     for (unsigned int i = 0; i < fQ2_Observables.size(); i++) {
         Double_t r2 = atof(fQ2_Observables[i].substr(4, fQ2_Observables[i].length() - 4).c_str());
-        fQ2_Radius.push_back(r2);
+        fQ2_Radius.emplace_back(r2);
     }
 
     for (unsigned int i = 0; i < fQ1_X_Observables.size(); i++) {
         Double_t r1 = atof(fQ1_X_Observables[i].substr(6, fQ1_X_Observables[i].length() - 6).c_str());
-        fQ1_X_Radius.push_back(r1);
+        fQ1_X_Radius.emplace_back(r1);
     }
 
     for (unsigned int i = 0; i < fQ2_X_Observables.size(); i++) {
         Double_t r2 = atof(fQ2_X_Observables[i].substr(6, fQ2_X_Observables[i].length() - 6).c_str());
-        fQ2_X_Radius.push_back(r2);
+        fQ2_X_Radius.emplace_back(r2);
     }
 
     for (unsigned int i = 0; i < fQ1_Y_Observables.size(); i++) {
         Double_t r1 = atof(fQ1_Y_Observables[i].substr(6, fQ1_Y_Observables[i].length() - 6).c_str());
-        fQ1_Y_Radius.push_back(r1);
+        fQ1_Y_Radius.emplace_back(r1);
     }
 
     for (unsigned int i = 0; i < fQ2_Y_Observables.size(); i++) {
         Double_t r2 = atof(fQ2_Y_Observables[i].substr(6, fQ2_Y_Observables[i].length() - 6).c_str());
-        fQ2_Y_Radius.push_back(r2);
+        fQ2_Y_Radius.emplace_back(r2);
     }
 
     for (unsigned int i = 0; i < fQhigh_Observables.size(); i++) {
         Double_t r1 = atof(fQhigh_Observables[i].substr(7, fQhigh_Observables[i].length() - 7).c_str());
-        fQhigh_Radius.push_back(r1);
+        fQhigh_Radius.emplace_back(r1);
     }
 
     for (unsigned int i = 0; i < fQlow_Observables.size(); i++) {
         Double_t r2 = atof(fQlow_Observables[i].substr(6, fQlow_Observables[i].length() - 6).c_str());
-        fQlow_Radius.push_back(r2);
+        fQlow_Radius.emplace_back(r2);
     }
 
     for (unsigned int i = 0; i < fQhigh_X_Observables.size(); i++) {
         Double_t r1 = atof(fQhigh_X_Observables[i].substr(9, fQhigh_X_Observables[i].length() - 9).c_str());
-        fQhigh_X_Radius.push_back(r1);
+        fQhigh_X_Radius.emplace_back(r1);
     }
 
     for (unsigned int i = 0; i < fQlow_X_Observables.size(); i++) {
         Double_t r2 = atof(fQlow_X_Observables[i].substr(8, fQlow_X_Observables[i].length() - 8).c_str());
-        fQlow_X_Radius.push_back(r2);
+        fQlow_X_Radius.emplace_back(r2);
     }
 
     for (unsigned int i = 0; i < fQhigh_Y_Observables.size(); i++) {
         Double_t r1 = atof(fQhigh_Y_Observables[i].substr(9, fQhigh_Y_Observables[i].length() - 9).c_str());
-        fQhigh_Y_Radius.push_back(r1);
+        fQhigh_Y_Radius.emplace_back(r1);
     }
 
     for (unsigned int i = 0; i < fQlow_Y_Observables.size(); i++) {
         Double_t r2 = atof(fQlow_Y_Observables[i].substr(8, fQlow_Y_Observables[i].length() - 8).c_str());
-        fQlow_Y_Radius.push_back(r2);
+        fQlow_Y_Radius.emplace_back(r2);
     }
 
     for (unsigned int i = 0; i < fQbalance_Observables.size(); i++) {
         Double_t r1 =
             atof(fQbalance_Observables[i].substr(10, fQbalance_Observables[i].length() - 10).c_str());
-        fQbalance_Radius.push_back(r1);
+        fQbalance_Radius.emplace_back(r1);
     }
 
     for (unsigned int i = 0; i < fQratio_Observables.size(); i++) {
         Double_t r2 = atof(fQratio_Observables[i].substr(8, fQratio_Observables[i].length() - 8).c_str());
-        fQratio_Radius.push_back(r2);
+        fQratio_Radius.emplace_back(r2);
     }
 
     for (unsigned int i = 0; i < fQbalance_X_Observables.size(); i++) {
         Double_t r1 =
             atof(fQbalance_X_Observables[i].substr(12, fQbalance_X_Observables[i].length() - 12).c_str());
-        fQbalance_X_Radius.push_back(r1);
+        fQbalance_X_Radius.emplace_back(r1);
     }
 
     for (unsigned int i = 0; i < fQratio_X_Observables.size(); i++) {
         Double_t r2 =
             atof(fQratio_X_Observables[i].substr(10, fQratio_X_Observables[i].length() - 10).c_str());
-        fQratio_X_Radius.push_back(r2);
+        fQratio_X_Radius.emplace_back(r2);
     }
 
     for (unsigned int i = 0; i < fQbalance_Y_Observables.size(); i++) {
         Double_t r1 =
             atof(fQbalance_Y_Observables[i].substr(12, fQbalance_Y_Observables[i].length() - 12).c_str());
-        fQbalance_Y_Radius.push_back(r1);
+        fQbalance_Y_Radius.emplace_back(r1);
     }
 
     for (unsigned int i = 0; i < fQratio_Y_Observables.size(); i++) {
         Double_t r2 =
             atof(fQratio_Y_Observables[i].substr(10, fQratio_Y_Observables[i].length() - 10).c_str());
-        fQratio_Y_Radius.push_back(r2);
+        fQratio_Y_Radius.emplace_back(r2);
     }
 }
 
@@ -188,13 +191,13 @@ TRestEvent* TRestTrackBlobAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) 
     vector<TRestTrack*> tracks;
 
     TRestTrack* tXYZ = fInputTrackEvent->GetMaxEnergyTrack();
-    if (tXYZ) tracks.push_back(tXYZ);
+    if (tXYZ) tracks.emplace_back(tXYZ);
 
     TRestTrack* tX = fInputTrackEvent->GetMaxEnergyTrack("X");
-    if (tX) tracks.push_back(tX);
+    if (tX) tracks.emplace_back(tX);
 
     TRestTrack* tY = fInputTrackEvent->GetMaxEnergyTrack("Y");
-    if (tY) tracks.push_back(tY);
+    if (tY) tracks.emplace_back(tY);
 
     Double_t x1 = 0, y1 = 0, z1 = 0;
     Double_t x2 = 0, y2 = 0, z2 = 0;
