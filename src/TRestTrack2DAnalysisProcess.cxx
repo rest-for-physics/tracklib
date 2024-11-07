@@ -98,6 +98,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "TRestTrack2DAnalysisProcess.h"
+
 using namespace std;
 
 // Comparator function for sorting in descending order
@@ -111,7 +112,9 @@ TRestTrack2DAnalysisProcess::TRestTrack2DAnalysisProcess() { Initialize(); }
 
 TRestTrack2DAnalysisProcess::TRestTrack2DAnalysisProcess(const char* configFilename) {
     Initialize();
-    if (LoadConfigFromFile(configFilename)) LoadDefaultConfig();
+    if (LoadConfigFromFile(configFilename)) {
+        LoadDefaultConfig();
+    }
 }
 
 TRestTrack2DAnalysisProcess::~TRestTrack2DAnalysisProcess() { delete fTrackEvent; }
@@ -142,7 +145,7 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     Double_t XZ_TotalEnergyX;
     Double_t YZ_TotalEnergyY;
 
-    /// Number of traks per type
+    /// Number of tracks per type
     int NTracksX;
     int NTracksY;
 
@@ -176,7 +179,7 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     map<int, Double_t> XZ_YZ_GaussSigmaXYBalance;
     map<int, Double_t> XZ_YZ_GaussSigmaZBalance;
 
-    /// Espacial measuremets
+    /// Spatial measurements
     map<int, Double_t> XZ_LengthX;
     map<int, Double_t> YZ_LengthY;
 
@@ -205,7 +208,7 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     NTracksX = fTrackEvent->GetNumberOfTracks("X");
     NTracksY = fTrackEvent->GetNumberOfTracks("Y");
 
-    /// Map oservables
+    /// Map observables
     for (int tck = 0; tck < fTrackEvent->GetNumberOfTracks(); tck++) {
         if (!fTrackEvent->isTopLevel(tck)) continue;
 
@@ -291,10 +294,10 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     /// From map to vector
     map<int, Double_t>::iterator it;
     for (it = XZ_EnergyX.begin(); it != XZ_EnergyX.end(); it++) {
-        energiesX.push_back(make_pair(it->first, it->second));
+        energiesX.emplace_back(it->first, it->second);
     }
     for (it = YZ_EnergyY.begin(); it != YZ_EnergyY.end(); it++) {
-        energiesY.push_back(make_pair(it->first, it->second));
+        energiesY.emplace_back(it->first, it->second);
     }
 
     /// Sort the vector by decreasing order of its pair's second value
@@ -343,7 +346,7 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
         YZ_TotalEnergyY += pair.second;
     }
 
-    /// Skew and sigm Z observables combining max traks in XZ and YZ
+    /// Skew and sigma Z observables combining max tracks in XZ and YZ
     TRestHits hits;
     TRestHits* hitsXZ = nullptr;
     TRestHits* hitsYZ = nullptr;
@@ -454,7 +457,7 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
         std::cerr << "Error: energiesY is empty. The observables are set to 0." << std::endl;
     }
 
-    if (!energiesX.empty() & !energiesY.empty()) {
+    if (!energiesX.empty() && !energiesY.empty()) {
         Double_t energiesX0SecondKey = energiesX[0].second;
         Double_t energiesY0SecondKey = energiesY[0].second;
 
@@ -518,7 +521,7 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     SetObservableValue("SecondMaxTrack_XZ_YZ_GaussSigmaXYBalance", XZ_YZ_GaussSigmaXYBalance[1]);
     SetObservableValue("SecondMaxTrack_XZ_YZ_GaussSigmaZBalance", XZ_YZ_GaussSigmaZBalance[1]);
 
-    if (!energiesX.empty() & !energiesY.empty()) {
+    if (!energiesX.empty() && !energiesY.empty()) {
         Double_t energiesX1SecondKey = energiesX[1].second;
         Double_t energiesY1SecondKey = energiesY[1].second;
 
@@ -538,7 +541,7 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
         std::cerr << "Error: energiesX or energiesY is empty. The observables are set to 0." << std::endl;
     }
 
-    // --- Distance obsevables between first two tracks --- //
+    // --- Distance observables between first two tracks --- //
     SetObservableValue("XZ_FirstSecondTracksDistanceXZ", XZ_FirstSecondTracksDistanceXZ);
     SetObservableValue("YZ_FirstSecondTracksDistanceYZ", YZ_FirstSecondTracksDistanceYZ);
     SetObservableValue("XZ_YZ_FirstSecondTracksDistanceSum",
@@ -554,13 +557,6 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     return fTrackEvent;
 }
 
-void TRestTrack2DAnalysisProcess::EndProcess() {
-    // Function to be executed once at the end of the process
-    // (after all events have been processed)
-
-    // Start by calling the EndProcess function of the abstract class.
-    // Comment this if you don't want it.
-    // TRestEventProcess::EndProcess();
-}
+void TRestTrack2DAnalysisProcess::EndProcess() {}
 
 void TRestTrack2DAnalysisProcess::InitFromConfigFile() {}
