@@ -441,7 +441,7 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
         SetObservableValue("MaxTrack_XZ_MeanZ", XZ_MeanZ[energiesX0FirstKey]);
         SetObservableValue("MaxTrack_XZ_SkewZ", XZ_SkewZ[energiesX0FirstKey]);
     } else {
-        SetObservableValue("MaxTrack_XZ_NHitsX", 0.);
+        SetObservableValue("MaxTrack_XZ_NHitsX", 0);
         SetObservableValue("MaxTrack_XZ_EnergyX", 0.);
         SetObservableValue("MaxTrack_XZ_SigmaX", 0.);
         SetObservableValue("MaxTrack_XZ_SigmaZ", 0.);
@@ -471,7 +471,7 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
         SetObservableValue("MaxTrack_YZ_MeanZ", YZ_MeanZ[energiesY0FirstKey]);
         SetObservableValue("MaxTrack_YZ_SkewZ", YZ_SkewZ[energiesY0FirstKey]);
     } else {
-        SetObservableValue("MaxTrack_YZ_NHitsY", 0.);
+        SetObservableValue("MaxTrack_YZ_NHitsY", 0);
         SetObservableValue("MaxTrack_YZ_EnergyY", 0.);
         SetObservableValue("MaxTrack_YZ_SigmaY", 0.);
         SetObservableValue("MaxTrack_YZ_SigmaZ", 0.);
@@ -527,7 +527,7 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
         SetObservableValue("SecondMaxTrack_XZ_MeanZ", XZ_MeanZ[energiesX1FirstKey]);
         SetObservableValue("SecondMaxTrack_XZ_SkewZ", XZ_SkewZ[energiesX1FirstKey]);
     } else {
-        SetObservableValue("SecondMaxTrack_XZ_NHitsX", 0.);
+        SetObservableValue("SecondMaxTrack_XZ_NHitsX", 0);
         SetObservableValue("SecondMaxTrack_XZ_EnergyX", 0.);
         SetObservableValue("SecondMaxTrack_XZ_SigmaX", 0.);
         SetObservableValue("SecondMaxTrack_XZ_SigmaZ", 0.);
@@ -557,7 +557,7 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
         SetObservableValue("SecondMaxTrack_YZ_MeanZ", YZ_MeanZ[energiesY1FirstKey]);
         SetObservableValue("SecondMaxTrack_YZ_SkewZ", YZ_SkewZ[energiesY1FirstKey]);
     } else {
-        SetObservableValue("SecondMaxTrack_YZ_NHitsY", 0.);
+        SetObservableValue("SecondMaxTrack_YZ_NHitsY", 0);
         SetObservableValue("SecondMaxTrack_YZ_EnergyY", 0.);
         SetObservableValue("SecondMaxTrack_YZ_SigmaY", 0.);
         SetObservableValue("SecondMaxTrack_YZ_SigmaZ", 0.);
