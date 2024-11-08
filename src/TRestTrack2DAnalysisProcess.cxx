@@ -441,17 +441,17 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
         SetObservableValue("MaxTrack_XZ_MeanZ", XZ_MeanZ[energiesX0FirstKey]);
         SetObservableValue("MaxTrack_XZ_SkewZ", XZ_SkewZ[energiesX0FirstKey]);
     } else {
-        SetObservableValue("MaxTrack_XZ_NHitsX", 0);
-        SetObservableValue("MaxTrack_XZ_EnergyX", 0);
-        SetObservableValue("MaxTrack_XZ_SigmaX", 0);
-        SetObservableValue("MaxTrack_XZ_SigmaZ", 0);
-        SetObservableValue("MaxTrack_XZ_GaussSigmaX", 0);
-        SetObservableValue("MaxTrack_XZ_GaussSigmaZ", 0);
-        SetObservableValue("MaxTrack_XZ_LengthX", 0);
-        SetObservableValue("MaxTrack_XZ_VolumeX", 0);
-        SetObservableValue("MaxTrack_XZ_MeanX", 0);
-        SetObservableValue("MaxTrack_XZ_MeanZ", 0);
-        SetObservableValue("MaxTrack_XZ_SkewZ", 0);
+        SetObservableValue("MaxTrack_XZ_NHitsX", 0.);
+        SetObservableValue("MaxTrack_XZ_EnergyX", 0.);
+        SetObservableValue("MaxTrack_XZ_SigmaX", 0.);
+        SetObservableValue("MaxTrack_XZ_SigmaZ", 0.);
+        SetObservableValue("MaxTrack_XZ_GaussSigmaX", 0.);
+        SetObservableValue("MaxTrack_XZ_GaussSigmaZ", 0.);
+        SetObservableValue("MaxTrack_XZ_LengthX", 0.);
+        SetObservableValue("MaxTrack_XZ_VolumeX", 0.);
+        SetObservableValue("MaxTrack_XZ_MeanX", 0.);
+        SetObservableValue("MaxTrack_XZ_MeanZ", 0.);
+        SetObservableValue("MaxTrack_XZ_SkewZ", 0.);
     }
 
     SetObservableValue("MaxTrack_YZ_OK", !energiesY.empty());
@@ -471,17 +471,17 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
         SetObservableValue("MaxTrack_YZ_MeanZ", YZ_MeanZ[energiesY0FirstKey]);
         SetObservableValue("MaxTrack_YZ_SkewZ", YZ_SkewZ[energiesY0FirstKey]);
     } else {
-        SetObservableValue("MaxTrack_YZ_NHitsY", 0);
-        SetObservableValue("MaxTrack_YZ_EnergyY", 0);
-        SetObservableValue("MaxTrack_YZ_SigmaY", 0);
-        SetObservableValue("MaxTrack_YZ_SigmaZ", 0);
-        SetObservableValue("MaxTrack_YZ_GaussSigmaY", 0);
-        SetObservableValue("MaxTrack_YZ_GaussSigmaZ", 0);
-        SetObservableValue("MaxTrack_YZ_LengthY", 0);
-        SetObservableValue("MaxTrack_YZ_VolumeY", 0);
-        SetObservableValue("MaxTrack_YZ_MeanY", 0);
-        SetObservableValue("MaxTrack_YZ_MeanZ", 0);
-        SetObservableValue("MaxTrack_YZ_SkewZ", 0);
+        SetObservableValue("MaxTrack_YZ_NHitsY", 0.);
+        SetObservableValue("MaxTrack_YZ_EnergyY", 0.);
+        SetObservableValue("MaxTrack_YZ_SigmaY", 0.);
+        SetObservableValue("MaxTrack_YZ_SigmaZ", 0.);
+        SetObservableValue("MaxTrack_YZ_GaussSigmaY", 0.);
+        SetObservableValue("MaxTrack_YZ_GaussSigmaZ", 0.);
+        SetObservableValue("MaxTrack_YZ_LengthY", 0.);
+        SetObservableValue("MaxTrack_YZ_VolumeY", 0.);
+        SetObservableValue("MaxTrack_YZ_MeanY", 0.);
+        SetObservableValue("MaxTrack_YZ_MeanZ", 0.);
+        SetObservableValue("MaxTrack_YZ_SkewZ", 0.);
     }
 
     SetObservableValue("MaxTrack_XZ_YZ_OK", !energiesY.empty() && !energiesX.empty());
@@ -497,9 +497,9 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
                                                                  (energiesX0SecondKey + energiesY0SecondKey));
 
     } else {
-        SetObservableValue("MaxTrack_XZ_YZ_Energy", 0);
-        SetObservableValue("MaxTrack_XZ_YZ_MaxTrackEnergyPercentage", 0);
-        SetObservableValue("MaxTrack_XZ_YZ_EnergyBalanceXY", 0);
+        SetObservableValue("MaxTrack_XZ_YZ_Energy", 0.);
+        SetObservableValue("MaxTrack_XZ_YZ_MaxTrackEnergyPercentage", 0.);
+        SetObservableValue("MaxTrack_XZ_YZ_EnergyBalanceXY", 0.);
     }
 
     SetObservableValue("MaxTrack_XZ_YZ_SigmaXYBalance", XZ_YZ_SigmaXYBalance[0]);
@@ -527,17 +527,17 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
         SetObservableValue("SecondMaxTrack_XZ_MeanZ", XZ_MeanZ[energiesX1FirstKey]);
         SetObservableValue("SecondMaxTrack_XZ_SkewZ", XZ_SkewZ[energiesX1FirstKey]);
     } else {
-        SetObservableValue("SecondMaxTrack_XZ_NHitsX", 0);
-        SetObservableValue("SecondMaxTrack_XZ_EnergyX", 0);
-        SetObservableValue("SecondMaxTrack_XZ_SigmaX", 0);
-        SetObservableValue("SecondMaxTrack_XZ_SigmaZ", 0);
-        SetObservableValue("SecondMaxTrack_XZ_GaussSigmaX", 0);
-        SetObservableValue("SecondMaxTrack_XZ_GaussSigmaZ", 0);
-        SetObservableValue("SecondMaxTrack_XZ_LengthX", 0);
-        SetObservableValue("SecondMaxTrack_XZ_VolumeX", 0);
-        SetObservableValue("SecondMaxTrack_XZ_MeanX", 0);
-        SetObservableValue("SecondMaxTrack_XZ_MeanZ", 0);
-        SetObservableValue("SecondMaxTrack_XZ_SkewZ", 0);
+        SetObservableValue("SecondMaxTrack_XZ_NHitsX", 0.);
+        SetObservableValue("SecondMaxTrack_XZ_EnergyX", 0.);
+        SetObservableValue("SecondMaxTrack_XZ_SigmaX", 0.);
+        SetObservableValue("SecondMaxTrack_XZ_SigmaZ", 0.);
+        SetObservableValue("SecondMaxTrack_XZ_GaussSigmaX", 0.);
+        SetObservableValue("SecondMaxTrack_XZ_GaussSigmaZ", 0.);
+        SetObservableValue("SecondMaxTrack_XZ_LengthX", 0.);
+        SetObservableValue("SecondMaxTrack_XZ_VolumeX", 0.);
+        SetObservableValue("SecondMaxTrack_XZ_MeanX", 0.);
+        SetObservableValue("SecondMaxTrack_XZ_MeanZ", 0.);
+        SetObservableValue("SecondMaxTrack_XZ_SkewZ", 0.);
     }
 
     SetObservableValue("SecondMaxTrack_YZ_OK", energiesY.size() > 1);
@@ -557,17 +557,17 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
         SetObservableValue("SecondMaxTrack_YZ_MeanZ", YZ_MeanZ[energiesY1FirstKey]);
         SetObservableValue("SecondMaxTrack_YZ_SkewZ", YZ_SkewZ[energiesY1FirstKey]);
     } else {
-        SetObservableValue("SecondMaxTrack_YZ_NHitsY", 0);
-        SetObservableValue("SecondMaxTrack_YZ_EnergyY", 0);
-        SetObservableValue("SecondMaxTrack_YZ_SigmaY", 0);
-        SetObservableValue("SecondMaxTrack_YZ_SigmaZ", 0);
-        SetObservableValue("SecondMaxTrack_YZ_GaussSigmaY", 0);
-        SetObservableValue("SecondMaxTrack_YZ_GaussSigmaZ", 0);
-        SetObservableValue("SecondMaxTrack_YZ_LengthY", 0);
-        SetObservableValue("SecondMaxTrack_YZ_VolumeY", 0);
-        SetObservableValue("SecondMaxTrack_YZ_MeanY", 0);
-        SetObservableValue("SecondMaxTrack_YZ_MeanZ", 0);
-        SetObservableValue("SecondMaxTrack_YZ_SkewZ", 0);
+        SetObservableValue("SecondMaxTrack_YZ_NHitsY", 0.);
+        SetObservableValue("SecondMaxTrack_YZ_EnergyY", 0.);
+        SetObservableValue("SecondMaxTrack_YZ_SigmaY", 0.);
+        SetObservableValue("SecondMaxTrack_YZ_SigmaZ", 0.);
+        SetObservableValue("SecondMaxTrack_YZ_GaussSigmaY", 0.);
+        SetObservableValue("SecondMaxTrack_YZ_GaussSigmaZ", 0.);
+        SetObservableValue("SecondMaxTrack_YZ_LengthY", 0.);
+        SetObservableValue("SecondMaxTrack_YZ_VolumeY", 0.);
+        SetObservableValue("SecondMaxTrack_YZ_MeanY", 0.);
+        SetObservableValue("SecondMaxTrack_YZ_MeanZ", 0.);
+        SetObservableValue("SecondMaxTrack_YZ_SkewZ", 0.);
     }
 
     SetObservableValue("SecondMaxTrack_XZ_YZ_SigmaXYBalance", XZ_YZ_SigmaXYBalance[1]);
@@ -589,14 +589,14 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
                 "SecondMaxTrack_XZ_YZ_EnergyBalanceXY",
                 (energiesX1SecondKey - energiesY1SecondKey) / (energiesX1SecondKey + energiesY1SecondKey));
         } else {
-            SetObservableValue("SecondMaxTrack_XZ_YZ_Energy", 0.0);
-            SetObservableValue("SecondMaxTrack_XZ_YZ_EnergyPercentage", 0.0);
-            SetObservableValue("SecondMaxTrack_XZ_YZ_EnergyBalanceXY", 0.0);
+            SetObservableValue("SecondMaxTrack_XZ_YZ_Energy", 0.);
+            SetObservableValue("SecondMaxTrack_XZ_YZ_EnergyPercentage", 0.);
+            SetObservableValue("SecondMaxTrack_XZ_YZ_EnergyBalanceXY", 0.);
         }
     } else {
-        SetObservableValue("SecondMaxTrack_XZ_YZ_Energy", 0.0);
-        SetObservableValue("SecondMaxTrack_XZ_YZ_EnergyPercentage", 0.0);
-        SetObservableValue("SecondMaxTrack_XZ_YZ_EnergyBalanceXY", 0.0);
+        SetObservableValue("SecondMaxTrack_XZ_YZ_Energy", 0.);
+        SetObservableValue("SecondMaxTrack_XZ_YZ_EnergyPercentage", 0.);
+        SetObservableValue("SecondMaxTrack_XZ_YZ_EnergyBalanceXY", 0.);
     }
 
     // --- Distance observables between first two tracks --- //
