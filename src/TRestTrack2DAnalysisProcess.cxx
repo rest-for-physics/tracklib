@@ -304,6 +304,18 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     sort(energiesX.begin(), energiesX.end(), sortByValueDescending);
     sort(energiesY.begin(), energiesY.end(), sortByValueDescending);
 
+    // Print energiesX values
+    std::cout << "energiesX values:\n";
+    for (const auto& pair : energiesX) {
+        std::cout << "Key: " << pair.first << ", Value: " << pair.second << '\n';
+    }
+
+    // Print energiesY values
+    std::cout << "energiesY values:\n";
+    for (const auto& pair : energiesY) {
+        std::cout << "Key: " << pair.first << ", Value: " << pair.second << '\n';
+    }
+
     /// Observables "balance", between max track in X and max track in Y
     for (int i = 0; i < min(NTracksX, NTracksY); i++) {
         XZ_YZ_SigmaXYBalance[i] = (XZ_SigmaX[energiesX[i].first] - YZ_SigmaY[energiesY[i].first]) /
