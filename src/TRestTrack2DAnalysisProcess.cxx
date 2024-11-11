@@ -304,18 +304,6 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     sort(energiesX.begin(), energiesX.end(), sortByValueDescending);
     sort(energiesY.begin(), energiesY.end(), sortByValueDescending);
 
-    // Print energiesX values
-    std::cout << "energiesX values:\n";
-    for (const auto& pair : energiesX) {
-        std::cout << "Key: " << pair.first << ", Value: " << pair.second << '\n';
-    }
-
-    // Print energiesY values
-    std::cout << "energiesY values:\n";
-    for (const auto& pair : energiesY) {
-        std::cout << "Key: " << pair.first << ", Value: " << pair.second << '\n';
-    }
-
     /// Observables "balance", between max track in X and max track in Y
     for (int i = 0; i < min(NTracksX, NTracksY); i++) {
         XZ_YZ_SigmaXYBalance[i] = (XZ_SigmaX[energiesX[i].first] - YZ_SigmaY[energiesY[i].first]) /
@@ -433,11 +421,13 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
 
     // --- Max track observables --- //
 
-    // Copy the MaxTrack keys immediately after checking the vector
+    // Check if the maximum (final) energy value in energiesX and Y is non-zero
+    bool hasNonZeroEnergyX = !energiesX.empty() && energiesX.back().second != 0;
+    bool hasNonZeroEnergyY = !energiesY.empty() && energiesY.back().second != 0;
 
-    SetObservableValue("MaxTrack_XZ_OK", !energiesX.empty());
+    SetObservableValue("MaxTrack_XZ_OK", hasNonZeroEnergyX);
 
-    if (!energiesX.empty()) {
+    if (hasNonZeroEnergyX) {
         int energiesX0FirstKey =
             energiesX[0].first;  // Declare Keys outside to avoid error when accessing "energiesX[0].first"...
 
@@ -466,9 +456,9 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
         SetObservableValue("MaxTrack_XZ_SkewZ", 0.);
     }
 
-    SetObservableValue("MaxTrack_YZ_OK", !energiesY.empty());
+    SetObservableValue("MaxTrack_YZ_OK", hasNonZeroEnergyY);
 
-    if (!energiesY.empty()) {
+    if (hasNonZeroEnergyY) {
         int energiesY0FirstKey = energiesY[0].first;
 
         SetObservableValue("MaxTrack_YZ_NHitsY", YZ_NHitsY[energiesY0FirstKey]);
@@ -520,10 +510,16 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
     SetObservableValue("MaxTrack_XZ_YZ_GaussSigmaZBalance", XZ_YZ_GaussSigmaZBalance[0]);
 
     // --- Second max track observables --- //
-    SetObservableValue("SecondMaxTrack_XZ_OK", energiesX.size() > 1);
+
+    // Check if the second maximum energy value in energiesX and Y is non-zero
+    bool hasNonZeroSecondMaxEnergyX = energiesX.size() > 1 && energiesX[energiesX.size() - 2].second != 0;
+    bool hasNonZeroSecondMaxEnergyY = energiesY.size() > 1 && energiesY[energiesY.size() - 2].second != 0;
+
+    SetObservableValue("SecondMaxTrack_XZ_OK", hasNonZeroSecondMaxEnergyX);
+    SetObservableValue("SecondMaxTrack_YZ_OK", hasNonZeroSecondMaxEnergyY);
 
     // Copy the SecondTrack keys immediately after checking the vector
-    if (energiesX.size() > 1) {
+    if (hasNonZeroSecondMaxEnergyX) {
         int energiesX1FirstKey =
             energiesX[1].first;  // Declare Keys outside to avoid error when accessing "energiesX[1].first"...
 
@@ -554,7 +550,7 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
 
     SetObservableValue("SecondMaxTrack_YZ_OK", energiesY.size() > 1);
 
-    if (!energiesY.empty()) {
+    if (hasNonZeroSecondMaxEnergyY) {
         int energiesY1FirstKey = energiesY[1].first;
 
         SetObservableValue("SecondMaxTrack_YZ_NHitsY", YZ_NHitsY[energiesY1FirstKey]);
