@@ -218,7 +218,7 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
             XZ_NHitsX[t->GetTrackID()] = t->GetNumberOfHits();
             XZ_EnergyX[t->GetTrackID()] = t->GetTrackEnergy();
             XZ_SigmaX[t->GetTrackID()] = t->GetHits()->GetSigmaX();
-            XZ_SigmaZ[t->GetTrackID()] = t->GetHits()->GetSigmaZ2();
+            XZ_SigmaZ[t->GetTrackID()] = sqrt(t->GetHits()->GetSigmaZ2());
             XZ_GaussSigmaX[t->GetTrackID()] = t->GetHits()->GetGaussSigmaX();
             XZ_GaussSigmaZ[t->GetTrackID()] = t->GetHits()->GetGaussSigmaZ();
             XZ_LengthX[t->GetTrackID()] = t->GetLength();
@@ -254,7 +254,7 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
             YZ_NHitsY[t->GetTrackID()] = t->GetNumberOfHits();
             YZ_EnergyY[t->GetTrackID()] = t->GetTrackEnergy();
             YZ_SigmaY[t->GetTrackID()] = t->GetHits()->GetSigmaY();
-            YZ_SigmaZ[t->GetTrackID()] = t->GetHits()->GetSigmaZ2();
+            YZ_SigmaZ[t->GetTrackID()] = sqrt(t->GetHits()->GetSigmaZ2());
             YZ_GaussSigmaY[t->GetTrackID()] = t->GetHits()->GetGaussSigmaY();
             YZ_GaussSigmaZ[t->GetTrackID()] = t->GetHits()->GetGaussSigmaZ();
             YZ_LengthY[t->GetTrackID()] = t->GetLength();
@@ -372,7 +372,7 @@ TRestEvent* TRestTrack2DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
         }
     }
 
-    MaxTrack_XZ_YZ_SigmaZ = hits.GetSigmaZ2();
+    MaxTrack_XZ_YZ_SigmaZ = sqrt(hits.GetSigmaZ2());
     MaxTrack_XZ_YZ_GaussSigmaZ = hits.GetGaussSigmaZ();
     MaxTrack_XZ_YZ_SkewXY = hits.GetSkewXY();
     MaxTrack_XZ_YZ_SkewZ = hits.GetSkewZ();
