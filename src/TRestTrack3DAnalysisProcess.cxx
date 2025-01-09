@@ -161,7 +161,7 @@ TRestEvent* TRestTrack3DAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
             XYZ_Energy[t->GetTrackID()] = t->GetTrackEnergy();
             XYZ_SigmaX[t->GetTrackID()] = t->GetHits()->GetSigmaX();
             XYZ_SigmaY[t->GetTrackID()] = t->GetHits()->GetSigmaY();
-            XYZ_SigmaZ[t->GetTrackID()] = t->GetHits()->GetSigmaZ2();
+            XYZ_SigmaZ[t->GetTrackID()] = sqrt(t->GetHits()->GetSigmaZ2());
             XYZ_GaussSigmaX[t->GetTrackID()] = t->GetHits()->GetGaussSigmaX();
             XYZ_GaussSigmaY[t->GetTrackID()] = t->GetHits()->GetGaussSigmaY();
             XYZ_GaussSigmaZ[t->GetTrackID()] = t->GetHits()->GetGaussSigmaZ();
