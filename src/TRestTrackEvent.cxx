@@ -265,7 +265,7 @@ Int_t TRestTrackEvent::GetLevel(Int_t tck) {
 Int_t TRestTrackEvent::GetLevelById(Int_t tckId) {
     Int_t lvl = 1;
     auto track = GetTrackById(tckId);
-    if(track == nullptr){
+    if (track == nullptr) {
         RESTWarning << "Track with ID " << tckId << " not found" << RESTendl;
         return -1;
     }
