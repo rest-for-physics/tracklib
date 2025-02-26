@@ -214,6 +214,34 @@ TRestEvent* TRestTrackLineAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) 
     fOutTrackEvent->AddTrack(tckY);
 
     fOutTrackEvent->SetLevels();
+
+    auto originalTrackX = fOutTrackEvent->GetTrackById(tckX->GetParentID());
+    while(fOutTrackEvent->GetLevelById(originalTrackX->GetTrackID()) > 1){
+        originalTrackX = fOutTrackEvent->GetTrackById(originalTrackX->GetParentID());
+    }
+    if (GetVerboseLevel() >= TRestStringOutput::REST_Verbose_Level::REST_Debug) {
+        fOutTrackEvent->PrintEvent();
+    }
+    RESTDebug << "Original track X ID: " << originalTrackX->GetTrackID() << "; line track ID " << tckX->GetTrackID() << RESTendl;
+    auto sigmaXZ = GetSigmaToLine(originalTrackX, tckX, true);
+
+    auto originalTrackY = fOutTrackEvent->GetTrackById(tckY->GetParentID());
+    while(fOutTrackEvent->GetLevelById(originalTrackY->GetTrackID()) > 1){
+        originalTrackY = fOutTrackEvent->GetTrackById(originalTrackY->GetParentID());
+    }
+    RESTDebug << "Original track Y ID: " << originalTrackY->GetTrackID() << "; line track ID " << tckY->GetTrackID() << RESTendl;
+    auto sigmaYZ = GetSigmaToLine(originalTrackY, tckY, true);
+    auto meanSigmaZ = (sigmaXZ.Z() + sigmaYZ.Z()) * 0.5;
+
+    double totalSigma = TMath::Sqrt(sigmaXZ.X()*sigmaXZ.X() + sigmaYZ.Y()*sigmaYZ.Y() + meanSigmaZ*meanSigmaZ);
+
+    SetObservableValue("sigmaX", sigmaXZ.X());
+    SetObservableValue("sigmaY", sigmaYZ.Y());
+    SetObservableValue("sigmaZ", meanSigmaZ);
+    SetObservableValue("sigmaZX", sigmaXZ.Z());
+    SetObservableValue("sigmaZY", sigmaYZ.Z());
+    SetObservableValue("sigma", totalSigma);
+
     return fOutTrackEvent;
 }
 
@@ -222,3 +250,51 @@ TRestEvent* TRestTrackLineAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) 
 /// processed. Nothing to do...
 ///
 void TRestTrackLineAnalysisProcess::EndProcess() {}
+
+
+TVector3 TRestTrackLineAnalysisProcess::GetSigmaToLine(TRestTrack* track, TRestTrack* line, bool ponderateByEnergy){
+    TRestVolumeHits* lineVolHits = line->GetVolumeHits();
+    TVector3 sigma2ToLine = TVector3(0,0,0);
+    for (size_t i = 0; i < track->GetVolumeHits()->GetNumberOfHits(); i++) {
+        TVector3 hitPos = track->GetVolumeHits()->GetPosition(i);
+        auto hitEnergy = track->GetVolumeHits()->GetEnergy(i);
+        size_t closestNodeIndex = lineVolHits->GetClosestHit(hitPos);
+
+        // find second closes node
+        size_t secondClosestNodeIndex = closestNodeIndex-1;
+        if (secondClosestNodeIndex < 0) {
+            secondClosestNodeIndex = closestNodeIndex+1;
+        } else if (closestNodeIndex == lineVolHits->GetNumberOfHits()-1){
+            secondClosestNodeIndex = closestNodeIndex-1;
+        } else {
+            auto dist1 = (lineVolHits->GetPosition(secondClosestNodeIndex) - hitPos).Mag();
+            auto dist2 = (lineVolHits->GetPosition(closestNodeIndex+1) - hitPos).Mag();
+            if (dist1 > dist2){
+                secondClosestNodeIndex = closestNodeIndex+1;
+            }
+        }
+        TVector3 lineDirector = lineVolHits->GetPosition(closestNodeIndex) - lineVolHits->GetPosition(secondClosestNodeIndex);
+        TVector3 hitToClosestLinePoint = hitPos - lineVolHits->GetPosition(closestNodeIndex);
+        TVector3 hitToLine = hitToClosestLinePoint - (hitToClosestLinePoint.Dot(lineDirector.Unit()))*lineDirector.Unit();
+
+        double toAddX = hitToLine.X()*hitToLine.X();
+        double toAddY = hitToLine.Y()*hitToLine.Y();
+        double toAddZ = hitToLine.Z()*hitToLine.Z();
+        if (ponderateByEnergy){
+            toAddX *= hitEnergy;
+            toAddY *= hitEnergy;
+            toAddZ *= hitEnergy;
+        }
+        sigma2ToLine += TVector3(toAddX, toAddY, toAddZ);
+    }
+
+
+    sigma2ToLine = TVector3(TMath::Sqrt(sigma2ToLine.X()), TMath::Sqrt(sigma2ToLine.Y()), TMath::Sqrt(sigma2ToLine.Z()));
+    if (ponderateByEnergy){
+        auto trackEnergy = track->GetEnergy();
+        sigma2ToLine *= 1.0/trackEnergy;
+    } else {
+        sigma2ToLine *= 1.0/track->GetVolumeHits()->GetNumberOfHits();
+    }
+    return sigma2ToLine;
+}

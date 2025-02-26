@@ -57,6 +57,8 @@ class TRestTrackLineAnalysisProcess : public TRestEventProcess {
 
     const char* GetProcessName() const override { return "trackLineAna"; }
 
+    TVector3 GetSigmaToLine(TRestTrack* track, TRestTrack* line, bool ponderateByEnergy = true);
+
     // Constructor
     TRestTrackLineAnalysisProcess();
     // Destructor
