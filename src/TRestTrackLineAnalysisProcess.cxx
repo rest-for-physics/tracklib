@@ -240,8 +240,10 @@ TRestEvent* TRestTrackLineAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) 
     SetObservableValue("sigmaX", sigmaXZ.X());
     SetObservableValue("sigmaY", sigmaYZ.Y());
     SetObservableValue("sigmaZ", meanSigmaZ);
-    SetObservableValue("sigmaZX", sigmaXZ.Z());
-    SetObservableValue("sigmaZY", sigmaYZ.Z());
+    SetObservableValue("sigmaXZ", sigmaXZ.Mag());
+    SetObservableValue("sigmaYZ", sigmaYZ.Mag());
+    SetObservableValue("sigmaZ_XZ", sigmaXZ.Z());
+    SetObservableValue("sigmaZ_YZ", sigmaYZ.Z());
     SetObservableValue("sigma", totalSigma);
 
     return fOutTrackEvent;
