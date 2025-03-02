@@ -255,6 +255,18 @@ TRestEvent* TRestTrackLineAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) 
 ///
 void TRestTrackLineAnalysisProcess::EndProcess() {}
 
+///////////////////////////////////////////////
+/// \brief Function to calculate the sigma of the distances of the hits to the line
+/// defined by the line track. The sigma is calculated as the standard deviation of the
+/// distances of the hits to the line. The line is defined by the two closest nodes to the
+/// hit. The sigma can be ponderated by the energy of the hit or not. This function works
+/// for any type of track (XZ, YZ or XYZ).
+/// TODO: should this function be in TRestVolumeHits ?
+/// \param track The track containing the hits to calculate the sigma
+/// \param line The nodes that define the line.
+/// \param ponderateByEnergy If true, the sigma is ponderated by the energy of the hit
+/// \return The sigma of the distances of the hits to the line
+///
 TVector3 TRestTrackLineAnalysisProcess::GetSigmaToLine(TRestTrack* track, TRestTrack* line,
                                                        bool ponderateByEnergy) {
     TRestVolumeHits* lineVolHits = line->GetVolumeHits();
