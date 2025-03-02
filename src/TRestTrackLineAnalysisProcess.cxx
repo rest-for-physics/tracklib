@@ -229,11 +229,11 @@ TRestEvent* TRestTrackLineAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) 
     if (GetVerboseLevel() >= TRestStringOutput::REST_Verbose_Level::REST_Extreme) {
         fOutTrackEvent->PrintEvent();
     }
-    RESTDebug << "Original track X ID: " << originalTrackX->GetTrackID() << "; line track ID: "
-              << tckX->GetTrackID() << RESTendl;
-    RESTDebug << "Original track Y ID: " << originalTrackY->GetTrackID() << "; line track ID: "
-              << tckY->GetTrackID() << RESTendl;
-    
+    RESTDebug << "Original track X ID: " << originalTrackX->GetTrackID()
+              << "; line track ID: " << tckX->GetTrackID() << RESTendl;
+    RESTDebug << "Original track Y ID: " << originalTrackY->GetTrackID()
+              << "; line track ID: " << tckY->GetTrackID() << RESTendl;
+
     auto sigmaXZ = GetSigmaToLine(originalTrackX, tckX, true);
     auto sigmaYZ = GetSigmaToLine(originalTrackY, tckY, true);
     auto meanSigmaZ = TMath::Sqrt((sigmaXZ.Z() * sigmaXZ.Z() + sigmaYZ.Z() * sigmaYZ.Z()) * 0.5);
