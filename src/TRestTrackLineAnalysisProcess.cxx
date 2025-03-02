@@ -215,28 +215,44 @@ TRestEvent* TRestTrackLineAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) 
 
     fOutTrackEvent->SetLevels();
 
+    // Get the track which contains the hits from where the line track was obtained
+    // for the XZ projection
     auto originalTrackX = fOutTrackEvent->GetTrackById(tckX->GetParentID());
     while (fOutTrackEvent->GetLevelById(originalTrackX->GetTrackID()) > 1) {
         originalTrackX = fOutTrackEvent->GetTrackById(originalTrackX->GetParentID());
     }
-    if (GetVerboseLevel() >= TRestStringOutput::REST_Verbose_Level::REST_Debug) {
-        fOutTrackEvent->PrintEvent();
-    }
-    RESTDebug << "Original track X ID: " << originalTrackX->GetTrackID() << "; line track ID "
-              << tckX->GetTrackID() << RESTendl;
-    auto sigmaXZ = GetSigmaToLine(originalTrackX, tckX, true);
-
+    // for the YZ projection
     auto originalTrackY = fOutTrackEvent->GetTrackById(tckY->GetParentID());
     while (fOutTrackEvent->GetLevelById(originalTrackY->GetTrackID()) > 1) {
         originalTrackY = fOutTrackEvent->GetTrackById(originalTrackY->GetParentID());
     }
-    RESTDebug << "Original track Y ID: " << originalTrackY->GetTrackID() << "; line track ID "
+    if (GetVerboseLevel() >= TRestStringOutput::REST_Verbose_Level::REST_Extreme) {
+        fOutTrackEvent->PrintEvent();
+    }
+    RESTDebug << "Original track X ID: " << originalTrackX->GetTrackID() << "; line track ID: "
+              << tckX->GetTrackID() << RESTendl;
+    RESTDebug << "Original track Y ID: " << originalTrackY->GetTrackID() << "; line track ID: "
               << tckY->GetTrackID() << RESTendl;
+    
+    auto sigmaXZ = GetSigmaToLine(originalTrackX, tckX, true);
     auto sigmaYZ = GetSigmaToLine(originalTrackY, tckY, true);
     auto meanSigmaZ = TMath::Sqrt((sigmaXZ.Z() * sigmaXZ.Z() + sigmaYZ.Z() * sigmaYZ.Z()) * 0.5);
     double totalSigma =
         TMath::Sqrt(sigmaXZ.X() * sigmaXZ.X() + sigmaYZ.Y() * sigmaYZ.Y() + meanSigmaZ * meanSigmaZ);
 
+    SetObservableValue("energySigmaX", sigmaXZ.X());
+    SetObservableValue("energySigmaY", sigmaYZ.Y());
+    SetObservableValue("energySigmaZ", meanSigmaZ);
+    SetObservableValue("energySigmaXZ", sigmaXZ.Mag());
+    SetObservableValue("energySigmaYZ", sigmaYZ.Mag());
+    SetObservableValue("energySigmaZ_XZ", sigmaXZ.Z());
+    SetObservableValue("energySigmaZ_YZ", sigmaYZ.Z());
+    SetObservableValue("energySigma", totalSigma);
+
+    sigmaXZ = GetSigmaToLine(originalTrackX, tckX, false);
+    sigmaYZ = GetSigmaToLine(originalTrackY, tckY, false);
+    meanSigmaZ = TMath::Sqrt((sigmaXZ.Z() * sigmaXZ.Z() + sigmaYZ.Z() * sigmaYZ.Z()) * 0.5);
+    totalSigma = TMath::Sqrt(sigmaXZ.X() * sigmaXZ.X() + sigmaYZ.Y() * sigmaYZ.Y() + meanSigmaZ * meanSigmaZ);
     SetObservableValue("sigmaX", sigmaXZ.X());
     SetObservableValue("sigmaY", sigmaYZ.Y());
     SetObservableValue("sigmaZ", meanSigmaZ);
