@@ -233,8 +233,7 @@ TRestEvent* TRestTrackLineAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) 
     RESTDebug << "Original track Y ID: " << originalTrackY->GetTrackID() << "; line track ID "
               << tckY->GetTrackID() << RESTendl;
     auto sigmaYZ = GetSigmaToLine(originalTrackY, tckY, true);
-    auto meanSigmaZ = (sigmaXZ.Z() + sigmaYZ.Z()) * 0.5;
-
+    auto meanSigmaZ = TMath::Sqrt((sigmaXZ.Z() * sigmaXZ.Z() + sigmaYZ.Z() * sigmaYZ.Z()) * 0.5);
     double totalSigma =
         TMath::Sqrt(sigmaXZ.X() * sigmaXZ.X() + sigmaYZ.Y() * sigmaYZ.Y() + meanSigmaZ * meanSigmaZ);
 
@@ -293,13 +292,13 @@ TVector3 TRestTrackLineAnalysisProcess::GetSigmaToLine(TRestTrack* track, TRestT
         sigma2ToLine += TVector3(toAddX, toAddY, toAddZ);
     }
 
-    sigma2ToLine =
-        TVector3(TMath::Sqrt(sigma2ToLine.X()), TMath::Sqrt(sigma2ToLine.Y()), TMath::Sqrt(sigma2ToLine.Z()));
     if (ponderateByEnergy) {
         auto trackEnergy = track->GetEnergy();
         sigma2ToLine *= 1.0 / trackEnergy;
     } else {
         sigma2ToLine *= 1.0 / track->GetVolumeHits()->GetNumberOfHits();
     }
-    return sigma2ToLine;
+    TVector3 sigmaToLine =
+        TVector3(TMath::Sqrt(sigma2ToLine.X()), TMath::Sqrt(sigma2ToLine.Y()), TMath::Sqrt(sigma2ToLine.Z()));
+    return sigmaToLine;
 }
