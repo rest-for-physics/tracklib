@@ -124,9 +124,9 @@ void TRestTrackLineGainMapCorrectionProcess::Initialize() {
 /// Nothing to do...
 ///
 void TRestTrackLineGainMapCorrectionProcess::InitProcess() {
-    std::cout << "Importando GM"<< std::endl;
+    std::cout << "Importando GM" << std::endl;
     fGainMap.Import(fGainMapFile);
-    std::cout << "Importado"<< std::endl;
+    std::cout << "Importado" << std::endl;
 }
 
 ///////////////////////////////////////////////
@@ -143,7 +143,7 @@ TRestEvent* TRestTrackLineGainMapCorrectionProcess::ProcessEvent(TRestEvent* inp
 
     TRestTrack* tckX = fTrackEvent->GetMaxEnergyTrackInX();
     TRestTrack* tckY = fTrackEvent->GetMaxEnergyTrackInY();
-    
+
     if (!tckX || !tckY) return nullptr;
 
     // Match the XZ with the YZ hits of the linearized track (should have small number of nodes)
@@ -151,7 +151,7 @@ TRestEvent* TRestTrackLineGainMapCorrectionProcess::ProcessEvent(TRestEvent* inp
     TRestVolumeHits* hitsXYZ = new TRestVolumeHits();
     auto hitsX = tckX->GetHits();
     auto hitsY = tckY->GetHits();
-    for (int i=0; i<hitsX->GetNumberOfHits(); i++){
+    for (int i = 0; i < hitsX->GetNumberOfHits(); i++) {
         double X = hitsX->GetPosition(i).X();
         double Z = hitsX->GetPosition(i).Z();
         double energy = hitsX->GetEnergy(i);
@@ -159,42 +159,44 @@ TRestEvent* TRestTrackLineGainMapCorrectionProcess::ProcessEvent(TRestEvent* inp
         double zClosestYhit = 9e9;
         double eClosestYhit = 0;
         double yClosestYhit = 0;
-        for (int j=0; j<hitsY->GetNumberOfHits(); j++){
+        for (int j = 0; j < hitsY->GetNumberOfHits(); j++) {
             double Y = hitsY->GetPosition(i).Y();
             double ZfromY = hitsY->GetPosition(i).Z();
             double energyFromY = hitsY->GetEnergy(i);
-            if ((Z-ZfromY)*(Z-ZfromY)<(Z-zClosestYhit)*(Z-zClosestYhit)){
+            if ((Z - ZfromY) * (Z - ZfromY) < (Z - zClosestYhit) * (Z - zClosestYhit)) {
                 closestYhit = j;
                 zClosestYhit = ZfromY;
                 eClosestYhit = energyFromY;
                 yClosestYhit = Y;
             }
         }
-        hitsXYZ->AddHit(X,yClosestYhit, (Z+zClosestYhit)/2., energy+eClosestYhit, 0, REST_HitType::XYZ, 0, 0, 0);
+        hitsXYZ->AddHit(X, yClosestYhit, (Z + zClosestYhit) / 2., energy + eClosestYhit, 0, REST_HitType::XYZ,
+                        0, 0, 0);
     }
     tckXYZ->SetVolumeHits(*hitsXYZ);
 
     // apply calibration from gainmap
     TRestTrack* tckXYZcalibrated = new TRestTrack();
     TRestVolumeHits* hitsXYZcalibrated = new TRestVolumeHits();
-    for (int i=0; i<hitsXYZ->GetNumberOfHits();i++){
+    for (int i = 0; i < hitsXYZ->GetNumberOfHits(); i++) {
         double x = hitsXYZ->GetPosition(i).X();
         double y = hitsXYZ->GetPosition(i).Y();
         double z = hitsXYZ->GetPosition(i).Z();
         double e = hitsXYZ->GetEnergy(i);
-        double slope = m->GetSlope(x,y);
-        double intercept = m->GetIntercept(x,y);
-        if (slope == 0) slope=1;
-        double eCorrected = e*slope+intercept*e/hitsXYZ->GetTotalEnergy();
-        RESTDebug << "Hit " << i << ": ("<<x<<","<<y<<","<<z<<"); "<<e<<" "<<slope<<" -> "<<eCorrected<< RESTendl;
+        double slope = m->GetSlope(x, y);
+        double intercept = m->GetIntercept(x, y);
+        if (slope == 0) slope = 1;
+        double eCorrected = e * slope + intercept * e / hitsXYZ->GetTotalEnergy();
+        RESTDebug << "Hit " << i << ": (" << x << "," << y << "," << z << "); " << e << " " << slope << " -> "
+                  << eCorrected << RESTendl;
 
-        hitsXYZcalibrated->AddHit(x,y,z,eCorrected,0, REST_HitType::XYZ, 0, 0, 0);
+        hitsXYZcalibrated->AddHit(x, y, z, eCorrected, 0, REST_HitType::XYZ, 0, 0, 0);
     }
     tckXYZcalibrated->SetVolumeHits(*hitsXYZcalibrated);
 
     Double_t trackEnergy = tckXYZcalibrated->GetEnergy();
-    Double_t trackEnergyNoSegmentation = tckXYZ->GetEnergy() * m->GetSlopeFullSpc() + m->GetInterceptFullSpc();
-
+    Double_t trackEnergyNoSegmentation =
+        tckXYZ->GetEnergy() * m->GetSlopeFullSpc() + m->GetInterceptFullSpc();
 
     // A new value for each observable is added
     SetObservableValue("energy", trackEnergy);

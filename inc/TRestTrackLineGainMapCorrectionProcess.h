@@ -24,6 +24,7 @@
 #define RestCore_TRestTrackLineGainMapCorrectionProcess
 
 #include <TRestEventProcess.h>
+
 #include "TRestDataSetGainMap.h"
 #include "TRestTrackEvent.h"
 
@@ -38,7 +39,7 @@ class TRestTrackLineGainMapCorrectionProcess : public TRestEventProcess {
 
     std::string fGainMapFile = "";  //<
 
-    TRestDataSetGainMap fGainMap; //!
+    TRestDataSetGainMap fGainMap;  //!
 
     void Initialize() override;
 
@@ -51,8 +52,7 @@ class TRestTrackLineGainMapCorrectionProcess : public TRestEventProcess {
     TRestEvent* ProcessEvent(TRestEvent* inputEvent) override;
     void EndProcess() override;
 
-    void PrintMetadata() override {
-    }
+    void PrintMetadata() override {}
 
     const char* GetProcessName() const override { return "TRestTrackLineGainMapCorrectedProcess"; }
 
