@@ -23,9 +23,9 @@
 #ifndef RestCore_TRestTrackLinearizationProcess
 #define RestCore_TRestTrackLinearizationProcess
 
-#include <TRestTrackEvent.h>
+#include <TRestEventProcess.h>
 
-#include "TRestEventProcess.h"
+#include "TRestTrackEvent.h"
 
 //! A process to perform track linearization
 class TRestTrackLinearizationProcess : public TRestEventProcess {

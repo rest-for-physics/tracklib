@@ -25,7 +25,7 @@
 
 #include <iostream>
 
-class TRestTrack : public TObject {
+class TRestTrack {
    protected:
     Int_t fTrackID;         ///< Track ID
     Int_t fParentID;        ///< Parent ID
@@ -81,6 +81,6 @@ class TRestTrack : public TObject {
     // Destructor
     ~TRestTrack();
 
-    ClassDef(TRestTrack, 2);
+    ClassDef(TRestTrack, 3);
 };
 #endif

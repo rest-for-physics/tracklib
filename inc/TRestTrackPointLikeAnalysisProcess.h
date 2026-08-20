@@ -12,9 +12,9 @@
 #ifndef RestCore_TRestTrackPointLikeAnalysisProcess
 #define RestCore_TRestTrackPointLikeAnalysisProcess
 
-#include <TRestTrackEvent.h>
+#include <TRestEventProcess.h>
 
-#include "TRestEventProcess.h"
+#include "TRestTrackEvent.h"
 
 class TRestTrackPointLikeAnalysisProcess : public TRestEventProcess {
    private:

@@ -55,7 +55,7 @@ void TRestTrack::RemoveVolumeHits() {
 /// track based on the most energetic hit. The origin is defined as the further
 /// hit deposition edge to the most energetic hit, while the track end is defined
 /// as the closest edge to the most energetic hit. The hits are expected to be
-/// ordered following the minimim path.
+/// ordered following the minimum path.
 ///
 void TRestTrack::GetBoundaries(TVector3& orig, TVector3& end) {
     const int nHits = fVolumeHits.GetNumberOfHits();

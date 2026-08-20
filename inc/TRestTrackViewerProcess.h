@@ -25,8 +25,8 @@
 
 #include <TGraph.h>
 #include <TLegend.h>
+#include <TRestEventProcess.h>
 
-#include "TRestEventProcess.h"
 #include "TRestTrackEvent.h"
 
 //! A generic viewer REST process to visualize track events

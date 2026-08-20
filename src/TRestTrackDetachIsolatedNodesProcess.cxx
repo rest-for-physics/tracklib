@@ -71,8 +71,6 @@ TRestEvent* TRestTrackDetachIsolatedNodesProcess::ProcessEvent(TRestEvent* input
 
         Int_t nHits = hits->GetNumberOfHits();
 
-        /* {{{ Debug output */
-
         if (this->GetVerboseLevel() >= TRestStringOutput::REST_Verbose_Level::REST_Debug) {
             Int_t pId = fInputTrackEvent->GetTrack(tck)->GetParentID();
             cout << "Track : " << tck << " TrackID : " << tckId << " ParentID : " << pId << endl;
@@ -81,7 +79,6 @@ TRestEvent* TRestTrackDetachIsolatedNodesProcess::ProcessEvent(TRestEvent* input
             cout << "-----------------" << endl;
             GetChar();
         }
-        /* }}} */
 
         TRestVolumeHits connectedHits;
         TRestVolumeHits isolatedHit;

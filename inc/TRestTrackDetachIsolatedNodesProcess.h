@@ -12,9 +12,9 @@
 #ifndef RestCore_TRestTrackDetachIsolatedNodesProcess
 #define RestCore_TRestTrackDetachIsolatedNodesProcess
 
-#include <TRestTrackEvent.h>
+#include <TRestEventProcess.h>
 
-#include "TRestEventProcess.h"
+#include "TRestTrackEvent.h"
 
 class TRestTrackDetachIsolatedNodesProcess : public TRestEventProcess {
    private:

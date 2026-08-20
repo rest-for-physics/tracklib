@@ -228,27 +228,27 @@ void TRestTrackAnalysisProcess::InitProcess() {
         if (fObservables[i].find("nTracks_LE_") != string::npos) {
             Double_t energy = StringToDouble(fObservables[i].substr(11, fObservables[i].length()).c_str());
 
-            fTrack_LE_EnergyObservables.push_back(fObservables[i]);
-            fTrack_LE_Threshold.push_back(energy);
-            nTracks_LE.push_back(0);
+            fTrack_LE_EnergyObservables.emplace_back(fObservables[i]);
+            fTrack_LE_Threshold.emplace_back(energy);
+            nTracks_LE.emplace_back(0);
         }
 
     for (unsigned int i = 0; i < fObservables.size(); i++)
         if (fObservables[i].find("nTracks_HE_") != string::npos) {
             Double_t energy = StringToDouble(fObservables[i].substr(11, fObservables[i].length()).c_str());
 
-            fTrack_HE_EnergyObservables.push_back(fObservables[i]);
-            fTrack_HE_Threshold.push_back(energy);
-            nTracks_HE.push_back(0);
+            fTrack_HE_EnergyObservables.emplace_back(fObservables[i]);
+            fTrack_HE_Threshold.emplace_back(energy);
+            nTracks_HE.emplace_back(0);
         }
 
     for (unsigned int i = 0; i < fObservables.size(); i++)
         if (fObservables[i].find("nTracks_En_") != string::npos) {
             Double_t energy = StringToDouble(fObservables[i].substr(11, fObservables[i].length()).c_str());
 
-            fTrack_En_EnergyObservables.push_back(fObservables[i]);
-            fTrack_En_Threshold.push_back(energy);
-            nTracks_En.push_back(0);
+            fTrack_En_EnergyObservables.emplace_back(fObservables[i]);
+            fTrack_En_Threshold.emplace_back(energy);
+            nTracks_En.emplace_back(0);
         }
 
     for (unsigned int i = 0; i < fObservables.size(); i++)
@@ -256,9 +256,9 @@ void TRestTrackAnalysisProcess::InitProcess() {
             Double_t tailPercentage =
                 StringToDouble(fObservables[i].substr(9, fObservables[i].length()).c_str());
 
-            fTwistLowObservables.push_back(fObservables[i]);
-            fTwistLowTailPercentage.push_back(tailPercentage);
-            fTwistLowValue.push_back(0);
+            fTwistLowObservables.emplace_back(fObservables[i]);
+            fTwistLowTailPercentage.emplace_back(tailPercentage);
+            fTwistLowValue.emplace_back(0);
         }
 
     for (unsigned int i = 0; i < fObservables.size(); i++)
@@ -266,9 +266,9 @@ void TRestTrackAnalysisProcess::InitProcess() {
             Double_t tailPercentage =
                 StringToDouble(fObservables[i].substr(10, fObservables[i].length()).c_str());
 
-            fTwistHighObservables.push_back(fObservables[i]);
-            fTwistHighTailPercentage.push_back(tailPercentage);
-            fTwistHighValue.push_back(0);
+            fTwistHighObservables.emplace_back(fObservables[i]);
+            fTwistHighTailPercentage.emplace_back(tailPercentage);
+            fTwistHighValue.emplace_back(0);
         }
 
     for (unsigned int i = 0; i < fObservables.size(); i++)
@@ -276,9 +276,9 @@ void TRestTrackAnalysisProcess::InitProcess() {
             Double_t tailPercentage =
                 StringToDouble(fObservables[i].substr(13, fObservables[i].length()).c_str());
 
-            fTwistBalanceObservables.push_back(fObservables[i]);
-            fTwistBalanceTailPercentage.push_back(tailPercentage);
-            fTwistBalanceValue.push_back(0);
+            fTwistBalanceObservables.emplace_back(fObservables[i]);
+            fTwistBalanceTailPercentage.emplace_back(tailPercentage);
+            fTwistBalanceValue.emplace_back(0);
         }
 
     for (unsigned int i = 0; i < fObservables.size(); i++)
@@ -286,9 +286,9 @@ void TRestTrackAnalysisProcess::InitProcess() {
             Double_t tailPercentage =
                 StringToDouble(fObservables[i].substr(11, fObservables[i].length()).c_str());
 
-            fTwistRatioObservables.push_back(fObservables[i]);
-            fTwistRatioTailPercentage.push_back(tailPercentage);
-            fTwistRatioValue.push_back(0);
+            fTwistRatioObservables.emplace_back(fObservables[i]);
+            fTwistRatioTailPercentage.emplace_back(tailPercentage);
+            fTwistRatioValue.emplace_back(0);
         }
 
     for (unsigned int i = 0; i < fObservables.size(); i++)
@@ -296,9 +296,9 @@ void TRestTrackAnalysisProcess::InitProcess() {
             Double_t tailPercentage =
                 StringToDouble(fObservables[i].substr(17, fObservables[i].length()).c_str());
 
-            fTwistWeightedLowObservables.push_back(fObservables[i]);
-            fTwistWeightedLowTailPercentage.push_back(tailPercentage);
-            fTwistWeightedLowValue.push_back(0);
+            fTwistWeightedLowObservables.emplace_back(fObservables[i]);
+            fTwistWeightedLowTailPercentage.emplace_back(tailPercentage);
+            fTwistWeightedLowValue.emplace_back(0);
         }
 
     for (unsigned int i = 0; i < fObservables.size(); i++)
@@ -306,9 +306,9 @@ void TRestTrackAnalysisProcess::InitProcess() {
             Double_t tailPercentage =
                 StringToDouble(fObservables[i].substr(18, fObservables[i].length()).c_str());
 
-            fTwistWeightedHighObservables.push_back(fObservables[i]);
-            fTwistWeightedHighTailPercentage.push_back(tailPercentage);
-            fTwistWeightedHighValue.push_back(0);
+            fTwistWeightedHighObservables.emplace_back(fObservables[i]);
+            fTwistWeightedHighTailPercentage.emplace_back(tailPercentage);
+            fTwistWeightedHighValue.emplace_back(0);
         }
 
     for (unsigned int i = 0; i < fObservables.size(); i++)
@@ -316,9 +316,9 @@ void TRestTrackAnalysisProcess::InitProcess() {
             Double_t tailPercentage =
                 StringToDouble(fObservables[i].substr(11, fObservables[i].length()).c_str());
 
-            fTwistLowObservables_X.push_back(fObservables[i]);
-            fTwistLowTailPercentage_X.push_back(tailPercentage);
-            fTwistLowValue_X.push_back(0);
+            fTwistLowObservables_X.emplace_back(fObservables[i]);
+            fTwistLowTailPercentage_X.emplace_back(tailPercentage);
+            fTwistLowValue_X.emplace_back(0);
         }
 
     for (unsigned int i = 0; i < fObservables.size(); i++)
@@ -326,9 +326,9 @@ void TRestTrackAnalysisProcess::InitProcess() {
             Double_t tailPercentage =
                 StringToDouble(fObservables[i].substr(12, fObservables[i].length()).c_str());
 
-            fTwistHighObservables_X.push_back(fObservables[i]);
-            fTwistHighTailPercentage_X.push_back(tailPercentage);
-            fTwistHighValue_X.push_back(0);
+            fTwistHighObservables_X.emplace_back(fObservables[i]);
+            fTwistHighTailPercentage_X.emplace_back(tailPercentage);
+            fTwistHighValue_X.emplace_back(0);
         }
 
     for (unsigned int i = 0; i < fObservables.size(); i++)
@@ -336,9 +336,9 @@ void TRestTrackAnalysisProcess::InitProcess() {
             Double_t tailPercentage =
                 StringToDouble(fObservables[i].substr(15, fObservables[i].length()).c_str());
 
-            fTwistBalanceObservables_X.push_back(fObservables[i]);
-            fTwistBalanceTailPercentage_X.push_back(tailPercentage);
-            fTwistBalanceValue_X.push_back(0);
+            fTwistBalanceObservables_X.emplace_back(fObservables[i]);
+            fTwistBalanceTailPercentage_X.emplace_back(tailPercentage);
+            fTwistBalanceValue_X.emplace_back(0);
         }
 
     for (unsigned int i = 0; i < fObservables.size(); i++)
@@ -346,9 +346,9 @@ void TRestTrackAnalysisProcess::InitProcess() {
             Double_t tailPercentage =
                 StringToDouble(fObservables[i].substr(13, fObservables[i].length()).c_str());
 
-            fTwistRatioObservables_X.push_back(fObservables[i]);
-            fTwistRatioTailPercentage_X.push_back(tailPercentage);
-            fTwistRatioValue_X.push_back(0);
+            fTwistRatioObservables_X.emplace_back(fObservables[i]);
+            fTwistRatioTailPercentage_X.emplace_back(tailPercentage);
+            fTwistRatioValue_X.emplace_back(0);
         }
 
     for (unsigned int i = 0; i < fObservables.size(); i++)
@@ -356,9 +356,9 @@ void TRestTrackAnalysisProcess::InitProcess() {
             Double_t tailPercentage =
                 StringToDouble(fObservables[i].substr(19, fObservables[i].length()).c_str());
 
-            fTwistWeightedLowObservables_X.push_back(fObservables[i]);
-            fTwistWeightedLowTailPercentage_X.push_back(tailPercentage);
-            fTwistWeightedLowValue_X.push_back(0);
+            fTwistWeightedLowObservables_X.emplace_back(fObservables[i]);
+            fTwistWeightedLowTailPercentage_X.emplace_back(tailPercentage);
+            fTwistWeightedLowValue_X.emplace_back(0);
         }
 
     for (unsigned int i = 0; i < fObservables.size(); i++)
@@ -366,9 +366,9 @@ void TRestTrackAnalysisProcess::InitProcess() {
             Double_t tailPercentage =
                 StringToDouble(fObservables[i].substr(20, fObservables[i].length()).c_str());
 
-            fTwistWeightedHighObservables_X.push_back(fObservables[i]);
-            fTwistWeightedHighTailPercentage_X.push_back(tailPercentage);
-            fTwistWeightedHighValue_X.push_back(0);
+            fTwistWeightedHighObservables_X.emplace_back(fObservables[i]);
+            fTwistWeightedHighTailPercentage_X.emplace_back(tailPercentage);
+            fTwistWeightedHighValue_X.emplace_back(0);
         }
 
     for (unsigned int i = 0; i < fObservables.size(); i++)
@@ -376,9 +376,9 @@ void TRestTrackAnalysisProcess::InitProcess() {
             Double_t tailPercentage =
                 StringToDouble(fObservables[i].substr(11, fObservables[i].length()).c_str());
 
-            fTwistLowObservables_Y.push_back(fObservables[i]);
-            fTwistLowTailPercentage_Y.push_back(tailPercentage);
-            fTwistLowValue_Y.push_back(0);
+            fTwistLowObservables_Y.emplace_back(fObservables[i]);
+            fTwistLowTailPercentage_Y.emplace_back(tailPercentage);
+            fTwistLowValue_Y.emplace_back(0);
         }
 
     for (unsigned int i = 0; i < fObservables.size(); i++)
@@ -386,9 +386,9 @@ void TRestTrackAnalysisProcess::InitProcess() {
             Double_t tailPercentage =
                 StringToDouble(fObservables[i].substr(12, fObservables[i].length()).c_str());
 
-            fTwistHighObservables_Y.push_back(fObservables[i]);
-            fTwistHighTailPercentage_Y.push_back(tailPercentage);
-            fTwistHighValue_Y.push_back(0);
+            fTwistHighObservables_Y.emplace_back(fObservables[i]);
+            fTwistHighTailPercentage_Y.emplace_back(tailPercentage);
+            fTwistHighValue_Y.emplace_back(0);
         }
 
     for (unsigned int i = 0; i < fObservables.size(); i++)
@@ -396,9 +396,9 @@ void TRestTrackAnalysisProcess::InitProcess() {
             Double_t tailPercentage =
                 StringToDouble(fObservables[i].substr(15, fObservables[i].length()).c_str());
 
-            fTwistBalanceObservables_Y.push_back(fObservables[i]);
-            fTwistBalanceTailPercentage_Y.push_back(tailPercentage);
-            fTwistBalanceValue_Y.push_back(0);
+            fTwistBalanceObservables_Y.emplace_back(fObservables[i]);
+            fTwistBalanceTailPercentage_Y.emplace_back(tailPercentage);
+            fTwistBalanceValue_Y.emplace_back(0);
         }
 
     for (unsigned int i = 0; i < fObservables.size(); i++)
@@ -406,9 +406,9 @@ void TRestTrackAnalysisProcess::InitProcess() {
             Double_t tailPercentage =
                 StringToDouble(fObservables[i].substr(13, fObservables[i].length()).c_str());
 
-            fTwistRatioObservables_Y.push_back(fObservables[i]);
-            fTwistRatioTailPercentage_Y.push_back(tailPercentage);
-            fTwistRatioValue_Y.push_back(0);
+            fTwistRatioObservables_Y.emplace_back(fObservables[i]);
+            fTwistRatioTailPercentage_Y.emplace_back(tailPercentage);
+            fTwistRatioValue_Y.emplace_back(0);
         }
 
     for (unsigned int i = 0; i < fObservables.size(); i++)
@@ -416,9 +416,9 @@ void TRestTrackAnalysisProcess::InitProcess() {
             Double_t tailPercentage =
                 StringToDouble(fObservables[i].substr(19, fObservables[i].length()).c_str());
 
-            fTwistWeightedLowObservables_Y.push_back(fObservables[i]);
-            fTwistWeightedLowTailPercentage_Y.push_back(tailPercentage);
-            fTwistWeightedLowValue_Y.push_back(0);
+            fTwistWeightedLowObservables_Y.emplace_back(fObservables[i]);
+            fTwistWeightedLowTailPercentage_Y.emplace_back(tailPercentage);
+            fTwistWeightedLowValue_Y.emplace_back(0);
         }
 
     for (unsigned int i = 0; i < fObservables.size(); i++)
@@ -426,9 +426,9 @@ void TRestTrackAnalysisProcess::InitProcess() {
             Double_t tailPercentage =
                 StringToDouble(fObservables[i].substr(20, fObservables[i].length()).c_str());
 
-            fTwistWeightedHighObservables_Y.push_back(fObservables[i]);
-            fTwistWeightedHighTailPercentage_Y.push_back(tailPercentage);
-            fTwistWeightedHighValue_Y.push_back(0);
+            fTwistWeightedHighObservables_Y.emplace_back(fObservables[i]);
+            fTwistWeightedHighTailPercentage_Y.emplace_back(tailPercentage);
+            fTwistWeightedHighValue_Y.emplace_back(0);
         }
 }
 
@@ -1253,7 +1253,7 @@ TRestEvent* TRestTrackAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) {
 
 //
 // void TRestTrackAnalysisProcess::EndOfEventProcess() {
-//    fPreviousEventTime.push_back(fInputTrackEvent->GetTimeStamp());
+//    fPreviousEventTime.emplace_back(fInputTrackEvent->GetTimeStamp());
 //    if (fPreviousEventTime.size() > 100) fPreviousEventTime.erase(fPreviousEventTime.begin());
 //}
 

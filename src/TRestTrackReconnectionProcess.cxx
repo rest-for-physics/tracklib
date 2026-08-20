@@ -186,7 +186,7 @@ void TRestTrackReconnectionProcess::BreakTracks(TRestVolumeHits* hits, vector<TR
         }
 
         if (n > 0 && hits->GetDistance(n - 1, n) > fMeanDistance + nSigma * fSigma) {
-            hitSets.push_back(subHits);
+            hitSets.emplace_back(subHits);
             subHits.RemoveHits();
         }
 
@@ -196,7 +196,7 @@ void TRestTrackReconnectionProcess::BreakTracks(TRestVolumeHits* hits, vector<TR
             cout << "H : " << n << " X : " << x << " Y : " << y << " Z : " << z << endl;
     }
 
-    hitSets.push_back(subHits);
+    hitSets.emplace_back(subHits);
 
     if (GetVerboseLevel() >= TRestStringOutput::REST_Verbose_Level::REST_Debug)
         cout << "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" << endl;
@@ -300,13 +300,6 @@ void TRestTrackReconnectionProcess::ReconnectTracks(vector<TRestVolumeHits>& hit
             }
         }
     }
-    /* }}} */
-
-    /* {{{ Debug output
-       cout << "Tracks" << endl;
-       cout << tracks[0][0] << " ::: " << tracks[0][1] << endl;
-       cout << tracks[1][0] << " ::: " << tracks[1][1] << endl;
-       }}} */
 
     TRestVolumeHits newHits;
     newHits.RemoveHits();
@@ -342,8 +335,7 @@ void TRestTrackReconnectionProcess::ReconnectTracks(vector<TRestVolumeHits>& hit
 
     hitSets.erase(hitSets.begin() + tck2);
     hitSets.erase(hitSets.begin() + tck1);
-    hitSets.push_back(newHits);
-    /* }}} */
+    hitSets.emplace_back(newHits);
 
     nSubTracks = hitSets.size();
 

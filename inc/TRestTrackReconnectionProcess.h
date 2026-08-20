@@ -12,9 +12,9 @@
 #ifndef RestCore_TRestTrackReconnectionProcess
 #define RestCore_TRestTrackReconnectionProcess
 
-#include <TRestTrackEvent.h>
+#include <TRestEventProcess.h>
 
-#include "TRestEventProcess.h"
+#include "TRestTrackEvent.h"
 
 class TRestTrackReconnectionProcess : public TRestEventProcess {
    private:

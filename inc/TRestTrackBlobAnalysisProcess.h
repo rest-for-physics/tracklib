@@ -12,9 +12,9 @@
 #ifndef RestCore_TRestTrackBlobAnalysisProcess
 #define RestCore_TRestTrackBlobAnalysisProcess
 
-#include <TRestTrackEvent.h>
+#include <TRestEventProcess.h>
 
-#include "TRestEventProcess.h"
+#include "TRestTrackEvent.h"
 
 class TRestTrackBlobAnalysisProcess : public TRestEventProcess {
    private:

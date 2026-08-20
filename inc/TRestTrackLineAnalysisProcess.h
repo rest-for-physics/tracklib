@@ -23,9 +23,9 @@
 #ifndef RestCore_TRestTrackLineAnalysisProcess
 #define RestCore_TRestTrackLineAnalysisProcess
 
-#include <TRestTrackEvent.h>
+#include <TRestEventProcess.h>
 
-#include "TRestEventProcess.h"
+#include "TRestTrackEvent.h"
 
 //! A process to identify and extrack origin and end of a track assuming a linear track
 class TRestTrackLineAnalysisProcess : public TRestEventProcess {
