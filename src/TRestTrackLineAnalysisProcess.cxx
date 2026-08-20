@@ -55,15 +55,21 @@
 /// when this value is below 0.5 it means that the track is downwards and upwards otherwise
 /// * **sigmaX**: Sigma of the distances of the hits to the line in the X coordinate, weighted by energy
 /// * **sigmaY**: Sigma of the distances of the hits to the line in the Y coordinate, weighted by energy
-/// * **sigmaZ**: Sigma of the distances of the hits to the line in the Z coordinate (calculated as sqrt(0.5*(sigmaZ_XZ**2 + sigmaZ_YZ**2))), weighted by energy
-/// * **sigmaZ_XZ**: Sigma of the distances of the hits to the line in the Z coordinate for the XZ projection, weighted by energy
-/// * **sigmaZ_YZ**: Sigma of the distances of the hits to the line in the Z coordinate for the YZ projection, weighted by energy
+/// * **sigmaZ**: Sigma of the distances of the hits to the line in the Z coordinate (calculated as
+/// sqrt(0.5*(sigmaZ_XZ**2 + sigmaZ_YZ**2))), weighted by energy
+/// * **sigmaZ_XZ**: Sigma of the distances of the hits to the line in the Z coordinate for the XZ projection,
+/// weighted by energy
+/// * **sigmaZ_YZ**: Sigma of the distances of the hits to the line in the Z coordinate for the YZ projection,
+/// weighted by energy
 /// * **sigma**: Total sigma of the distances of the hits to the line in 3D, weighted by energy
 /// * **sigmaUnweightedX**: Sigma of the distances of the hits to the line in the X coordinate, unweighted
 /// * **sigmaUnweightedY**: Sigma of the distances of the hits to the line in the Y coordinate, unweighted
-/// * **sigmaUnweightedZ**: Sigma of the distances of the hits to the line in the Z coordinate (calculated as sqrt(0.5*(sigmaUnweightedZ_XZ**2 + sigmaUnweightedZ_YZ**2))), unweighted
-/// * **sigmaUnweightedZ_XZ**: Sigma of the distances of the hits to the line in the Z coordinate for the XZ projection, unweighted
-/// * **sigmaUnweightedZ_YZ**: Sigma of the distances of the hits to the line in the Z coordinate for the YZ projection, unweighted
+/// * **sigmaUnweightedZ**: Sigma of the distances of the hits to the line in the Z coordinate (calculated as
+/// sqrt(0.5*(sigmaUnweightedZ_XZ**2 + sigmaUnweightedZ_YZ**2))), unweighted
+/// * **sigmaUnweightedZ_XZ**: Sigma of the distances of the hits to the line in the Z coordinate for the XZ
+/// projection, unweighted
+/// * **sigmaUnweightedZ_YZ**: Sigma of the distances of the hits to the line in the Z coordinate for the YZ
+/// projection, unweighted
 /// * **sigmaUnweighted**: Total sigma of the distances ofthe hits to the line in 3D, unweighted
 ///
 /// ### Examples
