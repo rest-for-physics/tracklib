@@ -53,6 +53,18 @@
 /// * **totalEnergy**: Energy of the track
 /// * **relativeZ**: Relative Z position in which the half of the integral is reached,
 /// when this value is below 0.5 it means that the track is downwards and upwards otherwise
+/// * **sigmaX**: Sigma of the distances of the hits to the line in the X coordinate, weighted by energy
+/// * **sigmaY**: Sigma of the distances of the hits to the line in the Y coordinate, weighted by energy
+/// * **sigmaZ**: Sigma of the distances of the hits to the line in the Z coordinate (calculated as sqrt(0.5*(sigmaZ_XZ**2 + sigmaZ_YZ**2))), weighted by energy
+/// * **sigmaZ_XZ**: Sigma of the distances of the hits to the line in the Z coordinate for the XZ projection, weighted by energy
+/// * **sigmaZ_YZ**: Sigma of the distances of the hits to the line in the Z coordinate for the YZ projection, weighted by energy
+/// * **sigma**: Total sigma of the distances of the hits to the line in 3D, weighted by energy
+/// * **sigmaUnweightedX**: Sigma of the distances of the hits to the line in the X coordinate, unweighted
+/// * **sigmaUnweightedY**: Sigma of the distances of the hits to the line in the Y coordinate, unweighted
+/// * **sigmaUnweightedZ**: Sigma of the distances of the hits to the line in the Z coordinate (calculated as sqrt(0.5*(sigmaUnweightedZ_XZ**2 + sigmaUnweightedZ_YZ**2))), unweighted
+/// * **sigmaUnweightedZ_XZ**: Sigma of the distances of the hits to the line in the Z coordinate for the XZ projection, unweighted
+/// * **sigmaUnweightedZ_YZ**: Sigma of the distances of the hits to the line in the Z coordinate for the YZ projection, unweighted
+/// * **sigmaUnweighted**: Total sigma of the distances ofthe hits to the line in 3D, unweighted
 ///
 /// ### Examples
 /// \code
@@ -240,27 +252,23 @@ TRestEvent* TRestTrackLineAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) 
     double totalSigma =
         TMath::Sqrt(sigmaXZ.X() * sigmaXZ.X() + sigmaYZ.Y() * sigmaYZ.Y() + meanSigmaZ * meanSigmaZ);
 
-    SetObservableValue("energySigmaX", sigmaXZ.X());
-    SetObservableValue("energySigmaY", sigmaYZ.Y());
-    SetObservableValue("energySigmaZ", meanSigmaZ);
-    SetObservableValue("energySigmaXZ", sigmaXZ.Mag());
-    SetObservableValue("energySigmaYZ", sigmaYZ.Mag());
-    SetObservableValue("energySigmaZ_XZ", sigmaXZ.Z());
-    SetObservableValue("energySigmaZ_YZ", sigmaYZ.Z());
-    SetObservableValue("energySigma", totalSigma);
+    SetObservableValue("sigmaX", sigmaXZ.X());
+    SetObservableValue("sigmaY", sigmaYZ.Y());
+    SetObservableValue("sigmaZ", meanSigmaZ);
+    SetObservableValue("sigmaZ_XZ", sigmaXZ.Z());
+    SetObservableValue("sigmaZ_YZ", sigmaYZ.Z());
+    SetObservableValue("sigma", totalSigma);
 
     sigmaXZ = GetSigmaToLine(originalTrackX, tckX, false);
     sigmaYZ = GetSigmaToLine(originalTrackY, tckY, false);
     meanSigmaZ = TMath::Sqrt((sigmaXZ.Z() * sigmaXZ.Z() + sigmaYZ.Z() * sigmaYZ.Z()) * 0.5);
     totalSigma = TMath::Sqrt(sigmaXZ.X() * sigmaXZ.X() + sigmaYZ.Y() * sigmaYZ.Y() + meanSigmaZ * meanSigmaZ);
-    SetObservableValue("sigmaX", sigmaXZ.X());
-    SetObservableValue("sigmaY", sigmaYZ.Y());
-    SetObservableValue("sigmaZ", meanSigmaZ);
-    SetObservableValue("sigmaXZ", sigmaXZ.Mag());
-    SetObservableValue("sigmaYZ", sigmaYZ.Mag());
-    SetObservableValue("sigmaZ_XZ", sigmaXZ.Z());
-    SetObservableValue("sigmaZ_YZ", sigmaYZ.Z());
-    SetObservableValue("sigma", totalSigma);
+    SetObservableValue("sigmaUnweightedX", sigmaXZ.X());
+    SetObservableValue("sigmaUnweightedY", sigmaYZ.Y());
+    SetObservableValue("sigmaUnweightedZ", meanSigmaZ);
+    SetObservableValue("sigmaUnweightedZ_XZ", sigmaXZ.Z());
+    SetObservableValue("sigmaUnweightedZ_YZ", sigmaYZ.Z());
+    SetObservableValue("sigmaUnweighted", totalSigma);
 
     return fOutTrackEvent;
 }
@@ -272,19 +280,20 @@ TRestEvent* TRestTrackLineAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) 
 void TRestTrackLineAnalysisProcess::EndProcess() {}
 
 ///////////////////////////////////////////////
-/// \brief Function to calculate the sigma of the distances of the hits to the line
-/// defined by the line track. The sigma is calculated as the standard deviation of the
-/// distances of the hits to the line. The line is defined by the two closest nodes to the
-/// hit. The sigma can be ponderated by the energy of the hit or not. This function works
+/// \brief Function to calculate the sigma of the hits to the line
+/// (idem the mean of the square distances of all the hits of the track to the line)
+/// in each direction X,Y and Z.
+/// The line is defined by the two closest nodes to the hit of the line track.
+/// The mean can be weighted by the energy of the hit or not. This function works
 /// for any type of track (XZ, YZ or XYZ).
 /// TODO: should this function be in TRestVolumeHits ?
 /// \param track The track containing the hits to calculate the sigma
-/// \param line The nodes that define the line.
-/// \param ponderateByEnergy If true, the sigma is ponderated by the energy of the hit
-/// \return The sigma of the distances of the hits to the line
+/// \param line The tracks which containes the nodes that define the line.
+/// \param weightByEnergy If true, the sigma is weighted by the energy of the hit
+/// \return Vector with the sigma of the hits to the line in each direction X,Y and Z
 ///
 TVector3 TRestTrackLineAnalysisProcess::GetSigmaToLine(TRestTrack* track, TRestTrack* line,
-                                                       bool ponderateByEnergy) {
+                                                       bool weightByEnergy) {
     TRestVolumeHits* lineVolHits = line->GetVolumeHits();
     TVector3 sigma2ToLine = TVector3(0, 0, 0);
     for (size_t i = 0; i < track->GetVolumeHits()->GetNumberOfHits(); i++) {
@@ -314,7 +323,7 @@ TVector3 TRestTrackLineAnalysisProcess::GetSigmaToLine(TRestTrack* track, TRestT
         double toAddX = hitToLine.X() * hitToLine.X();
         double toAddY = hitToLine.Y() * hitToLine.Y();
         double toAddZ = hitToLine.Z() * hitToLine.Z();
-        if (ponderateByEnergy) {
+        if (weightByEnergy) {
             toAddX *= hitEnergy;
             toAddY *= hitEnergy;
             toAddZ *= hitEnergy;
@@ -322,7 +331,7 @@ TVector3 TRestTrackLineAnalysisProcess::GetSigmaToLine(TRestTrack* track, TRestT
         sigma2ToLine += TVector3(toAddX, toAddY, toAddZ);
     }
 
-    if (ponderateByEnergy) {
+    if (weightByEnergy) {
         auto trackEnergy = track->GetEnergy();
         sigma2ToLine *= 1.0 / trackEnergy;
     } else {
