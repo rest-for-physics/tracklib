@@ -88,6 +88,7 @@ class TRestTrackEvent : public TRestEvent {
     Double_t GetEnergy(TString option = "");
 
     Int_t GetLevel(Int_t tck);
+    Int_t GetLevelById(Int_t tckId);
     void SetLevels();
     inline Int_t GetLevels() const { return fLevels; }
 

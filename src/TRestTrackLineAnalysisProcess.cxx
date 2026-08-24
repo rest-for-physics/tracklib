@@ -53,6 +53,24 @@
 /// * **totalEnergy**: Energy of the track
 /// * **relativeZ**: Relative Z position in which the half of the integral is reached,
 /// when this value is below 0.5 it means that the track is downwards and upwards otherwise
+/// * **sigmaX**: Sigma of the distances of the hits to the line in the X coordinate, weighted by energy
+/// * **sigmaY**: Sigma of the distances of the hits to the line in the Y coordinate, weighted by energy
+/// * **sigmaZ**: Sigma of the distances of the hits to the line in the Z coordinate (calculated as
+/// sqrt(0.5*(sigmaZ_XZ**2 + sigmaZ_YZ**2))), weighted by energy
+/// * **sigmaZ_XZ**: Sigma of the distances of the hits to the line in the Z coordinate for the XZ projection,
+/// weighted by energy
+/// * **sigmaZ_YZ**: Sigma of the distances of the hits to the line in the Z coordinate for the YZ projection,
+/// weighted by energy
+/// * **sigma**: Total sigma of the distances of the hits to the line in 3D, weighted by energy
+/// * **sigmaUnweightedX**: Sigma of the distances of the hits to the line in the X coordinate, unweighted
+/// * **sigmaUnweightedY**: Sigma of the distances of the hits to the line in the Y coordinate, unweighted
+/// * **sigmaUnweightedZ**: Sigma of the distances of the hits to the line in the Z coordinate (calculated as
+/// sqrt(0.5*(sigmaUnweightedZ_XZ**2 + sigmaUnweightedZ_YZ**2))), unweighted
+/// * **sigmaUnweightedZ_XZ**: Sigma of the distances of the hits to the line in the Z coordinate for the XZ
+/// projection, unweighted
+/// * **sigmaUnweightedZ_YZ**: Sigma of the distances of the hits to the line in the Z coordinate for the YZ
+/// projection, unweighted
+/// * **sigmaUnweighted**: Total sigma of the distances ofthe hits to the line in 3D, unweighted
 ///
 /// ### Examples
 /// \code
@@ -214,6 +232,50 @@ TRestEvent* TRestTrackLineAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) 
     fOutTrackEvent->AddTrack(tckY);
 
     fOutTrackEvent->SetLevels();
+
+    // Get the track which contains the hits from where the line track was obtained
+    // for the XZ projection
+    auto originalTrackX = fOutTrackEvent->GetTrackById(tckX->GetParentID());
+    while (fOutTrackEvent->GetLevelById(originalTrackX->GetTrackID()) > 1) {
+        originalTrackX = fOutTrackEvent->GetTrackById(originalTrackX->GetParentID());
+    }
+    // for the YZ projection
+    auto originalTrackY = fOutTrackEvent->GetTrackById(tckY->GetParentID());
+    while (fOutTrackEvent->GetLevelById(originalTrackY->GetTrackID()) > 1) {
+        originalTrackY = fOutTrackEvent->GetTrackById(originalTrackY->GetParentID());
+    }
+    if (GetVerboseLevel() >= TRestStringOutput::REST_Verbose_Level::REST_Extreme) {
+        fOutTrackEvent->PrintEvent();
+    }
+    RESTDebug << "Original track X ID: " << originalTrackX->GetTrackID()
+              << "; line track ID: " << tckX->GetTrackID() << RESTendl;
+    RESTDebug << "Original track Y ID: " << originalTrackY->GetTrackID()
+              << "; line track ID: " << tckY->GetTrackID() << RESTendl;
+
+    auto sigmaXZ = GetSigmaToLine(originalTrackX, tckX, true);
+    auto sigmaYZ = GetSigmaToLine(originalTrackY, tckY, true);
+    auto meanSigmaZ = TMath::Sqrt((sigmaXZ.Z() * sigmaXZ.Z() + sigmaYZ.Z() * sigmaYZ.Z()) * 0.5);
+    double totalSigma =
+        TMath::Sqrt(sigmaXZ.X() * sigmaXZ.X() + sigmaYZ.Y() * sigmaYZ.Y() + meanSigmaZ * meanSigmaZ);
+
+    SetObservableValue("sigmaX", sigmaXZ.X());
+    SetObservableValue("sigmaY", sigmaYZ.Y());
+    SetObservableValue("sigmaZ", meanSigmaZ);
+    SetObservableValue("sigmaZ_XZ", sigmaXZ.Z());
+    SetObservableValue("sigmaZ_YZ", sigmaYZ.Z());
+    SetObservableValue("sigma", totalSigma);
+
+    sigmaXZ = GetSigmaToLine(originalTrackX, tckX, false);
+    sigmaYZ = GetSigmaToLine(originalTrackY, tckY, false);
+    meanSigmaZ = TMath::Sqrt((sigmaXZ.Z() * sigmaXZ.Z() + sigmaYZ.Z() * sigmaYZ.Z()) * 0.5);
+    totalSigma = TMath::Sqrt(sigmaXZ.X() * sigmaXZ.X() + sigmaYZ.Y() * sigmaYZ.Y() + meanSigmaZ * meanSigmaZ);
+    SetObservableValue("sigmaUnweightedX", sigmaXZ.X());
+    SetObservableValue("sigmaUnweightedY", sigmaYZ.Y());
+    SetObservableValue("sigmaUnweightedZ", meanSigmaZ);
+    SetObservableValue("sigmaUnweightedZ_XZ", sigmaXZ.Z());
+    SetObservableValue("sigmaUnweightedZ_YZ", sigmaYZ.Z());
+    SetObservableValue("sigmaUnweighted", totalSigma);
+
     return fOutTrackEvent;
 }
 
@@ -222,3 +284,66 @@ TRestEvent* TRestTrackLineAnalysisProcess::ProcessEvent(TRestEvent* inputEvent) 
 /// processed. Nothing to do...
 ///
 void TRestTrackLineAnalysisProcess::EndProcess() {}
+
+///////////////////////////////////////////////
+/// \brief Function to calculate the sigma of the hits to the line
+/// (idem the mean of the square distances of all the hits of the track to the line)
+/// in each direction X,Y and Z.
+/// The line is defined by the two closest nodes to the hit of the line track.
+/// The mean can be weighted by the energy of the hit or not. This function works
+/// for any type of track (XZ, YZ or XYZ).
+/// TODO: should this function be in TRestVolumeHits ?
+/// \param track The track containing the hits to calculate the sigma
+/// \param line The tracks which containes the nodes that define the line.
+/// \param weightByEnergy If true, the sigma is weighted by the energy of the hit
+/// \return Vector with the sigma of the hits to the line in each direction X,Y and Z
+///
+TVector3 TRestTrackLineAnalysisProcess::GetSigmaToLine(TRestTrack* track, TRestTrack* line,
+                                                       bool weightByEnergy) {
+    TRestVolumeHits* lineVolHits = line->GetVolumeHits();
+    TVector3 sigma2ToLine = TVector3(0, 0, 0);
+    for (size_t i = 0; i < track->GetVolumeHits()->GetNumberOfHits(); i++) {
+        TVector3 hitPos = track->GetVolumeHits()->GetPosition(i);
+        auto hitEnergy = track->GetVolumeHits()->GetEnergy(i);
+        size_t closestNodeIndex = lineVolHits->GetClosestHit(hitPos);
+
+        // find second closes node
+        size_t secondClosestNodeIndex = closestNodeIndex - 1;
+        if (secondClosestNodeIndex < 0) {
+            secondClosestNodeIndex = closestNodeIndex + 1;
+        } else if (closestNodeIndex == lineVolHits->GetNumberOfHits() - 1) {
+            secondClosestNodeIndex = closestNodeIndex - 1;
+        } else {
+            auto dist1 = (lineVolHits->GetPosition(secondClosestNodeIndex) - hitPos).Mag();
+            auto dist2 = (lineVolHits->GetPosition(closestNodeIndex + 1) - hitPos).Mag();
+            if (dist1 > dist2) {
+                secondClosestNodeIndex = closestNodeIndex + 1;
+            }
+        }
+        TVector3 lineDirector =
+            lineVolHits->GetPosition(closestNodeIndex) - lineVolHits->GetPosition(secondClosestNodeIndex);
+        TVector3 hitToClosestLinePoint = hitPos - lineVolHits->GetPosition(closestNodeIndex);
+        TVector3 hitToLine =
+            hitToClosestLinePoint - (hitToClosestLinePoint.Dot(lineDirector.Unit())) * lineDirector.Unit();
+
+        double toAddX = hitToLine.X() * hitToLine.X();
+        double toAddY = hitToLine.Y() * hitToLine.Y();
+        double toAddZ = hitToLine.Z() * hitToLine.Z();
+        if (weightByEnergy) {
+            toAddX *= hitEnergy;
+            toAddY *= hitEnergy;
+            toAddZ *= hitEnergy;
+        }
+        sigma2ToLine += TVector3(toAddX, toAddY, toAddZ);
+    }
+
+    if (weightByEnergy) {
+        auto trackEnergy = track->GetEnergy();
+        sigma2ToLine *= 1.0 / trackEnergy;
+    } else {
+        sigma2ToLine *= 1.0 / track->GetVolumeHits()->GetNumberOfHits();
+    }
+    TVector3 sigmaToLine =
+        TVector3(TMath::Sqrt(sigma2ToLine.X()), TMath::Sqrt(sigma2ToLine.Y()), TMath::Sqrt(sigma2ToLine.Z()));
+    return sigmaToLine;
+}

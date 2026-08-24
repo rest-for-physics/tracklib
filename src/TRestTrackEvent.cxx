@@ -262,6 +262,22 @@ Int_t TRestTrackEvent::GetLevel(Int_t tck) {
     return lvl;
 }
 
+Int_t TRestTrackEvent::GetLevelById(Int_t tckId) {
+    Int_t lvl = 1;
+    auto track = GetTrackById(tckId);
+    if (track == nullptr) {
+        RESTWarning << "Track with ID " << tckId << " not found" << RESTendl;
+        return -1;
+    }
+    Int_t parentTrackId = track->GetParentID();
+
+    while (parentTrackId > 0) {
+        lvl++;
+        parentTrackId = GetTrackById(parentTrackId)->GetParentID();
+    }
+    return lvl;
+}
+
 Bool_t TRestTrackEvent::isTopLevel(Int_t tck) {
     if (GetLevels() == GetLevel(tck)) return true;
     return false;
