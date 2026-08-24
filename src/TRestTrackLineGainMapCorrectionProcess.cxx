@@ -178,7 +178,7 @@ TRestEvent* TRestTrackLineGainMapCorrectionProcess::ProcessEvent(TRestEvent* inp
     // apply calibration from gainmap
     TRestTrack* tckXYZcalibrated = new TRestTrack();
     TRestVolumeHits* hitsXYZcalibrated = new TRestVolumeHits();
-    for (int i = 0; i < hitsXYZ->GetNumberOfHits(); i++) {
+    for (size_t i = 0; i < hitsXYZ->GetNumberOfHits(); i++) {
         double x = hitsXYZ->GetPosition(i).X();
         double y = hitsXYZ->GetPosition(i).Y();
         double z = hitsXYZ->GetPosition(i).Z();
