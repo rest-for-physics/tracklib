@@ -36,6 +36,11 @@
 ///
 /// ### Parameters
 /// * fMaxNodes : Maximum number of nodes (hits) to reduce the hits to a line
+/// * fFixBoundaries : Fix the boundaries of the track, i.e. the first and last nodes. It
+/// is recommended to add 2 more nodes to fMaxNodes when setting this parameter to true. This
+/// avoids the first and last nodes being pulled into the center of the track by the
+/// kMeansClustering algorithm. This is useful when you need an accurate measurement of the
+/// track length, but it is less precise (worse length resolution). Default is false.
 ///
 /// ### Examples
 /// \code
@@ -63,7 +68,6 @@
 #include "TRestTrackLinearizationProcess.h"
 
 #include "TRestTrackReductionProcess.h"
-
 using namespace std;
 
 ClassImp(TRestTrackLinearizationProcess);
@@ -167,7 +171,7 @@ void TRestTrackLinearizationProcess::GetHitsProjection(TRestVolumeHits* hits, co
         return;
     }
 
-    TRestVolumeHits::kMeansClustering(hits, vHits, 1);
+    TRestVolumeHits::kMeansClustering(hits, vHits, 1, fFixBoundaries);
 
     if (GetVerboseLevel() >= TRestStringOutput::REST_Verbose_Level::REST_Debug)
         for (unsigned int i = 0; i < vHits.GetNumberOfHits(); i++)

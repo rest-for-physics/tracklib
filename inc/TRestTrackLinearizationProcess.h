@@ -23,9 +23,9 @@
 #ifndef RestCore_TRestTrackLinearizationProcess
 #define RestCore_TRestTrackLinearizationProcess
 
-#include <TRestEventProcess.h>
+#include <TRestTrackEvent.h>
 
-#include "TRestTrackEvent.h"
+#include "TRestEventProcess.h"
 
 //! A process to perform track linearization
 class TRestTrackLinearizationProcess : public TRestEventProcess {
@@ -38,6 +38,7 @@ class TRestTrackLinearizationProcess : public TRestEventProcess {
    protected:
     // A parameter which defines the maximum number of nodes for the track linearization
     Int_t fMaxNodes = 6;
+    Bool_t fFixBoundaries = false;
 
    public:
     RESTValue GetInputEvent() const override { return fTrackEvent; }
@@ -50,6 +51,7 @@ class TRestTrackLinearizationProcess : public TRestEventProcess {
     void PrintMetadata() override {
         BeginPrintProcess();
         RESTMetadata << "Max nodes: " << fMaxNodes << RESTendl;
+        RESTMetadata << "Fix boundaries: " << (fFixBoundaries ? "true" : "false") << RESTendl;
         EndPrintProcess();
     }
 
@@ -65,6 +67,6 @@ class TRestTrackLinearizationProcess : public TRestEventProcess {
 
     // ROOT class definition helper. Increase the number in it every time
     // you add/rename/remove the process parameters
-    ClassDefOverride(TRestTrackLinearizationProcess, 1);
+    ClassDefOverride(TRestTrackLinearizationProcess, 2);
 };
 #endif
