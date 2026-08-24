@@ -151,7 +151,7 @@ TRestEvent* TRestTrackLineGainMapCorrectionProcess::ProcessEvent(TRestEvent* inp
     TRestVolumeHits* hitsXYZ = new TRestVolumeHits();
     auto hitsX = tckX->GetHits();
     auto hitsY = tckY->GetHits();
-    for (int i = 0; i < hitsX->GetNumberOfHits(); i++) {
+    for (size_t i = 0; i < hitsX->GetNumberOfHits(); i++) {
         double X = hitsX->GetPosition(i).X();
         double Z = hitsX->GetPosition(i).Z();
         double energy = hitsX->GetEnergy(i);
