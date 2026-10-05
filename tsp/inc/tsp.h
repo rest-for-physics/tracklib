@@ -258,7 +258,7 @@ typedef struct CCtsp_branchobj {
 } CCtsp_branchobj;
 
 typedef struct CCtsp_cutnode {
-#define CCtsp_CUT_INNODELIST(t) ((t)&4)
+#define CCtsp_CUT_INNODELIST(t) ((t) & 4)
 #define CCtsp_CUT_ROOT 0
 #define CCtsp_CUT_PNODE 1
 #define CCtsp_CUT_QNODE 2
